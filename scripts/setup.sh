@@ -217,7 +217,7 @@ check_riva_tts() {
     log "WARN" "python not found; cannot run Riva TCP check"
     return 1
   fi
-  RIVA_HOST="$RIVA_HOST" RIVA_PORT="$RIVA_PORT" "$py_cmd" - <<'PY'
+  if RIVA_HOST="$RIVA_HOST" RIVA_PORT="$RIVA_PORT" "$py_cmd" - 2>>"$LOG_FILE" <<'PY'
 import os
 import socket
 host = os.environ.get('RIVA_HOST', '127.0.0.1')
@@ -226,7 +226,12 @@ with socket.create_connection((host, port), timeout=5):
     pass
 print(f'Riva TCP reachable at {host}:{port}')
 PY
-  log "INFO" "Riva TCP port is reachable"
+  then
+    log "INFO" "Riva TCP port is reachable"
+    return 0
+  fi
+  log "WARN" "Riva TCP port is not reachable at ${RIVA_HOST}:${RIVA_PORT}"
+  return 1
 }
 
 check_audio2face() {
@@ -250,15 +255,40 @@ install_backend_deps() {
     log "WARN" "python not found; skipping backend dependency install"
     return 1
   fi
-  if [[ ! -d "${ROOT_DIR}/backend/.venv" ]]; then
-    "$py_cmd" -m venv "${ROOT_DIR}/backend/.venv" || true
-  fi
-  if [[ -x "${ROOT_DIR}/backend/.venv/Scripts/python.exe" ]]; then
-    "${ROOT_DIR}/backend/.venv/Scripts/python.exe" -m pip install -r "${ROOT_DIR}/backend/requirements.txt"
-  elif [[ -x "${ROOT_DIR}/backend/.venv/bin/python" ]]; then
-    "${ROOT_DIR}/backend/.venv/bin/python" -m pip install -r "${ROOT_DIR}/backend/requirements.txt"
+  local platform
+  local venv_dir
+  platform="$(detect_platform)"
+  if [[ "$platform" == "windows-git-bash" ]]; then
+    venv_dir="${ROOT_DIR}/backend/.venv"
+    if [[ ! -d "$venv_dir" ]]; then
+      "$py_cmd" -m venv "$venv_dir" || true
+    fi
+    if [[ -x "${venv_dir}/Scripts/python.exe" ]]; then
+      if ! "${venv_dir}/Scripts/python.exe" -m pip install -r "${ROOT_DIR}/backend/requirements.txt"; then
+        log "WARN" "backend dependency install failed in Windows venv"
+        return 1
+      fi
+    elif ! "$py_cmd" -m pip install -r "${ROOT_DIR}/backend/requirements.txt"; then
+      log "WARN" "backend dependency install failed with system python"
+      return 1
+    fi
   else
-    "$py_cmd" -m pip install -r "${ROOT_DIR}/backend/requirements.txt"
+    venv_dir="${ROOT_DIR}/backend/.venv-linux"
+    if [[ ! -d "$venv_dir" ]]; then
+      if ! "$py_cmd" -m venv "$venv_dir"; then
+        log "WARN" "failed to create Linux venv; install python3-venv, for example: sudo apt-get install -y python3-venv python3-pip"
+        return 1
+      fi
+    fi
+    if [[ -x "${venv_dir}/bin/python" ]]; then
+      if ! "${venv_dir}/bin/python" -m pip install -r "${ROOT_DIR}/backend/requirements.txt"; then
+        log "WARN" "backend dependency install failed in Linux venv"
+        return 1
+      fi
+    elif ! "$py_cmd" -m pip install -r "${ROOT_DIR}/backend/requirements.txt"; then
+      log "WARN" "backend dependency install failed with system python"
+      return 1
+    fi
   fi
   log "INFO" "backend dependencies installed"
 }
