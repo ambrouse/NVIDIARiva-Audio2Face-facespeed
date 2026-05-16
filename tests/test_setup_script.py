@@ -8,6 +8,7 @@ SETUP = ROOT / "scripts" / "setup.sh"
 def testSetupScriptHasRequiredModes() -> None:
     content = SETUP.read_text(encoding="utf-8")
     for mode in [
+        "--auto",
         "--check",
         "--check-nvidia",
         "--install",
@@ -32,4 +33,6 @@ def testSetupScriptLogsToSetupLog() -> None:
 def testSetupScriptDoesNotForceNvidiaInstall() -> None:
     content = SETUP.read_text(encoding="utf-8")
     assert "requires NVIDIA NGC assets" in content
+    assert "NGC_RIVA_QUICKSTART_RESOURCE" in content
+    assert "ngc config set" in content
     assert "rm -rf" not in content
