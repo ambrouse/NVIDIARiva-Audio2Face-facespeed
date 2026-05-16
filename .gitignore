@@ -1,0 +1,50 @@
+# Claude/local harness
+.claude/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/.venv/
+.venv/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime outputs
+logs/**/*.log
+outputs/
+*.wav
+*.mp3
+*.mp4
+*.usd
+*.usda
+*.usdc
+
+# NVIDIA assets/models downloaded locally
+riva_quickstart*/
+riva-model-repo/
+ngc-cli/
+Audio2Face*/
+omniverse-cache/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Frontend runtime logs
+frontend/logs/

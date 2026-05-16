@@ -1,0 +1,16 @@
+{
+  "services": {
+    "riva": {
+      "logPath": "logs/riva/service.log",
+      "healthDetail": "NVIDIA Riva TTS service"
+    },
+    "audio2face": {
+      "logPath": "logs/audio2face/service.log",
+      "healthDetail": "NVIDIA Audio2Face service"
+    },
+    "backend-worker": {
+      "logPath": "logs/backend/worker.log",
+      "healthDetail": "Backend background worker"
+    }
+  }
+}
