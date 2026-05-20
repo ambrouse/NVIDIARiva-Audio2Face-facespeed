@@ -57,3 +57,18 @@ def testCreateJobCompletesMockPipeline() -> None:
 def testRejectsEmptyJobText() -> None:
     response = client.post("/api/jobs", json={"text": ""})
     assert response.status_code == 422
+
+
+def testRejectsWhitespaceOnlyJobText() -> None:
+    response = client.post("/api/jobs", json={"text": "   \n\t   "})
+    assert response.status_code == 422
+
+
+def testRejectsUnsafeVoiceName() -> None:
+    response = client.post("/api/jobs", json={"text": "hello", "voice": "default;rm"})
+    assert response.status_code == 422
+
+
+def testRejectsTooLongJobText() -> None:
+    response = client.post("/api/jobs", json={"text": "x" * 1001})
+    assert response.status_code == 422

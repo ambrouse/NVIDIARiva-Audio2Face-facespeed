@@ -17,7 +17,15 @@ export function SystemPage() {
       <p className="eyebrow">Setup</p>
       <h2>Hardware and software checks</h2>
       {error && <div className="alert">{error}</div>}
+      <div className="resourceGrid">
+        <div><strong>Backend</strong><span>127.0.0.1:8020</span></div>
+        <div><strong>Frontend</strong><span>127.0.0.1:6210</span></div>
+        <div><strong>Riva</strong><span>127.0.0.1:50100</span></div>
+        <div><strong>Audio2Face</strong><span>127.0.0.1:8040</span></div>
+      </div>
+      <div className="notice">Heavy NVIDIA actions are blocked unless ports, RAM, memory commit, disk, GPU/VRAM and Docker all pass the 10% reserve gates.</div>
       <div className="checkList">
+        {checks.length === 0 && <div className="emptyState">No system checks loaded yet.</div>}
         {checks.map((check) => (
           <div className="checkRow" key={check.name}>
             <div>
@@ -28,7 +36,14 @@ export function SystemPage() {
           </div>
         ))}
       </div>
-      <p className="muted commandHint">Run <code>./scripts/setup.sh --check</code> on the target Linux host for the full NVIDIA setup report.</p>
+      <div className="commandList">
+        <p className="muted commandHint">Safe preflight commands for the target Linux host:</p>
+        <code>bash scripts/setup.sh --check-ports</code>
+        <code>bash scripts/setup.sh --check-resources</code>
+        <code>bash scripts/setup.sh --check-gpu-light</code>
+        <code>bash scripts/setup.sh --check-docker-space</code>
+        <code>bash scripts/setup.sh --dry-run-nvidia-full</code>
+      </div>
     </section>
   );
 }

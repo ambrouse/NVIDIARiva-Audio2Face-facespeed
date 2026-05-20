@@ -1,4 +1,5 @@
 from pathlib import Path
+import wave
 
 from src.config import Settings
 
@@ -37,5 +38,9 @@ class NvidiaRivaTtsClient(RivaTtsClient):
             encoding=riva.client.AudioEncoding.LINEAR_PCM,
         )
         outputPath.parent.mkdir(parents=True, exist_ok=True)
-        outputPath.write_bytes(response.audio)
+        with wave.open(str(outputPath), "wb") as wavFile:
+            wavFile.setnchannels(1)
+            wavFile.setsampwidth(2)
+            wavFile.setframerate(sampleRateHz)
+            wavFile.writeframes(response.audio)
         return outputPath

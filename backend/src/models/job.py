@@ -1,7 +1,7 @@
 from enum import StrEnum
 from uuid import uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class JobState(StrEnum):
@@ -23,11 +23,19 @@ class OutputMode(StrEnum):
 
 
 class CreateJobRequest(BaseModel):
-    text: str = Field(min_length=1, max_length=5000)
-    voice: str = Field(default="default", min_length=1, max_length=64)
-    language: str = Field(default="vi-VN", min_length=2, max_length=16)
-    a2fProfile: str = Field(default="default", min_length=1, max_length=64)
+    text: str = Field(min_length=1, max_length=1000)
+    voice: str = Field(default="default", min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_.-]+$")
+    language: str = Field(default="vi-VN", min_length=2, max_length=16, pattern=r"^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})?$")
+    a2fProfile: str = Field(default="default", min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_.-]+$")
     outputMode: OutputMode = OutputMode.preview
+
+    @field_validator("text")
+    @classmethod
+    def textMustContainNonWhitespace(cls, value: str) -> str:
+        normalized = " ".join(value.split())
+        if not normalized:
+            raise ValueError("text cannot be empty")
+        return normalized
 
 
 class Job(BaseModel):

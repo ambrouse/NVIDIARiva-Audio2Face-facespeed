@@ -17,6 +17,14 @@ jobs:
         run: python -m pip install -r backend/requirements.txt
       - name: Run backend and setup tests
         run: python -m pytest backend tests
+      - name: Check setup script syntax
+        run: bash -n scripts/setup.sh
+      - name: Check tracked runtime artifacts are absent
+        run: |
+          ! git ls-files | grep -E '(^|/)(\.env$|logs/|outputs/|\.cache/|.*\.wav$|.*\.mp3$|frontend/\.ms-playwright/|\.local-libs/|\.local-rpms/|riva-model-repo/)'
+      - name: Check NVIDIA keys are not tracked
+        run: |
+          ! git grep -nE 'nvapi-[A-Za-z0-9_-]+'
 
   frontend:
     runs-on: ubuntu-latest

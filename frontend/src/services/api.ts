@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8020';
 
 export type ServiceStatus = {
   name: string;
@@ -54,10 +54,18 @@ export function fetchServiceLogs(serviceName: string): Promise<string[]> {
   return request<string[]>(`/api/services/${serviceName}/logs`);
 }
 
-export function createJob(text: string): Promise<Job> {
+export type CreateJobInput = {
+  text: string;
+  voice: string;
+  language: string;
+  a2fProfile: string;
+  outputMode: string;
+};
+
+export function createJob(input: CreateJobInput): Promise<Job> {
   return request<Job>('/api/jobs', {
     method: 'POST',
-    body: JSON.stringify({ text, voice: 'default', language: 'vi-VN', a2fProfile: 'default', outputMode: 'preview' }),
+    body: JSON.stringify(input),
   });
 }
 

@@ -10,19 +10,20 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "typescript": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "three": "latest"
+    "three": "latest",
+    "typescript": "latest",
+    "vite": "latest"
   },
   "devDependencies": {
-    "vitest": "latest",
-    "@testing-library/react": "latest",
     "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/three": "latest",
-    "jsdom": "latest"
+    "jsdom": "latest",
+    "playwright": "^1.60.0",
+    "vitest": "latest"
   }
 }

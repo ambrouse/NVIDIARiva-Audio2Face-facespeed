@@ -16,6 +16,10 @@ export function ServicesPage() {
   }
 
   async function handleAction(serviceName: string, action: 'start' | 'stop' | 'restart') {
+    const confirmed = window.confirm(`${action} ${serviceName}? Only project-scoped/local mock actions should run from this dashboard.`);
+    if (!confirmed) {
+      return;
+    }
     await runServiceAction(serviceName, action);
     await loadServices();
   }

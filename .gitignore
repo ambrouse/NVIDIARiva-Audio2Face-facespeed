@@ -1,5 +1,4 @@
-# Claude/local harness
-.claude/
+
 
 # Environment
 .env
@@ -25,8 +24,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # Runtime outputs
-logs/**/*.log
+logs/
 outputs/
+.cache/
 *.wav
 *.mp3
 *.mp4
@@ -40,6 +40,9 @@ riva-model-repo/
 ngc-cli/
 Audio2Face*/
 omniverse-cache/
+.local-libs/
+.local-rpms/
+frontend/.ms-playwright/
 
 # OS/editor
 .DS_Store

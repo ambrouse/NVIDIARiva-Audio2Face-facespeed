@@ -23,7 +23,8 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   background: rgba(3, 7, 18, 0.62);
 }
 
-.brand { display: flex; gap: 14px; align-items: center; margin-bottom: 36px; }
+.brand, .titleRow { display: flex; gap: 14px; align-items: center; margin-bottom: 36px; }
+.titleRow { justify-content: space-between; margin-bottom: 10px; }
 .brandMark { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: #38bdf8; color: #04111f; font-weight: 800; }
 .brand p, .muted { color: #9fb0c7; margin: 6px 0 0; }
 
@@ -76,6 +77,7 @@ button.secondary { color: #e2e8f0; background: rgba(148, 163, 184, 0.18); }
 
 .resultGrid, .cards, .checkList { display: grid; gap: 16px; }
 .resultGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.resultError { grid-column: 1 / -1; }
 .resultGrid > div, .serviceCard, .checkRow {
   border: 1px solid rgba(148, 163, 184, 0.16);
   border-radius: 18px;
@@ -87,10 +89,25 @@ button.secondary { color: #e2e8f0; background: rgba(148, 163, 184, 0.18); }
 .cardHeader, .checkRow, .toolbar, .actions { display: flex; align-items: center; gap: 12px; }
 .cardHeader, .checkRow { justify-content: space-between; }
 .actions { flex-wrap: wrap; margin-top: 18px; }
-.badge { border-radius: 999px; padding: 6px 10px; font-size: 0.82rem; font-weight: 800; }
+.badge, .modeBadge, .stateStep { border-radius: 999px; padding: 6px 10px; font-size: 0.82rem; font-weight: 800; }
 .badgeOk { color: #052e1a; background: #34d399; }
 .badgeWarn { color: #3f1d04; background: #fbbf24; }
+.modeBadge { color: #082f49; background: #7dd3fc; }
 .alert { border-radius: 14px; padding: 12px 14px; color: #fecaca; background: rgba(127, 29, 29, 0.55); }
+.notice { border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 12px 14px; color: #bae6fd; background: rgba(14, 116, 144, 0.16); }
+.formGrid, .resourceGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.formFooter { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.limitText { color: #9fb0c7; }
+.warnText { color: #fbbf24; }
+.stateTimeline { display: flex; flex-wrap: wrap; gap: 8px; }
+.stateStep { color: #94a3b8; background: rgba(148, 163, 184, 0.14); }
+.stateStep.active { color: #042f2e; background: #5eead4; }
+.stateStep.failed { color: #450a0a; background: #fca5a5; }
+.resourceGrid { margin: 20px 0; }
+.resourceGrid > div, .emptyState { border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 18px; padding: 16px; background: rgba(2, 6, 23, 0.5); }
+.resourceGrid span { display: block; margin-top: 8px; color: #9fb0c7; }
+.commandList { display: grid; gap: 10px; margin-top: 20px; }
+.commandList code { display: block; padding: 10px 12px; border-radius: 12px; background: #020617; }
 .toolbar { flex-wrap: wrap; margin: 18px 0; }
 .toolbar select, .toolbar input { max-width: 260px; }
 .logViewer { min-height: 420px; overflow: auto; border-radius: 18px; padding: 18px; background: #020617; color: #bfdbfe; }

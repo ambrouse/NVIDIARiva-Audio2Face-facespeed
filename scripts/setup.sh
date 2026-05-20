@@ -5,14 +5,32 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_DIR="${ROOT_DIR}/logs/setup"
 LOG_FILE="${LOG_DIR}/setup.log"
 MODE="${1:---auto}"
-RIVA_QUICKSTART_DIR="${RIVA_QUICKSTART_DIR:-${ROOT_DIR}/riva_quickstart}"
+RIVA_QUICKSTART_DIR="${RIVA_QUICKSTART_DIR:-${ROOT_DIR}/.cache/nvidia/riva}"
+BACKEND_HOST="${BACKEND_HOST:-127.0.0.1}"
+BACKEND_PORT="${BACKEND_PORT:-8020}"
+FRONTEND_HOST="${FRONTEND_HOST:-127.0.0.1}"
+FRONTEND_PORT="${FRONTEND_PORT:-6210}"
 RIVA_HOST="${RIVA_HOST:-127.0.0.1}"
-RIVA_PORT="${RIVA_PORT:-50051}"
+RIVA_PORT="${RIVA_PORT:-50100}"
 A2F_HOST="${A2F_HOST:-127.0.0.1}"
-A2F_PORT="${A2F_PORT:-8011}"
+A2F_PORT="${A2F_PORT:-8040}"
 A2F_HEALTH_PATH="${A2F_HEALTH_PATH:-/health}"
 CUDA_TEST_IMAGE="${CUDA_TEST_IMAGE:-nvidia/cuda:12.4.1-base-ubuntu22.04}"
 NGC_RIVA_QUICKSTART_RESOURCE="${NGC_RIVA_QUICKSTART_RESOURCE:-}"
+RESOURCE_RESERVE_PERCENT="${RESOURCE_RESERVE_PERCENT:-10}"
+GPU_MIN_FREE_VRAM_PERCENT="${GPU_MIN_FREE_VRAM_PERCENT:-${RESOURCE_RESERVE_PERCENT}}"
+RAM_MIN_FREE_PERCENT="${RAM_MIN_FREE_PERCENT:-${RESOURCE_RESERVE_PERCENT}}"
+DISK_MIN_FREE_PERCENT="${DISK_MIN_FREE_PERCENT:-${RESOURCE_RESERVE_PERCENT}}"
+PROJECT_DOCKER_LABEL="com.facespeed.project=NVIDIARiva-Audio2Face-facespeed"
+RIVA_CONTAINER_NAME="${RIVA_CONTAINER_NAME:-facespeed-riva}"
+A2F_CONTAINER_NAME="${A2F_CONTAINER_NAME:-facespeed-audio2face}"
+RIVA_CONTAINER_IMAGE="${RIVA_CONTAINER_IMAGE:-}"
+A2F_CONTAINER_IMAGE="${A2F_CONTAINER_IMAGE:-}"
+RIVA_ASSET_DIR="${RIVA_ASSET_DIR:-${ROOT_DIR}/.cache/nvidia/riva}"
+A2F_ASSET_DIR="${A2F_ASSET_DIR:-${ROOT_DIR}/.cache/nvidia/audio2face}"
+CONTAINER_MEMORY_LIMIT="${CONTAINER_MEMORY_LIMIT:-16g}"
+CONTAINER_CPU_LIMIT="${CONTAINER_CPU_LIMIT:-8}"
+GPU_DEVICE_FLAG="${GPU_DEVICE_FLAG:---gpus device=0}"
 
 mkdir -p "$LOG_DIR"
 
@@ -41,15 +59,24 @@ detect_platform() {
 }
 
 python_cmd() {
-  if has_command python3; then
-    echo python3
-  elif has_command python; then
-    echo python
-  elif has_command py; then
-    echo py
-  else
-    echo ""
+  local candidates=(python3.12 python3.11 python3.10 python3 python)
+  if has_command py; then
+    candidates+=(py)
   fi
+  for candidate in "${candidates[@]}"; do
+    if ! has_command "$candidate"; then
+      continue
+    fi
+    if "$candidate" - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.version_info >= (3, 10) else 1)
+PY
+    then
+      echo "$candidate"
+      return 0
+    fi
+  done
+  echo ""
 }
 
 check_command() {
@@ -70,8 +97,17 @@ check_python() {
     log "INFO" "python available: $($py_cmd --version 2>&1 | head -n 1)"
     return 0
   fi
-  log "WARN" "python not found; install Python 3.11+ or enable it in PATH"
+  log "WARN" "python 3.10+ not found; install Python 3.11+ or enable it in PATH"
   return 1
+}
+
+venv_python_is_supported() {
+  local venv_python="$1"
+  [[ -x "$venv_python" ]] || return 1
+  "$venv_python" - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.version_info >= (3, 10) else 1)
+PY
 }
 
 check_nvidia_gpu() {
@@ -109,17 +145,159 @@ check_docker_gpu() {
   return 1
 }
 
-check_ports() {
-  local ports=(8000 8001 5173 6000 6200 50051 8011)
-  for port in "${ports[@]}"; do
-    if has_command ss && ss -ltn | grep -q ":${port} "; then
-      log "WARN" "port ${port} is already in use"
-    elif has_command netstat && netstat -an 2>/dev/null | grep -q ":${port} .*LISTEN"; then
-      log "WARN" "port ${port} is already in use"
-    else
-      log "INFO" "port ${port} appears available or cannot be checked"
+check_single_port() {
+  local name="$1"
+  local host="$2"
+  local port="$3"
+  if has_command ss; then
+    local listeners
+    listeners="$(ss -ltnp 2>/dev/null | grep -E "(^|[[:space:]])([^[:space:]]+:)?${port}[[:space:]]" || true)"
+    if [[ -n "$listeners" ]]; then
+      log "WARN" "${name} port ${host}:${port} is already in use; choose another port before starting services"
+      printf '%s\n' "$listeners" | tee -a "$LOG_FILE"
+      return 1
     fi
-  done
+  elif has_command netstat; then
+    if netstat -an 2>/dev/null | grep -q ":${port} .*LISTEN"; then
+      log "WARN" "${name} port ${host}:${port} is already in use; choose another port before starting services"
+      return 1
+    fi
+  else
+    log "WARN" "cannot check ${name} port ${host}:${port}; ss/netstat not found"
+    return 1
+  fi
+  log "INFO" "${name} port ${host}:${port} appears available"
+}
+
+check_ports() {
+  local failed=0
+  check_single_port "backend" "$BACKEND_HOST" "$BACKEND_PORT" || failed=1
+  check_single_port "frontend" "$FRONTEND_HOST" "$FRONTEND_PORT" || failed=1
+  check_single_port "riva" "$RIVA_HOST" "$RIVA_PORT" || failed=1
+  check_single_port "audio2face" "$A2F_HOST" "$A2F_PORT" || failed=1
+  return "$failed"
+}
+
+read_meminfo_value() {
+  local key="$1"
+  awk -v key="$key" '$1 == key ":" { print $2 }' /proc/meminfo 2>/dev/null
+}
+
+check_resources() {
+  local failed=0
+  local mem_total mem_available commit_limit committed_as commit_free disk_total disk_available
+  mem_total="$(read_meminfo_value MemTotal)"
+  mem_available="$(read_meminfo_value MemAvailable)"
+  commit_limit="$(read_meminfo_value CommitLimit)"
+  committed_as="$(read_meminfo_value Committed_AS)"
+  commit_free=$((commit_limit - committed_as))
+  disk_total="$(df -P "$ROOT_DIR" | awk 'NR == 2 { print $2 }')"
+  disk_available="$(df -P "$ROOT_DIR" | awk 'NR == 2 { print $4 }')"
+
+  log "INFO" "RAM available: ${mem_available} KiB of ${mem_total} KiB"
+  log "INFO" "memory commit headroom: ${commit_free} KiB of ${commit_limit} KiB"
+  log "INFO" "disk available for project: ${disk_available} KiB of ${disk_total} KiB"
+
+  if (( mem_available * 100 < mem_total * RAM_MIN_FREE_PERCENT )); then
+    log "WARN" "RAM available is below ${RAM_MIN_FREE_PERCENT}% reserve threshold"
+    failed=1
+  fi
+  if (( commit_free * 100 < commit_limit * RESOURCE_RESERVE_PERCENT )); then
+    log "WARN" "memory commit headroom is below ${RESOURCE_RESERVE_PERCENT}% reserve threshold"
+    failed=1
+  fi
+  if (( disk_available * 100 < disk_total * DISK_MIN_FREE_PERCENT )); then
+    log "WARN" "disk available is below ${DISK_MIN_FREE_PERCENT}% reserve threshold"
+    failed=1
+  fi
+  return "$failed"
+}
+
+check_gpu_light() {
+  if ! has_command nvidia-smi; then
+    log "WARN" "nvidia-smi not found; GPU status unavailable"
+    return 1
+  fi
+  log "INFO" "GPU summary"
+  nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu --format=csv 2>&1 | tee -a "$LOG_FILE"
+  nvidia-smi pmon -c 1 2>&1 | tee -a "$LOG_FILE" || true
+
+  local total free
+  total="$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1 | tr -d ' ')"
+  free="$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -n 1 | tr -d ' ')"
+  if [[ -n "$total" && -n "$free" ]] && (( free * 100 < total * GPU_MIN_FREE_VRAM_PERCENT )); then
+    log "WARN" "GPU free VRAM is below ${GPU_MIN_FREE_VRAM_PERCENT}% reserve threshold"
+    return 1
+  fi
+}
+
+check_docker_space() {
+  if ! check_docker; then
+    return 1
+  fi
+  log "INFO" "Docker disk usage"
+  docker system df 2>&1 | tee -a "$LOG_FILE"
+  log "INFO" "Active containers"
+  docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}' 2>&1 | tee -a "$LOG_FILE"
+  log "INFO" "Project-labeled containers"
+  docker ps -a --filter "label=${PROJECT_DOCKER_LABEL}" --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}' 2>&1 | tee -a "$LOG_FILE"
+}
+
+print_container_dry_run() {
+  local name="$1"
+  local image="$2"
+  local asset_dir="$3"
+  local port="$4"
+  local service_label="$5"
+  if [[ -z "$image" ]]; then
+    log "WARN" "${name} image is not set; export ${service_label}_CONTAINER_IMAGE before pull/start"
+    return 1
+  fi
+  mkdir -p "$asset_dir"
+  log "INFO" "dry-run pull command for ${name}:"
+  printf 'docker pull %q\n' "$image" | tee -a "$LOG_FILE"
+  log "INFO" "dry-run run command for ${name}:"
+  printf 'docker run --name %q --label %q --label %q --add-host=host.docker.internal:host-gateway --publish %q:%q --mount type=bind,source=%q,target=/workspace/cache --memory %q --cpus %q --restart no %s %q\n' \
+    "$name" \
+    "$PROJECT_DOCKER_LABEL" \
+    "com.facespeed.service=${service_label}" \
+    "127.0.0.1:${port}" \
+    "$port" \
+    "$asset_dir" \
+    "$CONTAINER_MEMORY_LIMIT" \
+    "$CONTAINER_CPU_LIMIT" \
+    "$GPU_DEVICE_FLAG" \
+    "$image" | tee -a "$LOG_FILE"
+}
+
+print_container_rollback() {
+  log "INFO" "project-scoped rollback commands:"
+  printf 'docker stop %q %q\n' "$RIVA_CONTAINER_NAME" "$A2F_CONTAINER_NAME" | tee -a "$LOG_FILE"
+  printf 'docker rm %q %q\n' "$RIVA_CONTAINER_NAME" "$A2F_CONTAINER_NAME" | tee -a "$LOG_FILE"
+  log "INFO" "cache/volumes are kept by default; remove only after explicit confirmation"
+}
+
+run_container_dry_run() {
+  log "INFO" "starting NVIDIA container command dry-run"
+  check_ports
+  check_resources
+  check_gpu_light
+  check_docker_space
+  check_ngc || true
+  print_container_dry_run "$RIVA_CONTAINER_NAME" "$RIVA_CONTAINER_IMAGE" "$RIVA_ASSET_DIR" "$RIVA_PORT" "riva" || true
+  print_container_dry_run "$A2F_CONTAINER_NAME" "$A2F_CONTAINER_IMAGE" "$A2F_ASSET_DIR" "$A2F_PORT" "audio2face" || true
+  print_container_rollback
+  log "INFO" "dry-run only; no pull/start/stop/remove/cleanup was executed"
+}
+
+run_dry_run_nvidia_full() {
+  log "INFO" "starting NVIDIA full dry-run preflight"
+  check_ports
+  check_resources
+  check_gpu_light
+  check_docker_space
+  check_ngc || true
+  log "INFO" "dry-run only; no container/image download/start/cleanup was executed"
 }
 
 check_ngc() {
@@ -235,7 +413,7 @@ PY
 }
 
 check_audio2face() {
-  if pgrep -fa audio2face >/dev/null 2>&1 || pgrep -fa Audio2Face >/dev/null 2>&1; then
+  if pgrep -x audio2face >/dev/null 2>&1 || pgrep -x Audio2Face >/dev/null 2>&1; then
     log "INFO" "Audio2Face process appears to be running"
     return 0
   fi
@@ -274,6 +452,10 @@ install_backend_deps() {
     fi
   else
     venv_dir="${ROOT_DIR}/backend/.venv-linux"
+    if [[ -d "$venv_dir" ]] && ! venv_python_is_supported "${venv_dir}/bin/python"; then
+      log "WARN" "existing Linux venv uses unsupported Python; recreating project-local venv at ${venv_dir}"
+      rm -r "$venv_dir"
+    fi
     if [[ ! -d "$venv_dir" ]]; then
       if ! "$py_cmd" -m venv "$venv_dir"; then
         log "WARN" "failed to create Linux venv; install python3-venv, for example: sudo apt-get install -y python3-venv python3-pip"
@@ -314,7 +496,10 @@ run_check() {
   check_ngc || true
   check_nvidia_gpu || true
   check_docker_gpu || true
-  check_ports
+  check_ports || true
+  check_resources || true
+  check_gpu_light || true
+  check_docker_space || true
   check_riva_container || true
   check_riva_tts || true
   check_audio2face || true
@@ -359,6 +544,24 @@ case "$MODE" in
   --check|--check-nvidia)
     run_check
     ;;
+  --check-ports)
+    check_ports
+    ;;
+  --check-resources)
+    check_resources
+    ;;
+  --check-gpu-light)
+    check_gpu_light
+    ;;
+  --check-docker-space)
+    check_docker_space
+    ;;
+  --dry-run-nvidia-full)
+    run_dry_run_nvidia_full
+    ;;
+  --dry-run-containers)
+    run_container_dry_run
+    ;;
   --install)
     run_install
     ;;
@@ -395,7 +598,7 @@ case "$MODE" in
     check_audio2face || true
     ;;
   *)
-    log "ERROR" "unknown mode: ${MODE}. Use --auto, --check, --check-nvidia, --install, --install-ngc, --install-riva, --start-riva, --check-riva, --check-a2f, --start-services, --full, or --nvidia-full"
+    log "ERROR" "unknown mode: ${MODE}. Use --auto, --check, --check-nvidia, --check-ports, --check-resources, --check-gpu-light, --check-docker-space, --dry-run-nvidia-full, --dry-run-containers, --install, --install-ngc, --install-riva, --start-riva, --check-riva, --check-a2f, --start-services, --full, or --nvidia-full"
     exit 2
     ;;
 esac
