@@ -48,6 +48,13 @@ export GPU_DEVICE_FLAG='--gpus device=0'
 bash scripts/setup.sh --dry-run-containers
 ```
 
+Current documentation findings:
+
+- The fetched Riva quick-start page currently targets Jetson Thor / JetPack 7.0 and points x86 data-center users toward Riva NIM documentation. Do not assume an old x86 quickstart image/tag without verifying the exact supported path.
+- The current Audio2Face/ACE page describes Audio2Face-3D SDK/models/plugins, but does not document a container, headless server mode, or REST API. Do not assume `A2F_PROCESS_PATH=/api/process-audio` is real until an official API or wrapper is verified.
+
+Real NVIDIA setup remains blocked until image tags, license/EULA, and API contracts are verified.
+
 Rollback is scoped to project container names (`facespeed-riva`, `facespeed-audio2face`) and keeps cache/assets by default.
 
 Default localhost ports:

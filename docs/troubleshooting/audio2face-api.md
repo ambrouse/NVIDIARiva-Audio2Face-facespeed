@@ -4,7 +4,7 @@ Time: 2026-05-20
 
 ## Current status
 
-The backend has a configurable HTTP Audio2Face adapter, but the real Audio2Face container image/tag/API contract has not been verified yet.
+The backend has a configurable HTTP Audio2Face adapter, but the real Audio2Face container image/tag/API contract has not been verified yet. The current Audio2Face/ACE page describes Audio2Face-3D SDK/models/plugins and does not document a container, headless server mode, or REST API.
 
 Do not claim real Audio2Face pass until all of these are known:
 
