@@ -57,14 +57,15 @@ Không dùng trạng thái mơ hồ như “gần xong”.
 
 | Phase | File | Mục tiêu | Status |
 |---|---|---|---|
-| 0 | `plans/plan-01-baseline-audit.md` | Audit repo, baseline resource, test nhẹ | PENDING |
-| 1 | `plans/plan-02-resource-guardrails.md` | Port/RAM/commit/disk/GPU/Docker guardrails | PENDING |
-| 2 | `plans/plan-03-backend-hardening.md` | Backend config/job/adapters/service safety | PENDING |
-| 3 | `plans/plan-04-frontend-dashboard.md` | Dashboard, resource UI, pipeline UX | PENDING |
-| 4 | `plans/plan-05-nvidia-container-setup.md` | Riva/A2F container setup workflow | PENDING |
-| 5 | `plans/plan-06-smoke-output-evaluation.md` | Smoke tests, output/algorithm evaluation | PENDING |
-| 6 | `plans/plan-07-docs-readme-cicd.md` | README/docs/CI/CD/version/release gates | PENDING |
-| 7 | `plans/plan-08-final-review-push.md` | Final review, security, push if approved | PENDING |
+| 0 | `plans/plan-01-baseline-audit.md` | Audit repo, baseline resource, test nhẹ | PASS |
+| 1 | `plans/plan-02-resource-guardrails.md` | Port/RAM/commit/disk/GPU/Docker guardrails | PASS |
+| 2 | `plans/plan-03-backend-hardening.md` | Backend config/job/adapters/service safety | PASS |
+| 3 | `plans/plan-04-frontend-dashboard.md` | Dashboard, resource UI, pipeline UX | PASS |
+| 4 | `plans/plan-05-nvidia-container-setup.md` | Riva/A2F container setup workflow | PASS dry-run / BLOCKED real start |
+| 5 | `plans/plan-06-smoke-output-evaluation.md` | Smoke tests, output/algorithm evaluation | PASS mock / BLOCKED real NVIDIA |
+| 6 | `plans/plan-07-docs-readme-cicd.md` | README/docs/CI/CD/version/release gates | PASS |
+| 7 | `plans/plan-08-final-review-push.md` | Final review, security, push if approved | PASS + pushed |
+| 8 | `plans/plan-09-real-nvidia-riva-audio2face-container-verification.md` | Verify real Riva/A2F image/API and gated smoke | PENDING |
 
 ## Log handoff protocol
 
