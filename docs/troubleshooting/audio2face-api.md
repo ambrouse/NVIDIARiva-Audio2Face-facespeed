@@ -25,7 +25,7 @@ For a product-quality result, pair it with one of these:
 | Unreal MetaHuman + NVIDIA ACE plugin | Best high-quality 3D runtime path |
 | ARKit-compatible FBX/GLB avatar | Good browser/native path if blendshape names map cleanly |
 | Existing local FBX with added/verified blendshapes | Practical if the asset can be rigged correctly |
-| Procedural browser face | Useful smoke/demo fallback only |
+| Browser ARKit viseme timeline | Current release path for Riva voice playback |
 
 ## Blackwell notes
 
@@ -93,7 +93,7 @@ bash scripts/setup.sh --start-a2f-nim
 
 Do not paste or commit `NGC_API_KEY`.
 
-## Current fallback contract
+## Current browser animation contract
 
 Completed local jobs expose:
 
@@ -102,7 +102,7 @@ Completed local jobs expose:
 /api/artifacts/animation/<job-id>.json
 ```
 
-The animation JSON uses `engine: browser-viseme-v2` with `jawOpen`, `mouthWide`, `mouthSmile`, and ARKit-style `blendShapes` frames. `FaceViewer` uses those values to animate the current browser 3D preview while the WAV plays.
+The animation JSON uses `engine: browser-viseme-v2` with `jawOpen`, `mouthWide`, `mouthSmile`, and ARKit-style `blendShapes` frames. `FaceViewer` uses those values to animate the current browser 3D preview while the WAV plays. This is the release path for the current browser product, not an error fallback.
 
 ## Backend configuration
 
@@ -120,7 +120,7 @@ A2F_TIMEOUT_SECONDS=120
 ## Failure handling
 
 - If the NIM cannot match RTX PRO 5000 Blackwell automatically, record the exact profile output and try local TensorRT generation.
-- If local engine generation fails, keep the fallback browser pipeline and document the failure log without secrets.
+- If local engine generation fails, keep `PIPELINE_MODE=riva` and document the Audio2Face-3D blocker without secrets.
 - If a real A2F-3D service starts, capture the gRPC endpoint, model name, blendshape names, FPS behavior, GPU memory, and one small WAV smoke result.
 - Do not retry in loops on GPU/service failure.
 - Do not log NVIDIA keys, authorization headers, large audio payloads, or private assets.

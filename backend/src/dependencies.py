@@ -2,8 +2,11 @@ from functools import lru_cache
 
 from src.config import getSettings
 from src.services.audio2face_client import MockAudio2FaceClient, NvidiaAudio2FaceClient
+from src.services.docling_client import DoclingClient
+from src.services.embedding_client import EmbeddingRerankClient
 from src.services.job_service import JobService
-from src.services.riva_client import MockRivaTtsClient, NvidiaRivaTtsClient
+from src.services.rag_service import RagService
+from src.services.riva_client import NvidiaRivaAsrClient, MockRivaTtsClient, NvidiaRivaTtsClient, RivaAsrClient
 from src.services.service_manager import ServiceManager
 from src.services.system_check import SystemCheckService
 
@@ -31,3 +34,14 @@ def getJobService() -> JobService:
 @lru_cache
 def getSystemCheckService() -> SystemCheckService:
     return SystemCheckService()
+
+
+@lru_cache
+def getRagService() -> RagService:
+    settings = getSettings()
+    return RagService(settings, getJobService(), DoclingClient(settings), EmbeddingRerankClient(settings))
+
+
+@lru_cache
+def getRivaAsrClient() -> RivaAsrClient:
+    return NvidiaRivaAsrClient(getSettings())

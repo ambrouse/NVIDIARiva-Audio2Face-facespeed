@@ -17,7 +17,6 @@ export function SystemPage() {
       <div className="supportHeader">
         <p className="eyebrow">Setup</p>
         <h1>Machine readiness</h1>
-        <p className="muted">Local ports, NVIDIA runtime, and required command availability.</p>
       </div>
       {error && <div className="alert">{error}</div>}
       <div className="resourceGrid">

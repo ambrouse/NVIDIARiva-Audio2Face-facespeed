@@ -14,8 +14,12 @@ from src.services.audio2face_client import MockAudio2FaceClient
 from src.services.riva_client import MockRivaTtsClient, NvidiaRivaTtsClient
 
 
+def makeSettings(**kwargs) -> Settings:
+    return Settings(_env_file=None, **kwargs)
+
+
 def testJobServiceUsesInjectedPipelineClients(tmp_path: Path) -> None:
-    settings = Settings(outputDir=tmp_path / "outputs", logDir=tmp_path / "logs")
+    settings = makeSettings(outputDir=tmp_path / "outputs", logDir=tmp_path / "logs")
     service = JobService(settings, MockRivaTtsClient(), MockAudio2FaceClient())
 
     job = service.createJob(CreateJobRequest(text="hello", voice="default", language="en-US", a2fProfile="default", outputMode="preview"))
@@ -37,7 +41,7 @@ def testJobServiceMarksRivaFailureAsFailed(tmp_path: Path) -> None:
         def synthesize(self, text: str, voice: str, language: str, outputPath: Path) -> Path:
             raise RuntimeError("riva unavailable")
 
-    settings = Settings(outputDir=tmp_path / "outputs", logDir=tmp_path / "logs")
+    settings = makeSettings(outputDir=tmp_path / "outputs", logDir=tmp_path / "logs")
     service = JobService(settings, FailingRivaClient(), MockAudio2FaceClient())
 
     job = service.createJob(CreateJobRequest(text="hello"))
@@ -52,7 +56,7 @@ def testJobServiceMarksAudio2FaceFailureAsFailed(tmp_path: Path) -> None:
         def processAudio(self, audioPath: Path, profile: str, outputMode: str, resultPath: Path, text: str = "") -> Path:
             raise RuntimeError("audio2face timeout")
 
-    settings = Settings(outputDir=tmp_path / "outputs", logDir=tmp_path / "logs")
+    settings = makeSettings(outputDir=tmp_path / "outputs", logDir=tmp_path / "logs")
     service = JobService(settings, MockRivaTtsClient(), FailingAudio2FaceClient())
 
     job = service.createJob(CreateJobRequest(text="hello"))
@@ -119,7 +123,7 @@ def testAudio2FaceClientPostsConfiguredPayload(tmp_path: Path, monkeypatch) -> N
             return FakeResponse()
 
     monkeypatch.setattr(httpx, "Client", FakeClient)
-    settings = Settings(a2fTransport="http", a2fHost="a2f.local", a2fPort=8011, a2fProcessPath="/api/process", a2fTimeoutSeconds=12)
+    settings = makeSettings(a2fTransport="http", a2fHost="a2f.local", a2fPort=8011, a2fProcessPath="/api/process", a2fTimeoutSeconds=12)
     audioPath = tmp_path / "audio.wav"
     audioPath.write_bytes(b"audio")
     resultPath = tmp_path / "result.json"
@@ -133,7 +137,7 @@ def testAudio2FaceClientPostsConfiguredPayload(tmp_path: Path, monkeypatch) -> N
 
 
 def testAudio2FaceGrpcTimelineMapsBlendShapes() -> None:
-    settings = Settings(a2fTransport="grpc")
+    settings = makeSettings(a2fTransport="grpc")
     client = NvidiaAudio2FaceClient(settings)
 
     timeline = client._buildTimeline(
@@ -164,7 +168,7 @@ def testAudio2FaceGrpcTimelineMapsBlendShapes() -> None:
 
 
 def testAudio2FaceGrpcRejectsNonMonoWav(tmp_path: Path) -> None:
-    settings = Settings(a2fTransport="grpc")
+    settings = makeSettings(a2fTransport="grpc")
     audioPath = tmp_path / "stereo.wav"
     with wave.open(str(audioPath), "wb") as wavFile:
         wavFile.setnchannels(2)
@@ -208,7 +212,7 @@ def testRivaClientWritesLinearPcmAsWav(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setitem(sys.modules, "riva.client", fakeClient)
 
     outputPath = tmp_path / "audio.wav"
-    settings = Settings(rivaSampleRateHz=22050)
+    settings = makeSettings(rivaSampleRateHz=22050)
 
     NvidiaRivaTtsClient(settings).synthesize("hello", "default", "en-US", outputPath)
 
@@ -246,7 +250,7 @@ def testRivaClientRejectsEmptyAudioPayload(tmp_path: Path, monkeypatch) -> None:
     outputPath = tmp_path / "audio.wav"
 
     try:
-        NvidiaRivaTtsClient(Settings()).synthesize("hello", "English-US.Female-1", "en-US", outputPath)
+        NvidiaRivaTtsClient(makeSettings()).synthesize("hello", "English-US.Female-1", "en-US", outputPath)
     except RuntimeError as error:
         assert "empty audio" in str(error)
     else:

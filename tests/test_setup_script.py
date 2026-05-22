@@ -20,6 +20,11 @@ def testSetupScriptHasRequiredModes() -> None:
         "--install",
         "--install-ngc",
         "--install-riva",
+        "--bootstrap",
+        "--verify",
+        "--check-support",
+        "--capture-demo",
+        "--logs-clean",
         "--start-riva",
         "--check-riva",
         "--check-a2f",
@@ -34,6 +39,20 @@ def testSetupScriptLogsToSetupLog() -> None:
     content = SETUP.read_text(encoding="utf-8")
     assert "logs/setup" in content
     assert "setup.log" in content
+
+
+def testSetupScriptCreatesEnvFromExample() -> None:
+    content = SETUP.read_text(encoding="utf-8")
+    assert "ensure_env_file" in content
+    assert "created .env from .env.example" in content
+    assert "provider-backed main path" in content
+
+
+def testSetupScriptKeepsStartedAppsAliveAfterBootstrap() -> None:
+    content = SETUP.read_text(encoding="utf-8")
+    assert "setsid nohup env" in content
+    assert 'echo "$!" > "$BACKEND_PID_FILE"' in content
+    assert 'echo "$!" > "$FRONTEND_PID_FILE"' in content
 
 
 def testSetupScriptDoesNotForceNvidiaInstall() -> None:
@@ -55,6 +74,7 @@ def testSetupScriptDoesNotUseBroadProcessKillCommands() -> None:
     content = SETUP.read_text(encoding="utf-8")
     for unsafe in ["pkill", "killall", "fuser -k", "docker system prune"]:
         assert unsafe not in content
+    assert "npm run dev" in content
 
 
 def testSetupScriptHasResourceThresholds() -> None:

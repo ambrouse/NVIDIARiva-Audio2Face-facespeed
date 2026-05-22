@@ -24,10 +24,19 @@ yarn-debug.log*
 yarn-error.log*
 
 # Runtime outputs
-logs/
+logs/**/*.log
+logs/**/*.pid
+logs/jobs/
+logs/runtime/
+logs/setup/*.log
 outputs/
+storage/
 .cache/
 test/**/gif-frames/
+test/**/.frames/
+test/**/rag-storage*/
+test/**/runtime-output*/
+test/**/logs*/
 *.wav
 *.mp3
 *.mp4
@@ -44,6 +53,14 @@ omniverse-cache/
 .local-libs/
 .local-rpms/
 frontend/.ms-playwright/
+
+# Keep release evidence audio and curated project logs.
+!test/**/*.wav
+!test/**/*.webm
+!logs/
+!logs/README.md
+!logs/plans/
+!logs/plans/*.md
 
 # OS/editor
 .DS_Store

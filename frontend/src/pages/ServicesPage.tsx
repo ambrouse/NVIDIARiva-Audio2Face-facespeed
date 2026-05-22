@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { fetchServices, ServiceStatus } from '../services/api';
+import { fetchRagStatus, RagRuntimeStatus } from '../services/api';
 import { StatusBadge } from '../components/StatusBadge';
 
 export function ServicesPage() {
-  const [services, setServices] = useState<ServiceStatus[]>([]);
+  const [status, setStatus] = useState<RagRuntimeStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function loadServices() {
+  async function loadRuntime() {
     try {
-      setServices(await fetchServices());
+      setStatus(await fetchRagStatus());
       setError(null);
     } catch (currentError) {
       setError(currentError instanceof Error ? currentError.message : 'Unknown error');
@@ -16,20 +16,62 @@ export function ServicesPage() {
   }
 
   useEffect(() => {
-    void loadServices();
+    void loadRuntime();
   }, []);
+
+  const runtimeCards = status ? [
+    {
+      name: 'Riva ASR',
+      state: status.asrAvailable ? 'ready' : 'blocked',
+      healthy: status.asrAvailable,
+      detail: status.asrDetail,
+      meta: [
+        ['Provider', 'riva-asr'],
+        ['Languages', status.languages.join(', ')],
+      ],
+    },
+    {
+      name: 'Docling parse',
+      state: 'ready',
+      healthy: true,
+      detail: status.doclingBaseUrl,
+      meta: [
+        ['Provider', status.parseProvider],
+        ['Mode', 'main path'],
+      ],
+    },
+    {
+      name: 'Embedding rerank',
+      state: 'ready',
+      healthy: true,
+      detail: status.embeddingBaseUrl,
+      meta: [
+        ['Provider', status.retrievalProvider],
+        ['Mode', 'main path'],
+      ],
+    },
+    {
+      name: 'Knowledge index',
+      state: status.documentCount > 0 ? 'ready' : 'empty',
+      healthy: status.documentCount > 0,
+      detail: `${status.documentCount} documents / ${status.chunkCount} chunks`,
+      meta: [
+        ['Source', 'uploaded PDFs'],
+        ['Fallback', 'disabled'],
+      ],
+    },
+  ] : [];
 
   return (
     <section className="supportPage">
       <div className="supportHeader">
         <p className="eyebrow">Operations</p>
         <h1>Runtime services</h1>
-        <p className="muted">Project-scoped service state and container ownership.</p>
-        <button className="secondary compactButton" onClick={() => void loadServices()}>Refresh</button>
+        <button className="secondary compactButton" onClick={() => void loadRuntime()}>Refresh</button>
       </div>
       {error && <div className="alert">{error}</div>}
       <div className="cards">
-        {services.map((service) => (
+        {runtimeCards.map((service) => (
           <article className="serviceCard" key={service.name}>
             <div className="cardHeader">
               <h3>{service.name}</h3>
@@ -37,24 +79,12 @@ export function ServicesPage() {
             </div>
             <p className="muted">{service.detail}</p>
             <dl className="serviceMeta">
-              <div>
-                <dt>Mode</dt>
-                <dd>{service.managerMode}</dd>
-              </div>
-              <div>
-                <dt>Container</dt>
-                <dd>{service.containerName ?? 'not configured'}</dd>
-              </div>
-              <div>
-                <dt>Docker state</dt>
-                <dd>{service.containerStatus ?? 'not found'}</dd>
-              </div>
-              {service.containerImage && (
-                <div>
-                  <dt>Image</dt>
-                  <dd>{service.containerImage}</dd>
+              {service.meta.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
                 </div>
-              )}
+              ))}
             </dl>
           </article>
         ))}

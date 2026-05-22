@@ -1,8 +1,10 @@
 import math
+from io import BytesIO
 from pathlib import Path
 import wave
 
 from src.config import Settings
+from src.models.rag import LanguageCode, Transcript
 
 
 class RivaTtsClient:
@@ -55,6 +57,70 @@ class NvidiaRivaTtsClient(RivaTtsClient):
             raise RuntimeError("Riva returned an empty audio payload.")
         _writeMonoPcmWav(outputPath, sampleRateHz, response.audio)
         return outputPath
+
+
+class RivaAsrClient:
+    def transcribe(self, audio: bytes, contentType: str | None, language: LanguageCode) -> Transcript:
+        raise NotImplementedError
+
+
+class NvidiaRivaAsrClient(RivaAsrClient):
+    def __init__(self, settings: Settings) -> None:
+        self.settings = settings
+
+    def transcribe(self, audio: bytes, contentType: str | None, language: LanguageCode) -> Transcript:
+        if not self.settings.rivaAsrEnabled:
+            raise RuntimeError("Riva ASR is disabled by config. Set RIVA_ASR_ENABLED=true after ASR models are provisioned.")
+        if not audio:
+            raise ValueError("audio cannot be empty")
+
+        try:
+            import grpc
+            import riva.client
+        except ImportError as exc:
+            raise RuntimeError("Riva client packages are missing. Install nvidia-riva-client and grpcio on the target host.") from exc
+
+        encoding, sampleRateHz, payload = self._normalizeAudio(audio, contentType, riva.client)
+        config = riva.client.RecognitionConfig(
+            encoding=encoding,
+            sample_rate_hertz=sampleRateHz,
+            language_code=language.value,
+            max_alternatives=1,
+            enable_automatic_punctuation=True,
+        )
+        auth = riva.client.Auth(uri=f"{self.settings.rivaAsrHost}:{self.settings.rivaAsrPort}")
+        service = riva.client.ASRService(auth)
+        try:
+            response = service.offline_recognize(payload, config)
+        except grpc.RpcError as exc:
+            code = exc.code().name if exc.code() else "UNKNOWN"
+            raise RuntimeError(f"Riva ASR request failed: {code} {exc.details()}") from exc
+
+        if not response.results:
+            raise RuntimeError("Riva ASR returned no transcript.")
+        alternative = response.results[0].alternatives[0] if response.results[0].alternatives else None
+        if alternative is None or not alternative.transcript.strip():
+            raise RuntimeError("Riva ASR returned an empty transcript.")
+        return Transcript(
+            text=alternative.transcript,
+            language=language,
+            confidence=max(0.0, min(1.0, alternative.confidence or 0.0)),
+            source="riva-asr",
+        )
+
+    def _normalizeAudio(self, audio: bytes, contentType: str | None, rivaClient) -> tuple[int, int, bytes]:
+        normalizedType = (contentType or "").lower()
+        if "ogg" in normalizedType or "opus" in normalizedType:
+            return rivaClient.AudioEncoding.OGGOPUS, 48000, audio
+        if "wav" in normalizedType or audio[:4] == b"RIFF":
+            with wave.open(BytesIO(audio), "rb") as wavFile:
+                channels = wavFile.getnchannels()
+                sampleWidth = wavFile.getsampwidth()
+                sampleRateHz = wavFile.getframerate()
+                if channels != 1 or sampleWidth != 2:
+                    raise ValueError("Riva ASR WAV input must be mono 16-bit PCM.")
+                return rivaClient.AudioEncoding.LINEAR_PCM, sampleRateHz, wavFile.readframes(wavFile.getnframes())
+        return rivaClient.AudioEncoding.LINEAR_PCM, self.settings.rivaAsrSampleRateHz, audio
 
 
 def _writeMonoPcmWav(outputPath: Path, sampleRateHz: int, audio: bytes) -> None:

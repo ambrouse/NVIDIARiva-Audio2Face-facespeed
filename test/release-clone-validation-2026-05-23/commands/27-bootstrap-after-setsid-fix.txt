@@ -1,0 +1,177 @@
+2026-05-22T18:58:42Z INFO setup - starting one-command setup + run
+2026-05-22T18:58:42Z INFO setup - starting system check on linux
+2026-05-22T18:58:42Z INFO setup - bash available: GNU bash, version 4.4.20(1)-release (x86_64-redhat-linux-gnu)
+2026-05-22T18:58:42Z INFO setup - git available: git version 2.43.7
+2026-05-22T18:58:42Z INFO setup - curl available: curl 7.61.1 (x86_64-redhat-linux-gnu) libcurl/7.61.1 OpenSSL/1.1.1k zlib/1.3.2 brotli/1.0.6 libidn2/2.2.0 libpsl/0.20.2 (+libidn2/2.2.0) libssh/0.9.6/openssl/zlib nghttp2/1.33.0
+2026-05-22T18:58:42Z INFO setup - python available: Python 3.12.13
+2026-05-22T18:58:42Z INFO setup - node available: v24.15.0
+2026-05-22T18:58:42Z INFO setup - npm available: 11.14.1
+2026-05-22T18:58:42Z INFO setup - docker available: Docker version 26.1.3, build b72abbb
+2026-05-22T18:58:42Z INFO setup - docker daemon is reachable
+2026-05-22T18:58:42Z WARN setup - NGC CLI not found
+2026-05-22T18:58:42Z INFO setup - nvidia-smi available
+NVIDIA RTX PRO 5000 Blackwell, 590.48.01, 48935 MiB
+2026-05-22T18:58:42Z INFO setup - docker available: Docker version 26.1.3, build b72abbb
+2026-05-22T18:58:42Z INFO setup - docker daemon is reachable
+2026-05-22T18:58:42Z INFO setup - checking Docker GPU access with nvidia/cuda:12.4.1-base-ubuntu22.04
+2026-05-22T18:58:43Z INFO setup - Docker GPU access works
+2026-05-22T18:58:43Z INFO setup - backend port 127.0.0.1:8120 appears available
+2026-05-22T18:58:43Z INFO setup - frontend port 127.0.0.1:6410 appears available
+2026-05-22T18:58:43Z WARN setup - riva port 127.0.0.1:50051 is already in use; choose another port before starting services
+LISTEN 0      2048         0.0.0.0:50051      0.0.0.0:*                                                                                                                                                       
+LISTEN 0      2048            [::]:50051         [::]:*                                                                                                                                                       
+2026-05-22T18:58:43Z INFO setup - audio2face-grpc port 127.0.0.1:8040 appears available
+2026-05-22T18:58:43Z INFO setup - audio2face-http port 127.0.0.1:8041 appears available
+2026-05-22T18:58:43Z INFO setup - RAM available: 96653412 KiB of 131125728 KiB
+2026-05-22T18:58:43Z INFO setup - memory commit headroom: -31680668 KiB of 69757164 KiB
+2026-05-22T18:58:43Z INFO setup - disk available for project: 32084888 KiB of 73364480 KiB
+2026-05-22T18:58:43Z WARN setup - memory commit headroom is below 10% reserve threshold
+2026-05-22T18:58:43Z INFO setup - GPU summary
+index, name, memory.total [MiB], memory.used [MiB], memory.free [MiB], utilization.gpu [%]
+0, NVIDIA RTX PRO 5000 Blackwell, 48935 MiB, 47500 MiB, 905 MiB, 30 %
+# gpu         pid   type     sm    mem    enc    dec    jpg    ofa    command 
+# Idx           #    C/G      %      %      %      %      %      %    name 
+    0    3650000     C     26      0      -      2      -      -    python         
+    0    3697462     C      -      -      -      -      -      -    tritonserver   
+    0    3720623     C      -      -      -      -      -      -    VLLM::EngineCor
+    0    3805638     C      -      -      -      -      -      -    python         
+    0    3807734     C      -      -      -      -      -      -    python         
+    0    4187230     C      -      -      -      -      -      -    tritonserver   
+2026-05-22T18:58:44Z WARN setup - GPU free VRAM is below 10% reserve threshold
+2026-05-22T18:58:44Z INFO setup - docker available: Docker version 26.1.3, build b72abbb
+2026-05-22T18:58:44Z INFO setup - docker daemon is reachable
+2026-05-22T18:58:44Z INFO setup - Docker disk usage
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          24        22        95.53GB   380.2MB (0%)
+Containers      25        23        613.3MB   184.3kB (0%)
+Local Volumes   78        6         23.69GB   21.54GB (90%)
+Build Cache     0         0         0B        0B
+2026-05-22T18:58:55Z INFO setup - Active containers
+CONTAINER ID   NAMES                    STATUS                 IMAGE
+1e9300609b20   facespeed-riva-asr       Up 3 hours             nvcr.io/nvidia/riva/riva-speech:2.19.0
+d013e01c958d   vllm_gemma4              Up 14 hours            local/vllm-openai-gemma4:latest
+d97339c02395   riva-speech              Up 14 hours            nvcr.io/nvidia/riva/riva-speech:2.19.0
+e225d154231d   face-recognition-nginx   Up 3 days              nginx:1.27-alpine
+0f349b8434be   face-test-minio          Up 8 days              minio/minio:RELEASE.2025-02-18T16-25-55Z
+90c1229c94c1   face-test-rabbitmq       Up 8 days              rabbitmq:3.13-management
+090fd1c383b9   face-test-redis          Up 8 days              redis:7.2-alpine
+cf88aa3e57da   face-test-qdrant         Up 8 days              qdrant/qdrant:v1.9.1
+a7931b5ab9ea   face-test-postgres       Up 8 days              postgres:16.2
+82beb23b547c   chatbot_db_ui            Up 11 days             adminer
+6a4c26ddc636   redis_insight            Up 11 days             redis/redisinsight:latest
+76ed4a756265   redis_exporter           Up 11 days             oliver006/redis_exporter:latest
+461f38869d9c   postgres_exporter        Up 11 days             prometheuscommunity/postgres-exporter:latest
+607db52483be   pgbouncer                Up 11 days             edoburu/pgbouncer:latest
+cc72083c885e   searxng                  Up 11 days             searxng/searxng:latest
+1fcfc68721f3   nginx                    Up 2 days              nginx:1.27-alpine
+449a19cbaf60   redis                    Up 11 days (healthy)   redis:7-alpine
+16c063f7aa3e   dcgm_exporter            Up 11 days             nvcr.io/nvidia/k8s/dcgm-exporter:3.3.5-3.4.0-ubuntu22.04
+7de6540a31fa   minio                    Up 11 days             minio/minio:RELEASE.2024-05-10T01-41-38Z
+25758b5ac05a   postgres                 Up 11 days             postgres:15
+16db78af886f   qdrant                   Up 11 days             qdrant/qdrant:latest
+e68efda83164   node_exporter            Up 11 days             quay.io/prometheus/node-exporter:latest
+30ee7c83f841   prometheus               Up 11 days             prom/prometheus:latest
+2026-05-22T18:58:55Z INFO setup - Project-labeled containers
+CONTAINER ID   NAMES                  STATUS                    IMAGE
+128e6701f123   facespeed-audio2face   Exited (0) 41 hours ago   nvcr.io/nvidia/ace/audio2face:1.0.11
+634f648548b2   facespeed-riva         Exited (0) 41 hours ago   nvcr.io/nvidia/riva/riva-speech:2.19.0
+2026-05-22T18:58:55Z INFO setup - Riva container appears to be running
+2026-05-22T18:58:55Z INFO setup - checking Riva TTS TCP 127.0.0.1:50051
+Riva TCP reachable at 127.0.0.1:50051
+2026-05-22T18:58:55Z INFO setup - Riva TCP port is reachable
+2026-05-22T18:58:55Z WARN setup - Audio2Face-3D not detected at gRPC 127.0.0.1:8040 or HTTP 127.0.0.1:8041/health
+2026-05-22T18:58:55Z INFO setup - system check completed
+2026-05-22T18:58:55Z INFO setup - starting local dependency install
+2026-05-22T18:58:55Z INFO setup - .env already exists; keeping local runtime configuration
+2026-05-22T18:58:55Z WARN setup - apt-get not found; skipping Linux package install
+Requirement already satisfied: fastapi==0.115.6 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 1)) (0.115.6)
+Requirement already satisfied: uvicorn[standard]==0.34.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (0.34.0)
+Requirement already satisfied: pydantic-settings==2.7.1 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 3)) (2.7.1)
+Requirement already satisfied: pytest==8.3.4 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 4)) (8.3.4)
+Requirement already satisfied: httpx==0.28.1 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 5)) (0.28.1)
+Requirement already satisfied: grpcio==1.67.1 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 6)) (1.67.1)
+Requirement already satisfied: nvidia-riva-client==2.19.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 7)) (2.19.0)
+Requirement already satisfied: pillow==12.2.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from -r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 8)) (12.2.0)
+Requirement already satisfied: starlette<0.42.0,>=0.40.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from fastapi==0.115.6->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 1)) (0.41.3)
+Requirement already satisfied: pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 in ./backend/.venv-linux/lib64/python3.12/site-packages (from fastapi==0.115.6->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 1)) (2.13.4)
+Requirement already satisfied: typing-extensions>=4.8.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from fastapi==0.115.6->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 1)) (4.15.0)
+Requirement already satisfied: click>=7.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (8.4.1)
+Requirement already satisfied: h11>=0.8 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: httptools>=0.6.3 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (0.7.1)
+Requirement already satisfied: python-dotenv>=0.13 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (1.2.2)
+Requirement already satisfied: pyyaml>=5.1 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: uvloop!=0.15.0,!=0.15.1,>=0.14.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (0.22.1)
+Requirement already satisfied: watchfiles>=0.13 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (1.2.0)
+Requirement already satisfied: websockets>=10.4 in ./backend/.venv-linux/lib64/python3.12/site-packages (from uvicorn[standard]==0.34.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 2)) (16.0)
+Requirement already satisfied: iniconfig in ./backend/.venv-linux/lib64/python3.12/site-packages (from pytest==8.3.4->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 4)) (2.3.0)
+Requirement already satisfied: packaging in ./backend/.venv-linux/lib64/python3.12/site-packages (from pytest==8.3.4->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 4)) (26.2)
+Requirement already satisfied: pluggy<2,>=1.5 in ./backend/.venv-linux/lib64/python3.12/site-packages (from pytest==8.3.4->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 4)) (1.6.0)
+Requirement already satisfied: anyio in ./backend/.venv-linux/lib64/python3.12/site-packages (from httpx==0.28.1->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 5)) (4.13.0)
+Requirement already satisfied: certifi in ./backend/.venv-linux/lib64/python3.12/site-packages (from httpx==0.28.1->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 5)) (2026.5.20)
+Requirement already satisfied: httpcore==1.* in ./backend/.venv-linux/lib64/python3.12/site-packages (from httpx==0.28.1->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 5)) (1.0.9)
+Requirement already satisfied: idna in ./backend/.venv-linux/lib64/python3.12/site-packages (from httpx==0.28.1->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 5)) (3.16)
+Requirement already satisfied: setuptools==70.0.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from nvidia-riva-client==2.19.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 7)) (70.0.0)
+Requirement already satisfied: grpcio-tools==1.67.1 in ./backend/.venv-linux/lib64/python3.12/site-packages (from nvidia-riva-client==2.19.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 7)) (1.67.1)
+Requirement already satisfied: protobuf<6.0dev,>=5.26.1 in ./backend/.venv-linux/lib64/python3.12/site-packages (from grpcio-tools==1.67.1->nvidia-riva-client==2.19.0->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 7)) (5.29.6)
+Requirement already satisfied: annotated-types>=0.6.0 in ./backend/.venv-linux/lib64/python3.12/site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.6->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 1)) (0.7.0)
+Requirement already satisfied: pydantic-core==2.46.4 in ./backend/.venv-linux/lib64/python3.12/site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.6->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 1)) (2.46.4)
+Requirement already satisfied: typing-inspection>=0.4.2 in ./backend/.venv-linux/lib64/python3.12/site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.6->-r /tmp/facespeed-release-clone-validation-2026-05-23/backend/requirements.txt (line 1)) (0.4.2)
+
+[notice] A new release of pip is available: 23.2.1 -> 26.1.1
+[notice] To update, run: python -m pip install --upgrade pip
+2026-05-22T18:58:56Z INFO setup - backend dependencies installed
+
+up to date, audited 127 packages in 843ms
+
+27 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+2026-05-22T18:58:57Z INFO setup - frontend dependencies installed
+2026-05-22T18:58:57Z INFO setup - local dependency install completed
+2026-05-22T18:58:57Z INFO setup - starting FaceSpeed app
+2026-05-22T18:58:57Z INFO setup - backend port 127.0.0.1:8120 appears available
+2026-05-22T18:58:57Z INFO setup - frontend port 127.0.0.1:6410 appears available
+2026-05-22T18:58:57Z WARN setup - riva port 127.0.0.1:50051 is already in use; choose another port before starting services
+LISTEN 0      2048         0.0.0.0:50051      0.0.0.0:*                                                                                                                                                       
+LISTEN 0      2048            [::]:50051         [::]:*                                                                                                                                                       
+2026-05-22T18:58:57Z INFO setup - audio2face-grpc port 127.0.0.1:8040 appears available
+2026-05-22T18:58:57Z INFO setup - audio2face-http port 127.0.0.1:8041 appears available
+2026-05-22T18:58:57Z INFO setup - RAM available: 96677920 KiB of 131125728 KiB
+2026-05-22T18:58:57Z INFO setup - memory commit headroom: -31588304 KiB of 69757164 KiB
+2026-05-22T18:58:57Z INFO setup - disk available for project: 32084944 KiB of 73364480 KiB
+2026-05-22T18:58:57Z WARN setup - memory commit headroom is below 10% reserve threshold
+2026-05-22T18:58:57Z INFO setup - GPU summary
+index, name, memory.total [MiB], memory.used [MiB], memory.free [MiB], utilization.gpu [%]
+0, NVIDIA RTX PRO 5000 Blackwell, 48935 MiB, 47500 MiB, 905 MiB, 25 %
+# gpu         pid   type     sm    mem    enc    dec    jpg    ofa    command 
+# Idx           #    C/G      %      %      %      %      %      %    name 
+    0    3650000     C     27      0      -      2      -      -    python         
+    0    3697462     C      -      -      -      -      -      -    tritonserver   
+    0    3720623     C      -      -      -      -      -      -    VLLM::EngineCor
+    0    3805638     C      -      -      -      -      -      -    python         
+    0    3807734     C      -      -      -      -      -      -    python         
+    0    4187230     C      -      -      -      -      -      -    tritonserver   
+2026-05-22T18:58:58Z WARN setup - GPU free VRAM is below 10% reserve threshold
+2026-05-22T18:58:58Z INFO setup - checking Riva TTS TCP 127.0.0.1:50051
+Riva TCP reachable at 127.0.0.1:50051
+2026-05-22T18:58:58Z INFO setup - Riva TCP port is reachable
+2026-05-22T18:58:58Z WARN setup - Audio2Face-3D not detected at gRPC 127.0.0.1:8040 or HTTP 127.0.0.1:8041/health
+2026-05-22T18:58:58Z INFO setup - starting backend on 127.0.0.1:8120
+2026-05-22T18:58:59Z INFO setup - backend is reachable at http://127.0.0.1:8120/health
+2026-05-22T18:58:59Z INFO setup - starting frontend on 127.0.0.1:6410
+2026-05-22T18:58:59Z INFO setup - frontend is reachable at http://127.0.0.1:6410/
+2026-05-22T18:58:59Z INFO setup - FaceSpeed status
+2026-05-22T18:58:59Z INFO setup - backend pid 435462 running
+2026-05-22T18:58:59Z INFO setup - frontend pid 435481 running
+2026-05-22T18:58:59Z INFO setup - backend port 8120: pid 435462 /tmp/facespeed-release-clone-validation-2026-05-23/backend/.venv-linux/bin/python -m uvicorn src.main:app --host 127.0.0.1 --port 8120 --app-dir backend
+2026-05-22T18:59:00Z INFO setup - frontend port 6410: pid 435494 node /tmp/facespeed-release-clone-validation-2026-05-23/frontend/node_modules/.bin/vite --host 127.0.0.1 --host 127.0.0.1 --port 6410 --strictPort
+2026-05-22T18:59:00Z INFO setup - backend health: ok at http://127.0.0.1:8120/health
+2026-05-22T18:59:00Z INFO setup - frontend: ok at http://127.0.0.1:6410/
+2026-05-22T18:59:00Z INFO setup - docker available: Docker version 26.1.3, build b72abbb
+2026-05-22T18:59:00Z INFO setup - docker daemon is reachable
+2026-05-22T18:59:00Z INFO setup - project-labeled containers
+CONTAINER ID   NAMES                  STATUS                    IMAGE
+128e6701f123   facespeed-audio2face   Exited (0) 41 hours ago   nvcr.io/nvidia/ace/audio2face:1.0.11
+634f648548b2   facespeed-riva         Exited (0) 41 hours ago   nvcr.io/nvidia/riva/riva-speech:2.19.0
+2026-05-22T18:59:00Z INFO setup - setup + run completed with warnings allowed; review WARN lines above if a NVIDIA service is unavailable

@@ -6,8 +6,8 @@ Date: 2026-05-22
 
 - Downloaded `nvidia/Audio2Face-3D-v3.0` open model files into `.cache/nvidia/audio2face-v3.0`.
 - Downloaded the real NVIDIA Maya-ACE James v3 ARKit mesh from Git LFS into `.cache/nvidia/maya-ace-assets`.
-- Parsed the Maya mesh topology and exported a browser-ready GLB:
-  - `frontend/public/models/a2f-james-v3.glb`
+- Parsed the Maya mesh topology and exported a browser proof GLB during this phase:
+  - `frontend/public/models/a2f-james-v3.glb` was later removed from the production frontend because browser QA showed it did not meet the visual quality bar.
   - 24,002 vertices
   - 48,000 triangles
   - 52 ARKit skin morph targets

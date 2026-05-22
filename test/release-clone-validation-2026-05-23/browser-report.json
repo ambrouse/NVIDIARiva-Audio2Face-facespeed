@@ -1,0 +1,16 @@
+{
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedResponses": [],
+  "metrics": {
+    "modelLoaded": "true",
+    "mouthRig": "model-morphs",
+    "meshCount": null,
+    "jawDelta": 0,
+    "audioElementCount": 1,
+    "audioControlsCount": 0,
+    "replayButtonCount": 1,
+    "assistantText": "Based on clone-rag-evidence.pdf page 1, This document proves the FaceSpeed Voice RAG main path. The avatar should move while the Riva audio answer plays. The answer package must include input audio, output audio, citations, and a video showing the 3D model moving. The retrieval path must use Docling parsing, embedding search, and reranking. Source: clone-rag-evidence.pdf, page 1.clone-rag-evidence.pdf p.1",
+    "overflow": false
+  }
+}

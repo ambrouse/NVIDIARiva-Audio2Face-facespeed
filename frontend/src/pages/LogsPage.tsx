@@ -19,7 +19,6 @@ export function LogsPage() {
       <div className="supportHeader">
         <p className="eyebrow">Activity</p>
         <h1>Service logs</h1>
-        <p className="muted">Load a service log and filter the current lines.</p>
       </div>
       <div className="toolbar">
         <select value={selectedService} onChange={(event) => setSelectedService(event.target.value)} aria-label="Service">

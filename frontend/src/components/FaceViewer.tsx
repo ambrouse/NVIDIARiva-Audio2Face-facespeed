@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { RotateCcw, SlidersHorizontal } from 'lucide-react';
 import * as THREE from 'three';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AnimationFrame, AnimationTimeline, fetchAnimationTimeline } from '../services/api';
 
@@ -8,15 +8,18 @@ type FaceViewerProps = {
   isReady: boolean;
   audioUrl?: string | null;
   animationUrl?: string | null;
+  modelUrl?: string;
+  modelLabel?: string;
+  faceScale?: number;
+  expressionIntensity?: number;
+  onOpenSettings?: () => void;
 };
 
 type FaceModel = Awaited<ReturnType<GLTFLoader['loadAsync']>>;
 
 const primaryFaceModelUrl = import.meta.env.VITE_FACE_MODEL_URL ?? '/models/readyplayer-talk-arkit.glb';
-const nvidiaFaceModelUrl = '/models/a2f-james-v3.glb';
 
 const faceModelPromises = new Map<string, Promise<FaceModel>>();
-let fallbackModelPromise: Promise<THREE.Group> | null = null;
 
 function preloadFaceModel(url: string): Promise<FaceModel> {
   if (!faceModelPromises.has(url)) {
@@ -25,30 +28,104 @@ function preloadFaceModel(url: string): Promise<FaceModel> {
   return faceModelPromises.get(url)!;
 }
 
-function preloadFallbackModel(): Promise<THREE.Group> {
-  fallbackModelPromise ??= new FBXLoader().loadAsync('/models/head.fbx');
-  return fallbackModelPromise;
-}
+type ViewerTuning = {
+  faceScale: number;
+  expressionIntensity: number;
+};
 
-export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps) {
+type NaturalExpression = {
+  blink: number;
+  brow: number;
+  squint: number;
+  smile: number;
+  cheek: number;
+};
+
+export function FaceViewer({
+  isReady,
+  audioUrl,
+  animationUrl,
+  modelUrl = primaryFaceModelUrl,
+  modelLabel = 'ReadyPlayer ARKit',
+  faceScale = 1,
+  expressionIntensity = 0.68,
+  onOpenSettings,
+}: FaceViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const previousAudioUrlRef = useRef<string | null>(null);
   const timelineRef = useRef<AnimationTimeline | null>(null);
   const isReadyRef = useRef(isReady);
+  const tuningRef = useRef<ViewerTuning>({ faceScale, expressionIntensity });
   const [timelineStatus, setTimelineStatus] = useState('Idle');
-  const [modelStatus, setModelStatus] = useState('Loading avatar');
+  const [modelStatus, setModelStatus] = useState('');
+  const [isPlaybackBlocked, setIsPlaybackBlocked] = useState(false);
 
   useEffect(() => {
     isReadyRef.current = isReady;
   }, [isReady]);
 
   useEffect(() => {
+    tuningRef.current = { faceScale, expressionIntensity };
+  }, [faceScale, expressionIntensity]);
+
+  useEffect(() => {
     const audio = audioRef.current;
-    if (audio && audioUrl) {
-      audio.preload = 'auto';
+    const previousAudioUrl = previousAudioUrlRef.current;
+    if (previousAudioUrl && previousAudioUrl !== audioUrl && previousAudioUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previousAudioUrl);
+    }
+    previousAudioUrlRef.current = audioUrl ?? null;
+
+    if (!audio) {
+      return;
+    }
+    audio.pause();
+    audio.currentTime = 0;
+
+    if (!audioUrl) {
+      audio.removeAttribute('src');
       audio.load();
+      setIsPlaybackBlocked(false);
+      return;
+    }
+
+    audio.preload = 'auto';
+    audio.load();
+    const playPromise = audio.play();
+    if (playPromise) {
+      playPromise.then(() => setIsPlaybackBlocked(false)).catch(() => setIsPlaybackBlocked(true));
     }
   }, [audioUrl]);
+
+  useEffect(() => {
+    return () => {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.pause();
+        audio.removeAttribute('src');
+        audio.load();
+      }
+      const previousAudioUrl = previousAudioUrlRef.current;
+      if (previousAudioUrl?.startsWith('blob:')) {
+        URL.revokeObjectURL(previousAudioUrl);
+      }
+      previousAudioUrlRef.current = null;
+    };
+  }, []);
+
+  function handleReplayLatest() {
+    const audio = audioRef.current;
+    if (!audio || !audioUrl) {
+      return;
+    }
+    audio.pause();
+    audio.currentTime = 0;
+    const playPromise = audio.play();
+    if (playPromise) {
+      playPromise.then(() => setIsPlaybackBlocked(false)).catch(() => setIsPlaybackBlocked(true));
+    }
+  }
 
   useEffect(() => {
     timelineRef.current = null;
@@ -83,6 +160,9 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
     if (!container) {
       return;
     }
+    container.dataset.modelLoaded = 'loading';
+    container.dataset.mouthRig = 'none';
+    setModelStatus('');
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x020617);
@@ -95,7 +175,8 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true });
     } catch {
-      container.dataset.fallback = 'webgl-unavailable';
+      container.dataset.renderError = 'webgl-unavailable';
+      setModelStatus('WebGL unavailable');
       return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -115,51 +196,10 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
 
     const group = new THREE.Group();
     group.name = 'speaking-face-rig';
-    const skin = new THREE.MeshStandardMaterial({
-      color: 0xd8ad96,
-      roughness: 0.64,
-      metalness: 0,
-      emissive: 0x24140f,
-      emissiveIntensity: 0.035,
-    });
-    const accent = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.28, metalness: 0.2 });
-    const dark = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
-    const lipMaterial = new THREE.MeshStandardMaterial({ color: 0xaa3f47, roughness: 0.42 });
-    const mouthInterior = new THREE.MeshStandardMaterial({ color: 0x25070b, roughness: 0.72 });
-    const teethMaterial = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.32 });
-    const eyeWhiteMaterial = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.22, metalness: 0 });
-    const irisMaterial = new THREE.MeshBasicMaterial({ color: 0x38bdf8, depthTest: false, side: THREE.DoubleSide });
-    const pupilMaterial = new THREE.MeshBasicMaterial({ color: 0x020617, depthTest: false, side: THREE.DoubleSide });
+    group.visible = false;
 
     const head = new THREE.Group();
-    const fallbackHead = new THREE.Mesh(new THREE.SphereGeometry(1.25, 48, 48), skin);
-    fallbackHead.scale.set(0.82, 1.08, 0.72);
-    head.add(fallbackHead);
     group.add(head);
-
-    const fallbackOnly = new THREE.Group();
-    const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.08, 24, 24), dark);
-    leftEye.position.set(-0.32, 0.26, 0.82);
-    const rightEye = leftEye.clone();
-    rightEye.position.x = 0.32;
-    fallbackOnly.add(leftEye, rightEye);
-    group.add(fallbackOnly);
-
-    const modelEyeOverlay = new THREE.Group();
-    modelEyeOverlay.name = 'model-eye-overlay';
-    modelEyeOverlay.visible = false;
-    for (const side of [-1, 1]) {
-      const eyeball = new THREE.Mesh(new THREE.SphereGeometry(0.096, 32, 20), eyeWhiteMaterial);
-      eyeball.scale.set(1.08, 0.72, 0.52);
-      eyeball.position.set(side * 0.255, 0.19, 0.785);
-      const iris = new THREE.Mesh(new THREE.CircleGeometry(0.052, 32), irisMaterial);
-      iris.position.set(side * 0.18, 0.17, 1.18);
-      iris.renderOrder = 5;
-      const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.024, 24), pupilMaterial);
-      pupil.position.set(side * 0.18, 0.17, 1.185);
-      pupil.renderOrder = 6;
-      modelEyeOverlay.add(eyeball, iris, pupil);
-    }
 
     const morphTargets: Array<{ mesh: THREE.Mesh; index: number; name: string }> = [];
     let loadedModel: THREE.Group | null = null;
@@ -172,6 +212,7 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
     let previousFrameTime = performance.now();
 
     const registerModel = (model: THREE.Group, label: string) => {
+      morphTargets.length = 0;
       model.traverse((object) => {
         if (object instanceof THREE.Mesh && /wolf3d_(body|outfit|footwear)/i.test(object.name)) {
           object.visible = false;
@@ -181,8 +222,9 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
       const maxAxis = Math.max(size.x, size.y, size.z) || 1;
-      model.scale.setScalar(2.35 / maxAxis);
-      model.position.sub(center.multiplyScalar(2.35 / maxAxis));
+      const baseScalar = 2.35 / maxAxis;
+      model.scale.setScalar(baseScalar);
+      model.position.sub(center.multiplyScalar(baseScalar));
       model.traverse((object) => {
         if (object instanceof THREE.Mesh) {
           object.castShadow = true;
@@ -205,15 +247,11 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
         }
       });
       loadedModelHasMouthMorphs = morphTargets.some((target) => /jaw|mouth|viseme|open|smile|aa|oh|ou/i.test(target.name));
-      fallbackOnly.visible = false;
-      neck.visible = false;
-      shoulders.visible = false;
       head.clear();
       head.add(model);
-      modelEyeOverlay.visible = loadedModelHasMouthMorphs && /nvidia/i.test(label);
-      head.add(modelEyeOverlay);
       loadedModel = model;
       loadedModelBaseScale.copy(model.scale);
+      group.visible = true;
       frameCamera(camera, model, container);
       const framedBox = visibleBoxFromObject(model);
       const framedSize = framedBox.getSize(new THREE.Vector3());
@@ -226,86 +264,21 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
       container.dataset.camera = `${camera.position.x.toFixed(2)},${camera.position.y.toFixed(2)},${camera.position.z.toFixed(2)}`;
       renderer.compile(scene, camera);
       renderer.render(scene, camera);
-      setModelStatus(loadedModelHasMouthMorphs ? `${label} - ${morphTargets.length} morph targets` : `${label} - fallback mouth rig`);
+      setModelStatus(loadedModelHasMouthMorphs ? `${label} - ${morphTargets.length} morph targets` : `${label} - no mouth morphs`);
     };
-
-    const mouthRig = new THREE.Group();
-    mouthRig.name = 'timeline-driven-mouth-rig';
-
-    const mouthCavity = new THREE.Mesh(new THREE.SphereGeometry(0.28, 32, 16), mouthInterior);
-    mouthCavity.name = 'mouth-cavity';
-    mouthCavity.scale.set(1.25, 0.18, 0.22);
-    mouthCavity.position.set(0, -0.32, 0.82);
-    mouthRig.add(mouthCavity);
-
-    const upperLip = new THREE.Mesh(new THREE.CapsuleGeometry(0.045, 0.46, 8, 24), lipMaterial);
-    upperLip.name = 'upper-lip';
-    upperLip.rotation.z = Math.PI / 2;
-    upperLip.position.set(0, -0.285, 0.9);
-    mouthRig.add(upperLip);
-
-    const lowerLip = upperLip.clone();
-    lowerLip.name = 'lower-lip';
-    lowerLip.position.set(0, -0.385, 0.9);
-    mouthRig.add(lowerLip);
-
-    const upperTeeth = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.045, 0.035), teethMaterial);
-    upperTeeth.name = 'upper-teeth';
-    upperTeeth.position.set(0, -0.33, 0.94);
-    mouthRig.add(upperTeeth);
-
-    const lowerTeeth = upperTeeth.clone();
-    lowerTeeth.name = 'lower-teeth';
-    lowerTeeth.position.set(0, -0.39, 0.94);
-    mouthRig.add(lowerTeeth);
-
-    const tongue = new THREE.Mesh(new THREE.SphereGeometry(0.18, 24, 12), new THREE.MeshStandardMaterial({ color: 0xdc626f, roughness: 0.55 }));
-    tongue.name = 'tongue';
-    tongue.scale.set(1.2, 0.28, 0.45);
-    tongue.position.set(0, -0.43, 0.88);
-    mouthRig.add(tongue);
-
-    const jaw = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 24), skin);
-    jaw.name = 'lower-jaw';
-    jaw.scale.set(0.9, 0.32, 0.48);
-    jaw.position.set(0, -0.82, 0.02);
-    mouthRig.add(jaw);
-    group.add(mouthRig);
-
-    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.42, 0.9, 32), skin);
-    neck.position.set(0, -1.5, -0.04);
-    group.add(neck);
-
-    const shoulders = new THREE.Mesh(new THREE.CapsuleGeometry(0.72, 1.7, 12, 32), accent);
-    shoulders.position.set(0, -2.15, -0.05);
-    shoulders.rotation.z = Math.PI / 2;
-    group.add(shoulders);
 
     scene.add(group);
 
-    preloadFaceModel(primaryFaceModelUrl)
+    preloadFaceModel(modelUrl)
       .then((gltf) => {
         if (container.isConnected) {
-          registerModel(gltf.scene, 'ReadyPlayer ARKit GLB');
+          registerModel(gltf.scene, modelLabel);
         }
       })
-      .catch(() => preloadFaceModel(nvidiaFaceModelUrl)
-        .then((gltf) => {
-          if (container.isConnected) {
-            registerModel(gltf.scene, 'NVIDIA James A2F-3D v3 GLB');
-          }
-        })
-        .catch(() => preloadFallbackModel()
-          .then((model) => {
-            if (container.isConnected) {
-              registerModel(model, 'FBX model');
-            }
-          })
-          .catch(() => {
-          container.dataset.modelLoaded = 'fallback-rig';
-          container.dataset.modelHasMorphs = 'true';
-          setModelStatus('Fallback face rig');
-          })));
+      .catch(() => {
+        container.dataset.modelLoaded = 'false';
+        setModelStatus('Avatar model unavailable');
+      });
 
     let frameId = 0;
     const animate = () => {
@@ -316,8 +289,10 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
       const audio = audioRef.current;
       const isSpeaking = Boolean(audio && !audio.paused && !audio.ended);
       const frame = sampleFrameAtTime(timelineRef.current?.frames ?? [], audio?.currentTime ?? 0);
-      const fallbackOpen = isReadyRef.current && isSpeaking ? 0.22 + Math.sin(Date.now() * 0.012) * 0.12 : 0.06;
-      const targetJawOpen = frame?.jawOpen ?? fallbackOpen;
+      const tuning = tuningRef.current;
+      const naturalExpression = buildNaturalExpression(now, isSpeaking, tuning.expressionIntensity);
+      const restOpen = isReadyRef.current && isSpeaking ? 0.22 + Math.sin(Date.now() * 0.012) * 0.12 : 0.06;
+      const targetJawOpen = frame?.jawOpen ?? restOpen;
       const targetMouthWide = frame?.mouthWide ?? 0.24;
       const targetMouthSmile = frame?.mouthSmile ?? 0.06;
       const damping = 1 - Math.exp(-deltaSeconds * (isSpeaking ? 22 : 9));
@@ -341,34 +316,29 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
 
       group.position.y = 0;
       if (loadedModel) {
-        loadedModel.scale.y = loadedModelHasMouthMorphs ? loadedModelBaseScale.y : loadedModelBaseScale.y * (1 + jawOpen * 0.035);
+        const breathing = 1 + Math.sin(now * 0.0018) * 0.006 * tuning.expressionIntensity;
+        loadedModel.scale.set(
+          loadedModelBaseScale.x * tuning.faceScale,
+          loadedModelBaseScale.y * tuning.faceScale * breathing,
+          loadedModelBaseScale.z * tuning.faceScale,
+        );
+        loadedModel.rotation.x = Math.sin(now * 0.0013) * 0.014 * tuning.expressionIntensity + (isSpeaking ? -jawOpen * 0.018 : 0);
+        loadedModel.rotation.y = Math.sin(now * 0.001) * 0.025 * tuning.expressionIntensity;
+        loadedModel.rotation.z = Math.sin(now * 0.0008) * 0.01 * tuning.expressionIntensity;
       }
-      mouthRig.visible = !loadedModelHasMouthMorphs;
-      mouthRig.position.y = loadedModel ? 0.08 : 0;
-      mouthRig.position.z = loadedModel ? 0.35 : 0;
-      mouthCavity.scale.set(1.05 + mouthWide * 0.8, 0.16 + jawOpen * 1.25, 0.24 + jawOpen * 0.24);
-      upperLip.position.y = -0.285 + mouthSmile * 0.025;
-      lowerLip.position.y = -0.385 - jawOpen * 0.22 + mouthSmile * 0.018;
-      upperLip.scale.set(1 + mouthWide * 0.45, 1, 1);
-      lowerLip.scale.set(1 + mouthWide * 0.55, 1, 1);
-      upperTeeth.position.y = -0.335 - jawOpen * 0.015;
-      lowerTeeth.position.y = -0.39 - jawOpen * 0.2;
-      lowerTeeth.visible = jawOpen > 0.12;
-      tongue.position.y = -0.43 - jawOpen * 0.1;
-      tongue.visible = jawOpen > 0.18;
-      jaw.position.y = -0.86 - jawOpen * 0.18;
-      jaw.scale.y = 0.34 + jawOpen * 0.28;
       for (const target of morphTargets) {
         if (target.mesh.morphTargetInfluences) {
-          target.mesh.morphTargetInfluences[target.index] = getBlendShapeValue(displayFrame, target.name, jawOpen);
+          target.mesh.morphTargetInfluences[target.index] = getBlendShapeValue(displayFrame, target.name, jawOpen, naturalExpression);
         }
       }
       container.dataset.mouthDrive = 'timeline';
       container.dataset.jawOpen = jawOpen.toFixed(3);
       container.dataset.mouthWide = mouthWide.toFixed(3);
       container.dataset.mouthSmile = mouthSmile.toFixed(3);
+      container.dataset.blink = naturalExpression.blink.toFixed(3);
+      container.dataset.expression = tuning.expressionIntensity.toFixed(2);
       container.dataset.smoothing = damping.toFixed(3);
-      container.dataset.mouthRig = loadedModelHasMouthMorphs ? 'nvidia-a2f-v3-morphs' : 'morphable';
+      container.dataset.mouthRig = loadedModelHasMouthMorphs ? 'model-morphs' : 'none';
       renderer.render(scene, camera);
     };
     animate();
@@ -386,23 +356,46 @@ export function FaceViewer({ isReady, audioUrl, animationUrl }: FaceViewerProps)
       renderer.dispose();
       container.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [modelLabel, modelUrl]);
 
   return (
     <div className="faceViewerCard">
       <div className="faceViewerHeader">
         <div>
-          <p className="eyebrow">Live Preview</p>
-          <h2>Avatar render</h2>
+          <p className="eyebrow">Live</p>
+          <h2>{modelLabel}</h2>
         </div>
-        <span className={isReady ? 'badge badgeOk' : 'badge badgeWarn'}>{isReady ? 'ready' : 'idle'}</span>
+        <div className="faceViewerActions">
+          {onOpenSettings && (
+            <button className="iconButton secondary" type="button" aria-label="Avatar" title="Avatar" onClick={onOpenSettings}>
+              <SlidersHorizontal size={17} />
+            </button>
+          )}
+          {audioUrl && (
+            <button
+              className={isPlaybackBlocked ? 'iconButton secondary playbackBlocked' : 'iconButton secondary'}
+              type="button"
+              aria-label="Replay latest answer"
+              title="Replay latest answer"
+              onClick={handleReplayLatest}
+            >
+              <RotateCcw size={17} />
+            </button>
+          )}
+          <span className={isReady ? 'badge badgeOk' : 'badge badgeWarn'}>{isReady ? 'ready' : 'idle'}</span>
+        </div>
       </div>
       <div className="faceCanvas" ref={containerRef} role="img" aria-label="3D speaking face model preview">
-        <div className="faceFallback">Loading avatar</div>
+        <div className="facePlaceholder" aria-hidden="true">
+          <span className="faceLoadingTrack">
+            <span />
+          </span>
+        </div>
       </div>
-      {audioUrl ? <audio className="faceAudio" controls preload="auto" ref={audioRef} src={audioUrl} /> : <p className="muted">No speech rendered yet.</p>}
+      <audio className="faceAudioHidden" preload="auto" ref={audioRef} src={audioUrl ?? undefined} />
+      {!audioUrl && <p className="muted">No speech rendered yet.</p>}
       <div className="previewMeta">
-        <span>{modelStatus}</span>
+        {modelStatus && <span>{modelStatus}</span>}
         <span>{timelineStatus}</span>
       </div>
     </div>
@@ -441,16 +434,52 @@ function visibleBoxFromObject(object: THREE.Object3D): THREE.Box3 {
   return box.isEmpty() ? new THREE.Box3().setFromObject(object) : box;
 }
 
-function getBlendShapeValue(frame: AnimationFrame | null, targetName: string, fallbackJawOpen: number): number {
+function buildNaturalExpression(now: number, isSpeaking: boolean, intensity: number): NaturalExpression {
+  const normalizedIntensity = Math.max(0, Math.min(1, intensity));
+  const blinkWave = Math.sin(now * 0.0034);
+  const blink = Math.max(0, Math.pow(blinkWave, 28)) * 0.9 * normalizedIntensity;
+  const talkEnergy = isSpeaking ? 1 : 0.32;
+  return {
+    blink,
+    brow: (0.08 + Math.sin(now * 0.0011) * 0.045 + (isSpeaking ? 0.035 : 0)) * normalizedIntensity,
+    squint: (0.045 + Math.sin(now * 0.0017 + 1.8) * 0.025) * normalizedIntensity,
+    smile: (0.05 + Math.sin(now * 0.0012 + 0.6) * 0.025 + talkEnergy * 0.035) * normalizedIntensity,
+    cheek: (0.04 + Math.sin(now * 0.0016 + 2.2) * 0.025 + talkEnergy * 0.025) * normalizedIntensity,
+  };
+}
+
+function getBlendShapeValue(frame: AnimationFrame | null, targetName: string, restJawOpen: number, expression: NaturalExpression): number {
   const blendShapes = frame?.blendShapes;
+  const expressionValue = expressionBlendShapeValue(targetName, expression);
   if (blendShapes) {
     const directValue = blendShapes[targetName] ?? blendShapes[lowerFirst(targetName)] ?? blendShapes[upperFirst(targetName)];
     if (typeof directValue === 'number') {
-      return scaleBlendShape(targetName, directValue);
+      return Math.max(scaleBlendShape(targetName, directValue), expressionValue);
     }
-    return 0;
+    return expressionValue;
   }
-  return /jaw|mouth|viseme|open|aa|oh|ou/i.test(targetName) ? scaleBlendShape(targetName, fallbackJawOpen) : 0;
+  const restValue = /jaw|mouth|viseme|open|aa|oh|ou/i.test(targetName) ? scaleBlendShape(targetName, restJawOpen) : 0;
+  return Math.max(restValue, expressionValue);
+}
+
+function expressionBlendShapeValue(targetName: string, expression: NaturalExpression): number {
+  const normalized = targetName.toLowerCase();
+  if (normalized.includes('eyeblink')) {
+    return expression.blink;
+  }
+  if (normalized.includes('eyesquint')) {
+    return expression.squint;
+  }
+  if (normalized.includes('browinnerup') || normalized.includes('browouterup')) {
+    return expression.brow;
+  }
+  if (normalized.includes('mouthsmile')) {
+    return expression.smile;
+  }
+  if (normalized.includes('cheeksquint')) {
+    return expression.cheek;
+  }
+  return 0;
 }
 
 function scaleBlendShape(targetName: string, value: number): number {

@@ -1,0 +1,196 @@
+{
+  "status": {
+    "asrAvailable": true,
+    "asrDetail": "Riva ASR endpoint 127.0.0.1:50151 is enabled by config.",
+    "documentCount": 0,
+    "chunkCount": 0,
+    "languages": [
+      "en-US",
+      "vi-VN"
+    ],
+    "doclingBaseUrl": "http://127.0.0.1:8005",
+    "embeddingBaseUrl": "http://127.0.0.1:8006",
+    "parseProvider": "docling",
+    "retrievalProvider": "embedding-rerank"
+  },
+  "document": {
+    "id": "0987c3de69f08a20",
+    "filename": "docling-rag-evidence.pdf",
+    "title": "## Docling RAG Evidence This document proves the",
+    "language": "en-US",
+    "status": "indexed",
+    "checksum": "0987c3de69f08a20854d8f29fd113e11e4ad8a177a8856a1d98a92fb3cc068da",
+    "pageCount": 1,
+    "chunkCount": 1,
+    "summary": "## Docling RAG Evidence\n\nThis document proves the FaceSpeed Voice RAG main path. The avatar should move while the Riva audio answer plays. The answer package must include input audio, output audio, citations, and a video",
+    "parseProvider": "docling",
+    "embeddingProvider": "embedding-api",
+    "rerankProvider": "embedding-api",
+    "sections": [
+      {
+        "id": "sec-0987c3de69f08a20-001",
+        "documentId": "0987c3de69f08a20",
+        "title": "Docling RAG Evidence",
+        "titlePath": [
+          "## Docling RAG Evidence This document proves the",
+          "Docling RAG Evidence"
+        ],
+        "level": 2,
+        "pageStart": 1,
+        "pageEnd": 1,
+        "parentId": null,
+        "childIds": [
+          "chk-0987c3de69f08a20-001"
+        ]
+      }
+    ],
+    "chunks": [
+      {
+        "id": "chk-0987c3de69f08a20-001",
+        "documentId": "0987c3de69f08a20",
+        "sectionId": "sec-0987c3de69f08a20-001",
+        "text": "This document proves the FaceSpeed Voice RAG main path. The avatar should move while the Riva audio answer plays. The answer package must include input audio, output audio, citations, and a video showing the 3D model moving. The retrieval path must use Docling parsing, embedding search, and reranking.",
+        "page": 1,
+        "titlePath": [
+          "## Docling RAG Evidence This document proves the",
+          "Docling RAG Evidence"
+        ],
+        "language": "en-US",
+        "tokenCount": 48,
+        "previousChunkId": null,
+        "nextChunkId": null,
+        "relatedChunkIds": [],
+        "embeddingId": "chk-0987c3de69f08a20-001"
+      }
+    ]
+  },
+  "transcript": {
+    "text": "What does the testing one Pdf say the avatar should do?",
+    "language": "en-US",
+    "confidence": 0.13865624368190765,
+    "source": "riva-asr"
+  },
+  "search": {
+    "query": "What does the testing one Pdf say the avatar should do?",
+    "found": true,
+    "confidence": 0.7620849821224953,
+    "answerability": "pass",
+    "citations": [
+      {
+        "chunkId": "chk-0987c3de69f08a20-001",
+        "documentId": "0987c3de69f08a20",
+        "source": "docling-rag-evidence.pdf",
+        "page": 1,
+        "titlePath": [
+          "## Docling RAG Evidence This document proves the",
+          "Docling RAG Evidence"
+        ],
+        "excerpt": "This document proves the FaceSpeed Voice RAG main path. The avatar should move while the Riva audio answer plays. The answer package must include input audio, output audio, citations, and a video showing the 3D model moving. The retrieval path must use Docling parsing, embedding search, and reranking.",
+        "confidence": 0.7620849821224953
+      }
+    ],
+    "compactContext": "[docling-rag-evidence.pdf p.1] This document proves the FaceSpeed Voice RAG main path. The avatar should move while the Riva audio answer plays. The answer package must include input audio, output audio, citations, and a video showing the 3D model moving. The retrieval path must use Docling parsing, embedding search, and reranking.",
+    "trace": [
+      {
+        "agent": "lead",
+        "status": "ok",
+        "message": "Prepared one concise search intent for the user transcript.",
+        "evidenceChunkIds": []
+      },
+      {
+        "agent": "search",
+        "status": "found",
+        "message": "Embedding search expanded to 1 chunks and reranked 1 candidates.",
+        "evidenceChunkIds": [
+          "chk-0987c3de69f08a20-001"
+        ]
+      },
+      {
+        "agent": "review",
+        "status": "pass",
+        "message": "Evidence is grounded enough for a concise answer.",
+        "evidenceChunkIds": []
+      }
+    ]
+  },
+  "turn": {
+    "id": "bcba6b30-5b82-4bff-835b-b0225f3d3c6b",
+    "language": "en-US",
+    "transcript": {
+      "text": "What does the testing one Pdf say the avatar should do?",
+      "language": "en-US",
+      "confidence": 1.0,
+      "source": "asr"
+    },
+    "answer": {
+      "text": "Based on docling-rag-evidence.pdf page 1, This document proves the FaceSpeed Voice RAG main path. The avatar should move while the Riva audio answer plays. The answer package must include input audio, output audio, citations, and a video showing the 3D model moving. The retrieval path must use Docling parsing, embedding search, and reranking. Source: docling-rag-evidence.pdf, page 1.",
+      "citations": [
+        {
+          "chunkId": "chk-0987c3de69f08a20-001",
+          "documentId": "0987c3de69f08a20",
+          "source": "docling-rag-evidence.pdf",
+          "page": 1,
+          "titlePath": [
+            "## Docling RAG Evidence This document proves the",
+            "Docling RAG Evidence"
+          ],
+          "excerpt": "This document proves the FaceSpeed Voice RAG main path. The avatar should move while the Riva audio answer plays. The answer package must include input audio, output audio, citations, and a video showing the 3D model moving. The retrieval path must use Docling parsing, embedding search, and reranking.",
+          "confidence": 0.7620849821224953
+        }
+      ],
+      "reviewStatus": "pass"
+    },
+    "audioUrl": "/api/artifacts/audio/94bd2d1b-cac5-4952-96a5-68f919da49a4.wav",
+    "animationUrl": "/api/artifacts/animation/94bd2d1b-cac5-4952-96a5-68f919da49a4.json",
+    "jobId": "94bd2d1b-cac5-4952-96a5-68f919da49a4",
+    "agentTrace": [
+      {
+        "agent": "lead",
+        "status": "ok",
+        "message": "Prepared one concise search intent for the user transcript.",
+        "evidenceChunkIds": []
+      },
+      {
+        "agent": "search",
+        "status": "found",
+        "message": "Embedding search expanded to 1 chunks and reranked 1 candidates.",
+        "evidenceChunkIds": [
+          "chk-0987c3de69f08a20-001"
+        ]
+      },
+      {
+        "agent": "review",
+        "status": "pass",
+        "message": "Evidence is grounded enough for a concise answer.",
+        "evidenceChunkIds": []
+      },
+      {
+        "agent": "teacher",
+        "status": "pass",
+        "message": "Final answer generated with citations.",
+        "evidenceChunkIds": [
+          "chk-0987c3de69f08a20-001"
+        ]
+      }
+    ]
+  },
+  "audioBytes": 882218,
+  "animationFrames": 1655,
+  "avatarVideo": {
+    "file": "docling-avatar-3d-moving.webm",
+    "jawDelta": 0.369,
+    "mouthRig": "model-morphs",
+    "modelHasMorphs": true,
+    "modelMeshCount": 4
+  },
+  "readmeGif": {
+    "file": "../../docs/assets/voice-rag-avatar-demo.gif",
+    "frames": 42,
+    "jawDelta": 0.36
+  },
+  "uiEvidence": {
+    "desktop": "../app/02-chat-answer-avatar.png",
+    "mobile": "../app/11-mobile-chat.png",
+    "mobileHorizontalOverflow": false
+  }
+}

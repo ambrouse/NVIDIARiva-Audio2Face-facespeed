@@ -1,0 +1,27 @@
+2026-05-22T19:07:11Z INFO setup - stopping project-owned processes and containers
+2026-05-22T19:07:11Z INFO setup - stopping backend pid 435462
+2026-05-22T19:07:12Z WARN setup - refusing to stop frontend pid 435481; command is not clearly project-owned
+2026-05-22T19:07:12Z INFO setup - no backend-port listener on port 8120
+2026-05-22T19:07:12Z INFO setup - stopping frontend-port pid 435494
+2026-05-22T19:07:13Z INFO setup - docker available: Docker version 26.1.3, build b72abbb
+2026-05-22T19:07:13Z INFO setup - docker daemon is reachable
+2026-05-22T19:07:13Z INFO setup - no running project-labeled containers to stop
+2026-05-22T19:07:13Z INFO setup - docker available: Docker version 26.1.3, build b72abbb
+2026-05-22T19:07:13Z INFO setup - docker daemon is reachable
+2026-05-22T19:07:13Z INFO setup - project-labeled containers
+CONTAINER ID   NAMES                  STATUS                    IMAGE
+128e6701f123   facespeed-audio2face   Exited (0) 41 hours ago   nvcr.io/nvidia/ace/audio2face:1.0.11
+634f648548b2   facespeed-riva         Exited (0) 41 hours ago   nvcr.io/nvidia/riva/riva-speech:2.19.0
+2026-05-22T19:07:13Z INFO setup - FaceSpeed status
+2026-05-22T19:07:13Z INFO setup - backend pid file not running
+2026-05-22T19:07:13Z INFO setup - frontend pid file not running
+2026-05-22T19:07:14Z INFO setup - backend port 8120: no listener
+2026-05-22T19:07:14Z INFO setup - frontend port 6410: no listener
+2026-05-22T19:07:14Z WARN setup - backend health: unavailable at http://127.0.0.1:8120/health
+2026-05-22T19:07:14Z WARN setup - frontend: unavailable at http://127.0.0.1:6410/
+2026-05-22T19:07:14Z INFO setup - docker available: Docker version 26.1.3, build b72abbb
+2026-05-22T19:07:14Z INFO setup - docker daemon is reachable
+2026-05-22T19:07:14Z INFO setup - project-labeled containers
+CONTAINER ID   NAMES                  STATUS                    IMAGE
+128e6701f123   facespeed-audio2face   Exited (0) 41 hours ago   nvcr.io/nvidia/ace/audio2face:1.0.11
+634f648548b2   facespeed-riva         Exited (0) 41 hours ago   nvcr.io/nvidia/riva/riva-speech:2.19.0

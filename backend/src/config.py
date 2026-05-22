@@ -21,9 +21,9 @@ class Settings(BaseSettings):
     a2fHttpPort: int = Field(8041, validation_alias=AliasChoices("A2F_HTTP_PORT", "a2fHttpPort"))
     logDir: Path = Field(Path("logs"), validation_alias=AliasChoices("LOG_DIR", "logDir"))
     outputDir: Path = Field(Path("outputs"), validation_alias=AliasChoices("OUTPUT_DIR", "outputDir"))
-    serviceManagerMode: Literal["mock", "docker"] = Field("mock", validation_alias=AliasChoices("SERVICE_MANAGER_MODE", "serviceManagerMode"))
+    serviceManagerMode: Literal["mock", "docker"] = Field("docker", validation_alias=AliasChoices("SERVICE_MANAGER_MODE", "serviceManagerMode"))
     pipelineMode: Literal["mock", "riva", "nvidia"] = Field(
-        "mock",
+        "riva",
         validation_alias=AliasChoices("PIPELINE_MODE", "pipelineMode"),
     )
     rivaDefaultVoice: str = Field(
@@ -65,6 +65,40 @@ class Settings(BaseSettings):
         30.0,
         validation_alias=AliasChoices("DOCKER_COMMAND_TIMEOUT_SECONDS", "dockerCommandTimeoutSeconds"),
     )
+    rivaAsrEnabled: bool = Field(False, validation_alias=AliasChoices("RIVA_ASR_ENABLED", "rivaAsrEnabled"))
+    rivaAsrHost: str = Field("127.0.0.1", validation_alias=AliasChoices("RIVA_ASR_HOST", "rivaAsrHost"))
+    rivaAsrPort: int = Field(50151, validation_alias=AliasChoices("RIVA_ASR_PORT", "rivaAsrPort"))
+    rivaAsrTimeoutSeconds: float = Field(30.0, validation_alias=AliasChoices("RIVA_ASR_TIMEOUT_SECONDS", "rivaAsrTimeoutSeconds"))
+    rivaAsrLanguage: str = Field("en-US", validation_alias=AliasChoices("RIVA_ASR_LANGUAGE", "rivaAsrLanguage"))
+    rivaAsrSampleRateHz: int = Field(16000, validation_alias=AliasChoices("RIVA_ASR_SAMPLE_RATE_HZ", "rivaAsrSampleRateHz"))
+    doclingApiBaseUrl: str = Field(
+        "http://127.0.0.1:8005",
+        validation_alias=AliasChoices("DOCLING_API_BASE_URL", "doclingApiBaseUrl"),
+    )
+    embeddingApiBaseUrl: str = Field(
+        "http://127.0.0.1:8006",
+        validation_alias=AliasChoices("EMBEDDING_API_BASE_URL", "embeddingApiBaseUrl"),
+    )
+    doclingTimeoutSeconds: float = Field(
+        60.0,
+        validation_alias=AliasChoices("DOCLING_TIMEOUT_SECONDS", "doclingTimeoutSeconds"),
+    )
+    embeddingTimeoutSeconds: float = Field(
+        30.0,
+        validation_alias=AliasChoices("EMBEDDING_TIMEOUT_SECONDS", "embeddingTimeoutSeconds"),
+    )
+    rerankTimeoutSeconds: float = Field(
+        30.0,
+        validation_alias=AliasChoices("RERANK_TIMEOUT_SECONDS", "rerankTimeoutSeconds"),
+    )
+    ragStorageDir: Path = Field(Path("storage/rag"), validation_alias=AliasChoices("RAG_STORAGE_DIR", "ragStorageDir"))
+    ragMinVectorScore: float = Field(0.2, validation_alias=AliasChoices("RAG_MIN_VECTOR_SCORE", "ragMinVectorScore"))
+    ragMinConfidence: float = Field(0.45, validation_alias=AliasChoices("RAG_MIN_CONFIDENCE", "ragMinConfidence"))
+    voiceChatMaxAudioSeconds: int = Field(
+        45,
+        validation_alias=AliasChoices("VOICE_CHAT_MAX_AUDIO_SECONDS", "voiceChatMaxAudioSeconds"),
+    )
+    pdfMaxUploadMb: int = Field(20, validation_alias=AliasChoices("PDF_MAX_UPLOAD_MB", "pdfMaxUploadMb"))
 
     model_config = SettingsConfigDict(
         env_file=ROOT_DIR / ".env",
@@ -84,4 +118,5 @@ def getSettings() -> Settings:
     settings = Settings()
     settings.logDir.mkdir(parents=True, exist_ok=True)
     settings.outputDir.mkdir(parents=True, exist_ok=True)
+    settings.ragStorageDir.mkdir(parents=True, exist_ok=True)
     return settings

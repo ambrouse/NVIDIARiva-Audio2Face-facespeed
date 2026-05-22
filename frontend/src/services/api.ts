@@ -48,6 +48,69 @@ export type AnimationTimeline = {
   modelAsset?: string;
 };
 
+export type RagRuntimeStatus = {
+  asrAvailable: boolean;
+  asrDetail: string;
+  documentCount: number;
+  chunkCount: number;
+  languages: string[];
+  doclingBaseUrl: string;
+  embeddingBaseUrl: string;
+  parseProvider: string;
+  retrievalProvider: string;
+};
+
+export type RagDocument = {
+  id: string;
+  filename: string;
+  title: string;
+  language: string;
+  status: string;
+  checksum: string;
+  pageCount: number;
+  chunkCount: number;
+  summary: string;
+};
+
+export type Citation = {
+  chunkId: string;
+  documentId: string;
+  source: string;
+  page: number;
+  titlePath: string[];
+  excerpt: string;
+  confidence: number;
+};
+
+export type AgentTrace = {
+  agent: string;
+  status: string;
+  message: string;
+  evidenceChunkIds: string[];
+};
+
+export type VoiceTurn = {
+  id: string;
+  language: string;
+  transcript: {
+    text: string;
+    language: string;
+    confidence: number;
+    source: string;
+  };
+  answer: {
+    text: string;
+    citations: Citation[];
+    reviewStatus: string;
+  };
+  audioUrl: string | null;
+  animationUrl: string | null;
+  jobId: string | null;
+  agentTrace: AgentTrace[];
+};
+
+export type Transcript = VoiceTurn['transcript'];
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   let response: Response;
   try {
@@ -114,4 +177,45 @@ export function createJob(input: CreateJobInput): Promise<Job> {
 
 export function fetchSystemChecks(): Promise<SystemCheck[]> {
   return request<SystemCheck[]>('/api/system/checks');
+}
+
+export function fetchRagStatus(): Promise<RagRuntimeStatus> {
+  return request<RagRuntimeStatus>('/api/rag/status');
+}
+
+export function fetchDocuments(): Promise<RagDocument[]> {
+  return request<RagDocument[]>('/api/documents');
+}
+
+export async function uploadDocument(file: File, language: string): Promise<RagDocument> {
+  const response = await fetch(resolveApiUrl(`/api/documents?filename=${encodeURIComponent(file.name)}&language=${encodeURIComponent(language)}`), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/pdf' },
+    body: await file.arrayBuffer(),
+  });
+  if (!response.ok) {
+    const detail = await response.json().catch(() => null);
+    throw new Error(detail?.detail ?? `Upload failed with status ${response.status}`);
+  }
+  return response.json() as Promise<RagDocument>;
+}
+
+export function createVoiceTurn(input: { message: string; language: string; voice: string; outputMode: string }): Promise<VoiceTurn> {
+  return request<VoiceTurn>('/api/voice/chat', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export async function transcribeVoice(audio: Blob): Promise<Transcript> {
+  const response = await fetch(resolveApiUrl('/api/voice/transcribe'), {
+    method: 'POST',
+    headers: { 'Content-Type': audio.type || 'audio/webm' },
+    body: audio,
+  });
+  if (!response.ok) {
+    const detail = await response.json().catch(() => null);
+    throw new Error(detail?.detail ?? `Transcription failed with status ${response.status}`);
+  }
+  return response.json() as Promise<Transcript>;
 }

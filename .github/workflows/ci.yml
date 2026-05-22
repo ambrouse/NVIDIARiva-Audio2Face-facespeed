@@ -18,19 +18,25 @@ jobs:
       - name: Run backend and setup tests
         run: PYTHONPATH=backend python -m pytest backend/tests tests
       - name: Check setup script syntax
-        run: bash -n setup.sh && bash -n scripts/setup.sh
+        run: bash -n setup.sh && bash -n scripts/setup.sh && bash -n scripts/manage-logs.sh
       - name: Check README and evidence assets
         run: |
           test -s README.md
-          test -s docs/assets/facespeed-demo.gif
-          test -s test/production-enduser-evidence-2026-05-22/README.md
-          test -s test/production-enduser-evidence-2026-05-22/browser-report.json
-          test -s test/production-enduser-evidence-2026-05-22/audio-report.json
-          duplicate_hashes="$(sha256sum test/production-enduser-evidence-2026-05-22/screenshots/*.png | awk '{print $1}' | sort | uniq -d)"
+          test -s docs/assets/voice-rag-avatar-demo.gif
+          test -s test/release-readiness-2026-05-23/README.md
+          test -s test/release-readiness-2026-05-23/browser-report.json
+          test -s test/release-readiness-2026-05-23/pipeline/docling-output-answer.wav
+          test -s test/release-readiness-2026-05-23/pipeline/docling-avatar-3d-moving.webm
+          test -s test/release-clone-validation-2026-05-23/README.md
+          test -s test/release-clone-validation-2026-05-23/browser-report.json
+          test -s test/release-clone-validation-2026-05-23/commands/35-clone-artifact-summary.json
+          duplicate_hashes="$(sha256sum test/release-readiness-2026-05-23/app/*.png test/release-clone-validation-2026-05-23/app/*.png | awk '{print $1}' | sort | uniq -d)"
           test -z "$duplicate_hashes"
       - name: Check tracked runtime artifacts are absent
         run: |
-          ! git ls-files | grep -E '(^|/)(\.env$|logs/|outputs/|\.cache/|.*\.wav$|.*\.mp3$|frontend/\.ms-playwright/|\.local-libs/|\.local-rpms/|riva-model-repo/)'
+          ! git ls-files | grep -E '(^|/)(\.env$|outputs/|storage/|\.cache/|.*\.mp3$|frontend/\.ms-playwright/|\.local-libs/|\.local-rpms/|riva-model-repo/)'
+          ! git ls-files 'logs/**' | grep -Ev '^(logs/README.md|logs/plans/[^/]+\.md)$'
+          ! git ls-files '*.wav' | grep -Ev '^test/.+\.wav$'
       - name: Check NVIDIA keys are not tracked
         run: |
           ! git grep -nE 'nvapi-[A-Za-z0-9_-]+'

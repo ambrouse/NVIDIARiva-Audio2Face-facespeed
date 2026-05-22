@@ -460,6 +460,21 @@ install_ngc() {
   return 1
 }
 
+ensure_env_file() {
+  local env_file="${ROOT_DIR}/.env"
+  local env_example="${ROOT_DIR}/.env.example"
+  if [[ -f "$env_file" ]]; then
+    log "INFO" ".env already exists; keeping local runtime configuration"
+    return 0
+  fi
+  if [[ ! -f "$env_example" ]]; then
+    log "WARN" ".env.example not found; cannot create default .env"
+    return 1
+  fi
+  cp "$env_example" "$env_file"
+  log "INFO" "created .env from .env.example for provider-backed main path"
+}
+
 download_riva_quickstart() {
   log "INFO" "checking Riva quickstart at ${RIVA_QUICKSTART_DIR}"
   mkdir -p "$RIVA_QUICKSTART_DIR"
@@ -638,6 +653,7 @@ run_check() {
 
 run_install() {
   log "INFO" "starting local dependency install"
+  ensure_env_file || true
   install_linux_base_packages || true
   install_backend_deps || true
   install_frontend_deps || true
@@ -712,13 +728,15 @@ start_backend_app() {
   log "INFO" "starting backend on ${BACKEND_HOST}:${BACKEND_PORT}"
   (
     cd "$ROOT_DIR"
-    BACKEND_HOST="$BACKEND_HOST" \
+    setsid nohup env \
+      BACKEND_HOST="$BACKEND_HOST" \
       BACKEND_PORT="$BACKEND_PORT" \
       FRONTEND_PORT="$FRONTEND_PORT" \
       ALLOWED_ORIGINS="${ALLOWED_ORIGINS:-http://${FRONTEND_HOST}:${FRONTEND_PORT},http://localhost:${FRONTEND_PORT}}" \
-      "$py_cmd" -m uvicorn src.main:app --host "$BACKEND_HOST" --port "$BACKEND_PORT" --app-dir backend
-  ) >>"$backend_log" 2>&1 &
-  echo "$!" > "$BACKEND_PID_FILE"
+      "$py_cmd" -m uvicorn src.main:app --host "$BACKEND_HOST" --port "$BACKEND_PORT" --app-dir backend \
+      >>"$backend_log" 2>&1 &
+    echo "$!" > "$BACKEND_PID_FILE"
+  )
   wait_for_http "backend" "$health_url" 50 0.4 || {
     log "WARN" "backend log: ${backend_log}"
     return 1
@@ -743,10 +761,12 @@ start_frontend_app() {
   log "INFO" "starting frontend on ${FRONTEND_HOST}:${FRONTEND_PORT}"
   (
     cd "$ROOT_DIR"
-    VITE_API_BASE_URL="${VITE_API_BASE_URL:-http://${BACKEND_HOST}:${BACKEND_PORT}}" \
-      npm --prefix frontend run dev -- --host "$FRONTEND_HOST" --port "$FRONTEND_PORT" --strictPort
-  ) >>"$frontend_log" 2>&1 &
-  echo "$!" > "$FRONTEND_PID_FILE"
+    setsid nohup env \
+      VITE_API_BASE_URL="${VITE_API_BASE_URL:-http://${BACKEND_HOST}:${BACKEND_PORT}}" \
+      npm --prefix frontend run dev -- --host "$FRONTEND_HOST" --port "$FRONTEND_PORT" --strictPort \
+      >>"$frontend_log" 2>&1 &
+    echo "$!" > "$FRONTEND_PID_FILE"
+  )
   wait_for_http "frontend" "$frontend_url" 50 0.4 || {
     log "WARN" "frontend log: ${frontend_log}"
     return 1
@@ -773,6 +793,61 @@ run_setup_run() {
   log "INFO" "setup + run completed with warnings allowed; review WARN lines above if a NVIDIA service is unavailable"
 }
 
+print_support_matrix() {
+  cat <<'SUPPORT'
+FaceSpeed machine support
+
+Supported target:
+  Linux workstation, NVIDIA RTX GPU, recent NVIDIA driver, Docker with GPU access,
+  Python 3.10+, Node 20+, npm, terminal, and network.
+
+Best effort:
+  WSL2 with NVIDIA GPU passthrough and Docker Desktop, only when nvidia-smi,
+  docker run --gpus all, ports, RAM, disk, and provider checks pass.
+
+Development only:
+  CPU-only Linux/macOS/Windows can run source tests/build and inspect UI, but
+  the provider-backed Riva/Docling/embedding main path will be incomplete.
+
+Unsupported:
+  Machines without terminal/network, unsupported GPU drivers, unreachable Docker
+  daemon, missing Python/Node with no install rights, or no licensed NVIDIA/NGC
+  access for NVIDIA services.
+SUPPORT
+}
+
+run_verify() {
+  log "INFO" "starting release verification"
+  run_check || true
+  (cd "$ROOT_DIR" && npm --prefix frontend test -- --run)
+  (cd "$ROOT_DIR" && npm --prefix frontend run build)
+  local py_cmd
+  py_cmd="$(backend_python)"
+  if [[ -z "$py_cmd" ]]; then
+    log "ERROR" "python not found; cannot run backend tests"
+    return 1
+  fi
+  (cd "$ROOT_DIR" && PYTHONPATH=backend "$py_cmd" -m pytest backend/tests tests)
+  log "INFO" "release verification completed"
+}
+
+run_capture_demo() {
+  log "INFO" "capturing release GIF demo"
+  if [[ ! -d "${ROOT_DIR}/frontend/node_modules" ]]; then
+    install_frontend_deps
+  fi
+  if [[ ! -d "${ROOT_DIR}/backend/.venv-linux" && "$(detect_platform)" != "windows-git-bash" ]]; then
+    install_backend_deps || true
+  fi
+  (cd "$ROOT_DIR" && node scripts/capture-release-demo.mjs)
+  log "INFO" "release GIF demo captured"
+}
+
+run_logs_clean() {
+  log "INFO" "cleaning disposable runtime logs"
+  (cd "$ROOT_DIR" && bash scripts/manage-logs.sh --clean)
+}
+
 stop_pid_file() {
   local label="$1"
   local pid_file="$2"
@@ -785,7 +860,7 @@ stop_pid_file() {
   pid="$(cat "$pid_file")"
   local cmdline
   cmdline="$(ps -p "$pid" -o args= 2>/dev/null || true)"
-  if [[ "$cmdline" != *"$ROOT_DIR"* && "$cmdline" != *"uvicorn src.main:app"* && "$cmdline" != *"vite"* ]]; then
+  if [[ "$cmdline" != *"$ROOT_DIR"* && "$cmdline" != *"uvicorn src.main:app"* && "$cmdline" != *"vite"* && "$cmdline" != *"npm run dev"* ]]; then
     log "WARN" "refusing to stop ${label} pid ${pid}; command is not clearly project-owned"
     return 1
   fi
@@ -839,7 +914,7 @@ is_project_owned_pid() {
   local cmdline
   cmdline="$(ps -p "$pid" -o args= 2>/dev/null || true)"
   [[ -n "$cmdline" ]] || return 1
-  [[ "$cmdline" == *"$ROOT_DIR"* || "$cmdline" == *"uvicorn src.main:app"* || "$cmdline" == *"vite --host"* ]]
+  [[ "$cmdline" == *"$ROOT_DIR"* || "$cmdline" == *"uvicorn src.main:app"* || "$cmdline" == *"vite --host"* || "$cmdline" == *"npm run dev"* ]]
 }
 
 stop_project_port_owner() {
@@ -913,11 +988,16 @@ Usage:
 
 Common modes:
   --setup-run          Check, install local deps, then run backend + frontend.
+  --bootstrap          Alias for --setup-run.
   --setup              Install backend/frontend dependencies only.
   --run                Run backend + frontend with warnings allowed.
+  --verify             Run setup checks, frontend tests/build, and backend tests.
   --status             Show project PIDs, health endpoints, and project containers.
   --stop               Stop project-owned PID-file processes and labeled containers.
   --check              Check Python, Node, npm, Docker, NVIDIA, ports, RAM/VRAM/disk.
+  --check-support      Print supported machine profiles.
+  --capture-demo       Capture the GitHub README GIF from the running app.
+  --logs-clean         Remove disposable runtime logs.
 
 NVIDIA modes:
   --dry-run-containers Print safe Docker commands without pulling or starting.
@@ -975,6 +1055,9 @@ case "$MODE" in
   --setup-run)
     run_setup_run
     ;;
+  --bootstrap)
+    run_setup_run
+    ;;
   --status)
     print_project_status
     ;;
@@ -983,6 +1066,18 @@ case "$MODE" in
     ;;
   --check|--check-nvidia)
     run_check
+    ;;
+  --check-support)
+    print_support_matrix
+    ;;
+  --verify)
+    run_verify
+    ;;
+  --capture-demo)
+    run_capture_demo
+    ;;
+  --logs-clean)
+    run_logs_clean
     ;;
   --check-ports)
     check_ports
