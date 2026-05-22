@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from src.dependencies import getServiceManager
 from src.models.service import ServiceAction, ServiceName, ServiceStatus
@@ -23,7 +23,10 @@ def runServiceAction(
     action: ServiceAction,
     serviceManager: ServiceManager = Depends(getServiceManager),
 ) -> ServiceStatus:
-    return serviceManager.runAction(serviceName, action)
+    try:
+        return serviceManager.runAction(serviceName, action)
+    except RuntimeError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
 
 
 @router.get("/{serviceName}/logs", response_model=list[str])

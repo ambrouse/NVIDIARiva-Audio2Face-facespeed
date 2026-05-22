@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchServices, runServiceAction, ServiceStatus } from '../services/api';
+import { fetchServices, ServiceStatus } from '../services/api';
 import { StatusBadge } from '../components/StatusBadge';
 
 export function ServicesPage() {
@@ -15,23 +15,18 @@ export function ServicesPage() {
     }
   }
 
-  async function handleAction(serviceName: string, action: 'start' | 'stop' | 'restart') {
-    const confirmed = window.confirm(`${action} ${serviceName}? Only project-scoped/local mock actions should run from this dashboard.`);
-    if (!confirmed) {
-      return;
-    }
-    await runServiceAction(serviceName, action);
-    await loadServices();
-  }
-
   useEffect(() => {
     void loadServices();
   }, []);
 
   return (
-    <section className="panel">
-      <p className="eyebrow">Control plane</p>
-      <h2>Service dashboard</h2>
+    <section className="supportPage">
+      <div className="supportHeader">
+        <p className="eyebrow">Operations</p>
+        <h1>Runtime services</h1>
+        <p className="muted">Project-scoped service state and container ownership.</p>
+        <button className="secondary compactButton" onClick={() => void loadServices()}>Refresh</button>
+      </div>
       {error && <div className="alert">{error}</div>}
       <div className="cards">
         {services.map((service) => (
@@ -41,11 +36,26 @@ export function ServicesPage() {
               <StatusBadge healthy={service.healthy} label={service.state} />
             </div>
             <p className="muted">{service.detail}</p>
-            <div className="actions">
-              <button onClick={() => void handleAction(service.name, 'start')}>Start</button>
-              <button onClick={() => void handleAction(service.name, 'restart')}>Restart</button>
-              <button className="secondary" onClick={() => void handleAction(service.name, 'stop')}>Stop</button>
-            </div>
+            <dl className="serviceMeta">
+              <div>
+                <dt>Mode</dt>
+                <dd>{service.managerMode}</dd>
+              </div>
+              <div>
+                <dt>Container</dt>
+                <dd>{service.containerName ?? 'not configured'}</dd>
+              </div>
+              <div>
+                <dt>Docker state</dt>
+                <dd>{service.containerStatus ?? 'not found'}</dd>
+              </div>
+              {service.containerImage && (
+                <div>
+                  <dt>Image</dt>
+                  <dd>{service.containerImage}</dd>
+                </div>
+              )}
+            </dl>
           </article>
         ))}
       </div>

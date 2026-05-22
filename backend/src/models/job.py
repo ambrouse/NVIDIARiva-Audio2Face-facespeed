@@ -24,8 +24,8 @@ class OutputMode(StrEnum):
 
 class CreateJobRequest(BaseModel):
     text: str = Field(min_length=1, max_length=1000)
-    voice: str = Field(default="default", min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_.-]+$")
-    language: str = Field(default="vi-VN", min_length=2, max_length=16, pattern=r"^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})?$")
+    voice: str = Field(default="English-US.Female-1", min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_.-]+$")
+    language: str = Field(default="en-US", min_length=2, max_length=16, pattern=r"^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})?$")
     a2fProfile: str = Field(default="default", min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_.-]+$")
     outputMode: OutputMode = OutputMode.preview
 
@@ -48,4 +48,6 @@ class Job(BaseModel):
     outputMode: OutputMode
     audioPath: str | None = None
     resultPath: str | None = None
+    audioUrl: str | None = None
+    animationUrl: str | None = None
     error: str | None = None

@@ -65,7 +65,8 @@ Không dùng trạng thái mơ hồ như “gần xong”.
 | 5 | `plans/plan-06-smoke-output-evaluation.md` | Smoke tests, output/algorithm evaluation | PASS mock / BLOCKED real NVIDIA |
 | 6 | `plans/plan-07-docs-readme-cicd.md` | README/docs/CI/CD/version/release gates | PASS |
 | 7 | `plans/plan-08-final-review-push.md` | Final review, security, push if approved | PASS + pushed |
-| 8 | `plans/plan-09-real-nvidia-riva-audio2face-container-verification.md` | Verify real Riva/A2F image/API and gated smoke | PENDING |
+| 8 | `plans/plan-09-real-nvidia-riva-audio2face-container-verification.md` | Verify real Riva/A2F image/API and gated smoke | BLOCKED real smoke |
+| 9 | `docs/phase-reports/phase-10-browser-viseme-3d-speaking-model.md` | Text → WAV → browser viseme JSON → 3D speaking face | PASS |
 
 ## Log handoff protocol
 

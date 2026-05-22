@@ -26,3 +26,8 @@ class ServiceStatus(BaseModel):
     state: ServiceState
     healthy: bool
     detail: str
+    managerMode: str = "mock"
+    containerName: str | None = None
+    containerState: str | None = None
+    containerStatus: str | None = None
+    containerImage: str | None = None

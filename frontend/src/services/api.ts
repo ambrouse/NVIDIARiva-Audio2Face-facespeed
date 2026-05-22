@@ -1,10 +1,15 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8020';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
 
 export type ServiceStatus = {
   name: string;
   state: string;
   healthy: boolean;
   detail: string;
+  managerMode: string;
+  containerName: string | null;
+  containerState: string | null;
+  containerStatus: string | null;
+  containerImage: string | null;
 };
 
 export type Job = {
@@ -17,6 +22,8 @@ export type Job = {
   outputMode: string;
   audioPath: string | null;
   resultPath: string | null;
+  audioUrl: string | null;
+  animationUrl: string | null;
   error: string | null;
 };
 
@@ -26,14 +33,35 @@ export type SystemCheck = {
   detail: string;
 };
 
+export type AnimationFrame = {
+  t: number;
+  jawOpen: number;
+  mouthWide: number;
+  mouthSmile: number;
+  blendShapes?: Record<string, number>;
+};
+
+export type AnimationTimeline = {
+  engine: string;
+  frames: AnimationFrame[];
+  model?: string;
+  modelAsset?: string;
+};
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(resolveApiUrl(path), {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : 'network error';
+    throw new Error(`Cannot reach backend API at ${resolveApiUrl(path)}. Check that the backend is running on port 8020. ${detail}`);
+  }
 
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`);
@@ -61,6 +89,21 @@ export type CreateJobInput = {
   a2fProfile: string;
   outputMode: string;
 };
+
+export function resolveApiUrl(path: string): string {
+  if (path.startsWith('http')) {
+    return path;
+  }
+  return `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+export async function fetchAnimationTimeline(urlOrPath: string): Promise<AnimationTimeline> {
+  const response = await fetch(resolveApiUrl(urlOrPath));
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+  return response.json() as Promise<AnimationTimeline>;
+}
 
 export function createJob(input: CreateJobInput): Promise<Job> {
   return request<Job>('/api/jobs', {

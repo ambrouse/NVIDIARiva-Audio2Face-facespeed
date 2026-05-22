@@ -15,9 +15,12 @@ export function LogsPage() {
   const filteredLogs = logs.filter((line) => line.toLowerCase().includes(filter.toLowerCase()));
 
   return (
-    <section className="panel">
-      <p className="eyebrow">Observability</p>
-      <h2>Realtime-ready logs</h2>
+    <section className="supportPage">
+      <div className="supportHeader">
+        <p className="eyebrow">Activity</p>
+        <h1>Service logs</h1>
+        <p className="muted">Load a service log and filter the current lines.</p>
+      </div>
       <div className="toolbar">
         <select value={selectedService} onChange={(event) => setSelectedService(event.target.value)} aria-label="Service">
           {services.map((service) => <option key={service} value={service}>{service}</option>)}

@@ -1,14 +1,15 @@
 # Troubleshooting: Resources and Ports
 
-Time: 2026-05-20
+Time: 2026-05-22
 
 ## Safe local ports
 
 ```text
 Backend API: 127.0.0.1:8020
-Frontend:    127.0.0.1:6210
-Riva gRPC:   127.0.0.1:50100
-Audio2Face:  127.0.0.1:8040
+Frontend:    127.0.0.1:6310
+Riva gRPC:   127.0.0.1:50051
+Audio2Face gRPC: 127.0.0.1:8040
+Audio2Face HTTP: 127.0.0.1:8041
 ```
 
 If a port is busy, do not kill the owner process. Ask for a new port and update `.env`/frontend env explicitly.
@@ -21,9 +22,18 @@ bash scripts/setup.sh --check-resources
 bash scripts/setup.sh --check-gpu-light
 bash scripts/setup.sh --check-docker-space
 bash scripts/setup.sh --dry-run-nvidia-full
+bash scripts/setup.sh --list-containers
 ```
 
 These commands must not start containers, download assets, prune Docker, kill processes or free ports.
+
+To stop only containers created for this project:
+
+```bash
+bash scripts/setup.sh --stop-containers
+```
+
+This command filters by `com.facespeed.project=NVIDIARiva-Audio2Face-facespeed` and does not touch unrelated containers.
 
 ## Hard gates
 
@@ -43,7 +53,7 @@ Heavy NVIDIA work is blocked if any gate fails:
 Check owner:
 
 ```bash
-ss -ltnp | grep -E ':(8020|6210|50100|8040)\\b'
+ss -ltnp | grep -E ':(8020|6310|50051|8040|8041)\\b'
 ```
 
 Resolution: choose a different port with the user. Do not kill the process.
@@ -68,10 +78,20 @@ docker system df
 
 Cleanup policy: only stopped/unused resources after explicit confirmation. Do not remove active containers/images/volumes.
 
+### Project container status
+
+Check project containers:
+
+```bash
+docker ps -a --filter label=com.facespeed.project=NVIDIARiva-Audio2Face-facespeed
+```
+
+The Services page can show container metadata through `/api/services`. Set `SERVICE_MANAGER_MODE=docker` only when the backend should start, stop or restart the project-labeled Riva/A2F containers.
+
 ### VS Code port forwarding disconnect
 
 If the browser disconnects but the service is still listening on localhost, reconnect the VS Code forwarded port. Verify with:
 
 ```bash
-ss -ltnp | grep -E ':(8020|6210)\\b'
+ss -ltnp | grep -E ':(8020|6310)\\b'
 ```

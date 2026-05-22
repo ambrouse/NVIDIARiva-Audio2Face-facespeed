@@ -19,6 +19,9 @@ def getJobService() -> JobService:
     if settings.pipelineMode == "nvidia":
         rivaClient = NvidiaRivaTtsClient(settings)
         audio2FaceClient = NvidiaAudio2FaceClient(settings)
+    elif settings.pipelineMode == "riva":
+        rivaClient = NvidiaRivaTtsClient(settings)
+        audio2FaceClient = MockAudio2FaceClient()
     else:
         rivaClient = MockRivaTtsClient()
         audio2FaceClient = MockAudio2FaceClient()

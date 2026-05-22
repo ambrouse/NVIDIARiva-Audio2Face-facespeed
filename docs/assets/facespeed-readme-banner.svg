@@ -1,0 +1,26 @@
+<svg width="1440" height="420" viewBox="0 0 1440 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1440" height="420" fill="#07111F"/>
+  <path d="M0 0H1440V420H0V0Z" fill="url(#bg)"/>
+  <path d="M118 304C222 178 310 121 458 154C560 177 620 256 736 241C876 223 923 103 1069 96C1177 91 1262 146 1340 236" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+  <path d="M120 312C230 246 313 225 421 244C543 266 599 336 739 318C884 299 945 214 1072 207C1172 201 1261 241 1342 316" stroke="#76B900" stroke-width="3" stroke-linecap="round" opacity=".72"/>
+  <g opacity=".9">
+    <circle cx="1080" cy="188" r="82" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+    <path d="M1050 173C1059 162 1071 156 1086 156C1103 156 1118 164 1128 177" stroke="#E5EEFC" stroke-width="5" stroke-linecap="round"/>
+    <path d="M1043 216C1064 240 1102 240 1125 216" stroke="#76B900" stroke-width="6" stroke-linecap="round"/>
+    <path d="M1027 192H1005M1155 192H1134" stroke="#38BDF8" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="1063" cy="189" r="7" fill="#E5EEFC"/>
+    <circle cx="1103" cy="189" r="7" fill="#E5EEFC"/>
+  </g>
+  <g fill="#E5EEFC">
+    <text x="116" y="128" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="48" font-weight="800">FaceSpeed</text>
+    <text x="118" y="176" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="25" font-weight="600" fill="#BAE6FD">Riva speech + Audio2Face-3D blendshapes + managed local containers</text>
+    <text x="118" y="226" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" fill="#9FB0C7">A practical control plane for turning text into audio, animation data, and a rigged 3D speaking face.</text>
+  </g>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1440" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset=".45" stop-color="#06283B"/>
+      <stop offset="1" stop-color="#0A151F"/>
+    </linearGradient>
+  </defs>
+</svg>

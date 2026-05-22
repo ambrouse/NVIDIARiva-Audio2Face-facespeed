@@ -16,15 +16,25 @@ jobs:
       - name: Install backend dependencies
         run: python -m pip install -r backend/requirements.txt
       - name: Run backend and setup tests
-        run: python -m pytest backend tests
+        run: PYTHONPATH=backend python -m pytest backend/tests tests
       - name: Check setup script syntax
-        run: bash -n scripts/setup.sh
+        run: bash -n setup.sh && bash -n scripts/setup.sh
+      - name: Check README and evidence assets
+        run: |
+          test -s README.md
+          test -s docs/assets/facespeed-demo.gif
+          test -s test/production-enduser-evidence-2026-05-22/README.md
+          test -s test/production-enduser-evidence-2026-05-22/browser-report.json
+          test -s test/production-enduser-evidence-2026-05-22/audio-report.json
+          duplicate_hashes="$(sha256sum test/production-enduser-evidence-2026-05-22/screenshots/*.png | awk '{print $1}' | sort | uniq -d)"
+          test -z "$duplicate_hashes"
       - name: Check tracked runtime artifacts are absent
         run: |
           ! git ls-files | grep -E '(^|/)(\.env$|logs/|outputs/|\.cache/|.*\.wav$|.*\.mp3$|frontend/\.ms-playwright/|\.local-libs/|\.local-rpms/|riva-model-repo/)'
       - name: Check NVIDIA keys are not tracked
         run: |
           ! git grep -nE 'nvapi-[A-Za-z0-9_-]+'
+          ! git grep -nE '(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY)'
 
   frontend:
     runs-on: ubuntu-latest

@@ -43,12 +43,14 @@ class JobService:
             audioPath = self.settings.outputDir / "audio" / f"{job.id}.wav"
             self.rivaClient.synthesize(normalizedText, job.voice, job.language, audioPath)
             job.audioPath = str(audioPath)
+            job.audioUrl = f"/api/artifacts/audio/{job.id}.wav"
             self._setState(job, JobState.speechReady)
 
             self._setState(job, JobState.sendingToA2f)
-            resultPath = self.settings.outputDir / "a2f" / f"{job.id}.json"
-            self.audio2FaceClient.processAudio(audioPath, job.a2fProfile, job.outputMode.value, resultPath)
+            resultPath = self.settings.outputDir / "animation" / f"{job.id}.json"
+            self.audio2FaceClient.processAudio(audioPath, job.a2fProfile, job.outputMode.value, resultPath, normalizedText)
             job.resultPath = str(resultPath)
+            job.animationUrl = f"/api/artifacts/animation/{job.id}.json"
 
             self._setState(job, JobState.animatingFace)
             self._setState(job, JobState.completed)

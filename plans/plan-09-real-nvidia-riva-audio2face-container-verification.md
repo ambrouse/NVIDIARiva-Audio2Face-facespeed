@@ -369,13 +369,38 @@ Next:
 - ...
 ```
 
+## Phase 09 Checkpoint
+
+Status: BLOCKED for real smoke after safe pull/start attempts
+Checked at: 2026-05-21 09:20
+Evidence:
+- NGC CLI was downloaded locally to `.cache/nvidia/ngc-cli/extracted/ngc-cli/ngc` and reports `NGC CLI 4.18.0`.
+- `ngc config current` found an API key from environment and printed it masked only.
+- Docker login to `nvcr.io` succeeded using the existing environment key via stdin.
+- Hard gates passed before pull/start: ports `8020`, `6210`, `50100`, `8040` available; Docker reachable; GPU visible; RAM/disk/commit above reserve threshold.
+- Pulled `nvcr.io/nvidia/riva/riva-speech:2.19.0`; local inspect size `39791080651` bytes.
+- Pulled `nvcr.io/nvidia/ace/audio2face:1.0.11`; local inspect size `27487807852` bytes.
+- Dry-run container commands with verified images used project labels, localhost binds, resource limits, GPU device flag and `--restart no`.
+- `facespeed-riva` started on `127.0.0.1:50100` but exited 0 after printing license text; image metadata has no default command and `/opt/riva/bin/riva_server` reports `--model-repository must be specified`.
+- `facespeed-audio2face` started on `127.0.0.1:8040` but exited 0; logs report `Detected NVIDIA RTX PRO 5000 Blackwell GPU, which is not yet supported in this version of the container` and `No supported GPU(s) detected`.
+- No real Riva WAV or A2F artifact was produced.
+Decision:
+- Phase 09.1 PASS for local NGC/Docker auth setup.
+- Phase 09.2 is partially verified: Riva image/tag exists and is pulled, but runtime is BLOCKED until a valid Riva model repository/quickstart resource is available and mapped.
+- Phase 09.3 is BLOCKED for current A2F image because `nvidia/ace/audio2face:1.0.11` does not support the host RTX PRO 5000 Blackwell GPU.
+- Phase 09.5/09.6/09.7 cannot PASS.
+Next:
+- Get the exact Riva model repository/quickstart resource for `riva-speech:2.19.0` or a newer Blackwell-compatible Riva path.
+- Find a newer Blackwell-compatible Audio2Face/ACE image or NVIDIA-supported deployment path.
+- Do not retry container start loops with the current A2F image.
+
 ## Close Comment
 
-Status: PENDING
-Closed at: N/A
+Status: BLOCKED
+Closed at: 2026-05-21 09:20
 Evidence:
-- N/A
-Log entry: N/A
-Next plan: TBD after verification
+- Images pulled and scoped start attempts completed, but Riva needs `--model-repository` and A2F image does not support the host Blackwell GPU.
+Log entry: logs/sessions/facespeed-safe-completion.md#phase-09-real-nvidia-riva-audio2face-container-verification
+Next plan: Resolve Riva model repository and Blackwell-compatible Audio2Face/ACE runtime before real smoke.
 Notes:
 - Real NVIDIA work must not claim pass until Riva and A2F smoke artifacts exist.

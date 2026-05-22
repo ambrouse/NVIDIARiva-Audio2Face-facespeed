@@ -1,0 +1,12 @@
+{
+  "file": "generated-audio.wav",
+  "format": "RIFF/WAVE PCM",
+  "channels": 1,
+  "sample_width_bytes": 2,
+  "sample_rate_hz": 22050,
+  "frames": 165632,
+  "duration_seconds": 7.512,
+  "rms": 1949.23,
+  "peak_abs": 17342,
+  "non_silent": true
+}

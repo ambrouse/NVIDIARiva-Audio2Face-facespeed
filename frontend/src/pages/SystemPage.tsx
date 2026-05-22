@@ -13,14 +13,17 @@ export function SystemPage() {
   }, []);
 
   return (
-    <section className="panel">
-      <p className="eyebrow">Setup</p>
-      <h2>Hardware and software checks</h2>
+    <section className="supportPage">
+      <div className="supportHeader">
+        <p className="eyebrow">Setup</p>
+        <h1>Machine readiness</h1>
+        <p className="muted">Local ports, NVIDIA runtime, and required command availability.</p>
+      </div>
       {error && <div className="alert">{error}</div>}
       <div className="resourceGrid">
         <div><strong>Backend</strong><span>127.0.0.1:8020</span></div>
-        <div><strong>Frontend</strong><span>127.0.0.1:6210</span></div>
-        <div><strong>Riva</strong><span>127.0.0.1:50100</span></div>
+        <div><strong>Frontend</strong><span>127.0.0.1:6310</span></div>
+        <div><strong>Riva</strong><span>127.0.0.1:50051</span></div>
         <div><strong>Audio2Face</strong><span>127.0.0.1:8040</span></div>
       </div>
       <div className="notice">Heavy NVIDIA actions are blocked unless ports, RAM, memory commit, disk, GPU/VRAM and Docker all pass the 10% reserve gates.</div>

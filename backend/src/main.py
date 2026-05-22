@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.config import getSettings
 from src.dependencies import getServiceManager
 from src.models.service import ServiceName
-from src.routes import jobs, services, system
+from src.routes import artifacts, jobs, services, system
 
 settings = getSettings()
 app = FastAPI(title="Text Speech Face API", version="0.1.0")
@@ -21,6 +21,7 @@ app.add_middleware(
 
 app.include_router(services.router)
 app.include_router(jobs.router)
+app.include_router(artifacts.router)
 app.include_router(system.router)
 
 

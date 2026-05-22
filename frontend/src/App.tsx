@@ -5,41 +5,41 @@ import { ServicesPage } from './pages/ServicesPage';
 import { SystemPage } from './pages/SystemPage';
 import './styles/app.css';
 
-type Page = 'pipeline' | 'services' | 'logs' | 'system';
+type Page = 'studio' | 'operations' | 'activity' | 'setup';
 
 const navigation: { id: Page; label: string }[] = [
-  { id: 'pipeline', label: 'Pipeline' },
-  { id: 'services', label: 'Services' },
-  { id: 'logs', label: 'Logs' },
-  { id: 'system', label: 'System' },
+  { id: 'studio', label: 'Studio' },
+  { id: 'operations', label: 'Operations' },
+  { id: 'activity', label: 'Activity' },
+  { id: 'setup', label: 'Setup' },
 ];
 
 export function App() {
-  const [page, setPage] = useState<Page>('pipeline');
+  const [page, setPage] = useState<Page>('studio');
 
   return (
     <main className="appShell">
-      <aside className="sidebar" aria-label="Main navigation">
+      <header className="topBar">
         <div className="brand">
-          <span className="brandMark">TSF</span>
+          <span className="brandMark">FS</span>
           <div>
-            <strong>Face Speed</strong>
-            <p>Riva + Audio2Face</p>
+            <strong>FaceSpeed Studio</strong>
+            <p>Riva voice to talking 3D avatar</p>
           </div>
         </div>
-        <nav>
+        <nav className="topNav" aria-label="Primary">
           {navigation.map((item) => (
             <button className={page === item.id ? 'navItem active' : 'navItem'} key={item.id} onClick={() => setPage(item.id)}>
               {item.label}
             </button>
           ))}
         </nav>
-      </aside>
+      </header>
       <div className="content">
-        {page === 'pipeline' && <PipelinePage />}
-        {page === 'services' && <ServicesPage />}
-        {page === 'logs' && <LogsPage />}
-        {page === 'system' && <SystemPage />}
+        {page === 'studio' && <PipelinePage />}
+        {page === 'operations' && <ServicesPage />}
+        {page === 'activity' && <LogsPage />}
+        {page === 'setup' && <SystemPage />}
       </div>
     </main>
   );

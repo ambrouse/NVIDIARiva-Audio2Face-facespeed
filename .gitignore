@@ -27,6 +27,7 @@ yarn-error.log*
 logs/
 outputs/
 .cache/
+test/**/gif-frames/
 *.wav
 *.mp3
 *.mp4
