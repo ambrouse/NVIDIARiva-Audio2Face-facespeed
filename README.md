@@ -15,7 +15,7 @@ Updated: 2026-05-26
 ![Three.js](https://img.shields.io/badge/Three.js-Avatar-111111?style=for-the-badge&logo=threedotjs&logoColor=white)
 ![NVIDIA](https://img.shields.io/badge/NVIDIA-Riva-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
 
-[Chạy Nhanh](#chay-nhanh) · [Runtime](#runtime) · [Kiến Trúc](#kien-truc) · [Dữ Liệu Và Test](#du-lieu-va-test) · [Docs](#docs) · [Repo Map](#repo-map)
+[Chạy Nhanh](#chay-nhanh) · [Runtime](#runtime) · [API Ngoài](#api-ngoai) · [Kiến Trúc](#kien-truc) · [Dữ Liệu Và Test](#du-lieu-va-test) · [Docs](#docs) · [Repo Map](#repo-map)
 
 </div>
 
@@ -26,11 +26,11 @@ FaceSpeed Studio là workspace local để hỏi đáp trên kho PDF bằng text
 | Bước | Service thật đang dùng |
 | --- | --- |
 | Nhận câu hỏi | Text input hoặc NVIDIA Riva ASR |
-| Parse PDF | Docling provider `http://127.0.0.1:8005` |
+| Parse PDF | API ngoài repo: Docling provider `http://127.0.0.1:8005` |
 | Lưu metadata/chunk | Postgres `127.0.0.1:6001` |
 | Vector search | Qdrant `127.0.0.1:6002/6003` |
-| Embedding/rerank | Provider `http://127.0.0.1:8006` |
-| Teacher/review LLM | vLLM OpenAI-compatible `http://127.0.0.1:8007/v1` |
+| Embedding/rerank | API ngoài repo: provider `http://127.0.0.1:8006` |
+| Teacher/review LLM | API ngoài repo: vLLM OpenAI-compatible `http://127.0.0.1:8007/v1` |
 | Đọc câu trả lời | NVIDIA Riva TTS `127.0.0.1:6051` |
 | Avatar nói | Browser ARKit/viseme timeline trên ReadyPlayer GLB |
 
@@ -90,7 +90,28 @@ Thoát tmux mà không tắt process: `Ctrl+B`, rồi `D`.
 | Embedding/rerank | `http://127.0.0.1:8006` | Provider sẵn trên máy |
 | vLLM | `http://127.0.0.1:8007/v1` | Provider sẵn trên máy |
 
-Các port project sở hữu nằm trong `6000-6500` và tránh `6000`. Provider `8005/8006/8007` là service ngoài project trên workstation này, không phải bridge benchmark `6105/6106/6107`.
+Các port project sở hữu nằm trong `6000-6500` và tránh `6000`. Service do `docker-compose.yml`, `scripts/setup.sh`, hoặc tmux của repo start thì tính là runtime của project. Provider `8005/8006/8007` là service ngoài project trên workstation này, không phải bridge benchmark `6105/6106/6107`.
+
+<a id="api-ngoai"></a>
+
+### API Ngoài Repo Cần Có Sẵn
+
+Các service dưới đây không được source này tự dựng bằng `./setup.sh` hoặc `docker-compose.yml`. Backend chỉ gọi API tới chúng, nên nếu chúng tắt hoặc đổi port thì RAG/voice chat sẽ báo lỗi thật.
+
+| API ngoài repo | Port mặc định | Biến cấu hình | Backend dùng để làm gì | Check nhanh |
+| --- | --- | --- | --- | --- |
+| Docling server | `http://127.0.0.1:8005` | `DOCLING_API_BASE_URL` | Parse PDF thành markdown/chunk đầu vào | `curl http://127.0.0.1:8005/health` |
+| Embedding/rerank server | `http://127.0.0.1:8006` | `EMBEDDING_API_BASE_URL` | Tạo embedding query/chunk và rerank kết quả search | `curl http://127.0.0.1:8006/health` |
+| vLLM OpenAI-compatible server | `http://127.0.0.1:8007/v1` | `LLM_API_BASE_URL` | Teacher/review answer, metadata cleanup nếu bật LLM | `curl http://127.0.0.1:8007/v1/models` |
+
+Các service không nằm trong bảng này là do repo quản lý hoặc optional theo path hiện tại:
+
+| Runtime thuộc repo | Vì sao không tính là API ngoài |
+| --- | --- |
+| Nginx `6300`, Postgres `6001`, Qdrant `6002/6003` | Chạy từ `docker-compose.yml` trong session `facespeed-riva-docker` |
+| Backend `6320`, frontend `6310` | Chạy từ `scripts/setup.sh` trong tmux project |
+| Riva TTS `6051`, Riva ASR `6052` | `scripts/setup.sh` start bằng tmux `facespeed-riva-tts` và `facespeed-riva-asr` nếu Riva quickstart/model đã được provision |
+| Audio2Face `6040/6041` | Optional, không bắt buộc cho path browser ARKit hiện tại |
 
 ### Env Quan Trọng
 
