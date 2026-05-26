@@ -1,16 +1,24 @@
 # Troubleshooting: Resources and Ports
 
-Time: 2026-05-22
+Time: 2026-05-26
 
 ## Safe local ports
 
 ```text
-Backend API: 127.0.0.1:8020
-Frontend:    127.0.0.1:6310
-Riva gRPC:   127.0.0.1:50051
-Audio2Face gRPC: 127.0.0.1:8040
-Audio2Face HTTP: 127.0.0.1:8041
+Nginx app proxy:     127.0.0.1:6300
+Frontend:            127.0.0.1:6310
+Backend API:         127.0.0.1:6320
+Postgres:            127.0.0.1:6001
+Qdrant HTTP/gRPC:    127.0.0.1:6002/6003
+Audio2Face optional: 127.0.0.1:6040/6041
+Riva TTS:            127.0.0.1:6051
+Riva ASR:            127.0.0.1:6052
+Docling:             127.0.0.1:8005
+Embedding/rerank:    127.0.0.1:8006
+LLM judge/teacher:   127.0.0.1:8007
 ```
+
+Open `http://127.0.0.1:6300/` in the browser. Nginx proxies `/api/*` to backend `6320`, so IDE/remote forwarding usually needs only port `6300`.
 
 If a port is busy, do not kill the owner process. Ask for a new port and update `.env`/frontend env explicitly.
 
@@ -53,7 +61,7 @@ Heavy NVIDIA work is blocked if any gate fails:
 Check owner:
 
 ```bash
-ss -ltnp | grep -E ':(8020|6310|50051|8040|8041)\\b'
+ss -ltnp | grep -E ':(6001|6002|6003|6040|6041|6051|6052|6300|6310|6320|8005|8006|8007)\\b'
 ```
 
 Resolution: choose a different port with the user. Do not kill the process.
@@ -93,5 +101,7 @@ The Services page can show container metadata through `/api/services`. Set `SERV
 If the browser disconnects but the service is still listening on localhost, reconnect the VS Code forwarded port. Verify with:
 
 ```bash
-ss -ltnp | grep -E ':(8020|6310)\\b'
+ss -ltnp | grep -E ':(6300|6310|6320)\\b'
 ```
+
+Prefer forwarding `6300`; forwarding only `6320` will not serve the frontend app.

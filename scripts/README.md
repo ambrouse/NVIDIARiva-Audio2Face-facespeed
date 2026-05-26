@@ -13,4 +13,4 @@ Operational scripts for setup, verification, demos, and cleanup.
 
 Run scripts from the repository root unless a script says otherwise.
 
-`setup.sh --setup` creates `.env` from `.env.example` on a fresh clone, and `setup.sh --run`/`--setup-run` detach backend/frontend processes with PID files in `logs/runtime/`. Use `./setup.sh --stop` to stop project-owned local processes.
+`setup.sh --setup` creates `.env` from `.env.example` on a fresh clone. `setup.sh --run`/`--setup-run` run the project in tmux sessions named `facespeed-riva-docker`, `facespeed-riva-tts`, `facespeed-riva-asr`, `facespeed-riva-backend`, and `facespeed-riva-frontend`. The Docker session includes nginx on `127.0.0.1:6300`, which proxies frontend and backend through one port. Use `./setup.sh --stop` to stop project-owned tmux sessions, local processes, and containers.

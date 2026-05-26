@@ -42,13 +42,13 @@ Rebuild FaceSpeed from a technical dashboard into a production-ready end-user av
 | --- | --- | --- | --- |
 | 1 | Audit current source, runtime, visible routes, generated artifacts, and cleanup candidates | completed | `logs/plans/production-enduser-rebuild.md` audit section |
 | 2 | Define production UX IA and visual direction from research | completed | Research notes and studio IA in this plan/log |
-| 3 | Redesign frontend into end-user avatar studio | completed | `test/release-readiness-2026-05-23/app/01-home-voice-chat.png` |
+| 3 | Redesign frontend into end-user avatar studio | completed | `.cache/facespeed/evidence/release-readiness-2026-05-23/app/01-home-voice-chat.png` |
 | 4 | Make every visible frontend function real and non-dead | completed | Evidence screenshots 01-06 and `browser-report.json` |
 | 5 | Clean source tree and remove unused artifacts/folders safely | completed | Cleanup manifest in log and `git status` review |
 | 6 | Refactor noisy code and stabilize frontend/backend contracts | completed | Unit/integration tests and browser QA passed |
 | 7 | Build one-command `setup.sh` for fresh machine setup + run | completed | Root script, shell check, `--status`, `--run` |
 | 8 | Rebuild README with GIF demo banner and operational docs | completed | `README.md` and `docs/assets/voice-rag-avatar-demo.gif` |
-| 9 | Final full QA pass and evidence packaging | completed | `test/release-readiness-2026-05-23/` |
+| 9 | Final full QA pass and evidence packaging | completed | `.cache/facespeed/evidence/release-readiness-2026-05-23/` |
 
 ## Phase Details
 
@@ -90,7 +90,7 @@ Rebuild FaceSpeed from a technical dashboard into a production-ready end-user av
   - `backend/`, `frontend/`, `scripts/`, `docs/`, `plans/`, `skills/`, `.codex/skills/`, essential tests, README, configs.
   - Useful public models required by current app.
 - Review before deleting:
-  - `frontend/dist/`, `test/*evidence*`, `.cache/`, `.local-libs/`, `.local-rpms/`, `outputs/`, old phase docs/logs.
+  - `frontend/dist/`, `.cache/facespeed/evidence/*`, `.cache/`, `.local-libs/`, `.local-rpms/`, `outputs/`, old phase docs/logs.
 - Do not delete user files or unrelated work.
 - Add/update `.gitignore` for generated runtime artifacts.
 
@@ -127,7 +127,7 @@ Rebuild FaceSpeed from a technical dashboard into a production-ready end-user av
 - Generate or record a short GIF demo from real app interaction.
 
 ### Phase 9: Final QA
-- Create `test/release-readiness-2026-05-23/`.
+- Create `.cache/facespeed/evidence/release-readiness-2026-05-23/`.
 - One best screenshot per function/state, no duplicates.
 - Root README with scope, run environment, test results, blockers.
 - Hygiene:

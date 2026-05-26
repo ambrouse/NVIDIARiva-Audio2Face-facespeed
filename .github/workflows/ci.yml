@@ -16,27 +16,24 @@ jobs:
       - name: Install backend dependencies
         run: python -m pip install -r backend/requirements.txt
       - name: Run backend and setup tests
-        run: PYTHONPATH=backend python -m pytest backend/tests tests
+        run: PYTHONPATH=backend python -m pytest tests
       - name: Check setup script syntax
         run: bash -n setup.sh && bash -n scripts/setup.sh && bash -n scripts/manage-logs.sh
       - name: Check README and evidence assets
         run: |
           test -s README.md
+          test -s docs/assets/facespeed-readme-banner.png
           test -s docs/assets/voice-rag-avatar-demo.gif
-          test -s test/release-readiness-2026-05-23/README.md
-          test -s test/release-readiness-2026-05-23/browser-report.json
-          test -s test/release-readiness-2026-05-23/pipeline/docling-output-answer.wav
-          test -s test/release-readiness-2026-05-23/pipeline/docling-avatar-3d-moving.webm
-          test -s test/release-clone-validation-2026-05-23/README.md
-          test -s test/release-clone-validation-2026-05-23/browser-report.json
-          test -s test/release-clone-validation-2026-05-23/commands/35-clone-artifact-summary.json
-          duplicate_hashes="$(sha256sum test/release-readiness-2026-05-23/app/*.png test/release-clone-validation-2026-05-23/app/*.png | awk '{print $1}' | sort | uniq -d)"
-          test -z "$duplicate_hashes"
+          test -s tests/README.md
+          test -s tests/benchmarks/README.md
+          test -s tests/benchmarks/REPORT-2026-05-25-rag-voice.md
+          test -s tests/nginx-proxy/test-nginx-proxy-20260526-v1.md
+          test -s tests/nginx-proxy/evidence-2026-05-26/nginx-proxy-home.png
+          test -s tests/nginx-proxy/evidence-2026-05-26/sources-popup-100-docs.png
       - name: Check tracked runtime artifacts are absent
         run: |
-          ! git ls-files | grep -E '(^|/)(\.env$|outputs/|storage/|\.cache/|.*\.mp3$|frontend/\.ms-playwright/|\.local-libs/|\.local-rpms/|riva-model-repo/)'
-          ! git ls-files 'logs/**' | grep -Ev '^(logs/README.md|logs/plans/[^/]+\.md)$'
-          ! git ls-files '*.wav' | grep -Ev '^test/.+\.wav$'
+          ! git ls-files | grep -E '(^|/)(\.env$|outputs/|storage/|\.cache/|.*\.(mp3|wav)$|frontend/\.ms-playwright/|\.local-libs/|\.local-rpms/|riva-model-repo/)'
+          ! git ls-files 'logs/**' | grep -Ev '^(logs/README.md|logs/(plans|documentation|benchmarks)/[^/]+\.md|logs/(setup|riva|port-forward)/README.md|logs/benchmarks/bridges/README.md)$'
       - name: Check NVIDIA keys are not tracked
         run: |
           ! git grep -nE 'nvapi-[A-Za-z0-9_-]+'

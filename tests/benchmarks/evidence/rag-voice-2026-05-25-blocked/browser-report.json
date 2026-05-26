@@ -1,0 +1,20 @@
+{
+  "createdAt": "2026-05-25T09:11:22.879Z",
+  "frontendUrl": "http://127.0.0.1:6310/",
+  "backendUrl": "http://127.0.0.1:6320",
+  "screenshots": [
+    "01-frontend-loaded.png",
+    "02-runtime-modal.png",
+    "03-voice-chat-provider-error.png"
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "failedResponses": [
+    {
+      "url": "http://127.0.0.1:6320/api/voice/chat",
+      "status": 503
+    }
+  ],
+  "alertText": "Request failed with status 503"
+}

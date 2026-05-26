@@ -1,0 +1,7 @@
+{
+  "ok": false,
+  "status": 503,
+  "body": {
+    "detail": "embedding request failed: [Errno 111] Connection refused"
+  }
+}

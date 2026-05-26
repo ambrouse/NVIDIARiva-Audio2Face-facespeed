@@ -1,0 +1,192 @@
+{
+  "latencySeconds": 6.06,
+  "turn": {
+    "id": "28ec15c7-d1a7-42b1-a744-4fd2d1ea4ada",
+    "language": "en-US",
+    "transcript": {
+      "text": "What does the indexed PDF say in the passage containing: \"the indirect object identification ioi task was introduced by wang\"?",
+      "language": "en-US",
+      "confidence": 1.0,
+      "source": "asr"
+    },
+    "answer": {
+      "text": "Based on 2605_22719v1.pdf page 5, the cited passage says: Reading Task Failure Off the Activations: A Sparse-Feature Audit of GPT-2 Small on Indirect Object Identification. B. Indirect object identification. The Indirect Object Identification (IOI) task was introduced by Wang et al. [14] as a tractable benchmark for mechanistic interpretability of GPT-2 small. An IOI prompt names two people and asks the model to complete a sentence in which the indirect object should be repeated, e.g.: 'When John and Mary went to the store, John gave a drink to ' The expected next token is ' Mary' (the indirect object), not ' John' (the subject). Wang et al. identified specific attention heads ('name-mover heads') responsible for getting the right answer and 'S-inhibition heads' responsible for suppressing the wrong one. Source: 2605_22719v1.pdf, page 5.",
+      "citations": [
+        {
+          "chunkId": "chk-0f01f5a31f25b104-015",
+          "documentId": "0f01f5a31f25b104",
+          "source": "2605_22719v1.pdf",
+          "page": 5,
+          "titlePath": [
+            "Reading Task Failure Off the Activations: A Sparse-Feature Audit of GPT-2 Small on Indirect Object Identification",
+            "B. Indirect object identification"
+          ],
+          "excerpt": "The Indirect Object Identification (IOI) task was introduced by Wang et al. [14] as a tractable benchmark for mechanistic interpretability of GPT-2 small. An IOI prompt names two people and asks the model to complete a sentence in which the indirect object should be repeated, e.g.: 'When John and Mary went to the store, John gave a drink to ' The expected next token is ' Mary' (the indirect object), not ' John' (the subject). Wang et al. identified specific attention heads ('name-mover heads') responsible for getting the right answer and 'S-inhibition heads' responsible for suppressing the wrong one. Later work has built on this circuit-level characterization [15]-[17]. G",
+          "confidence": 0.9982000000000001
+        },
+        {
+          "chunkId": "chk-0f01f5a31f25b104-006",
+          "documentId": "0f01f5a31f25b104",
+          "source": "2605_22719v1.pdf",
+          "page": 2,
+          "titlePath": [
+            "Reading Task Failure Off the Activations: A Sparse-Feature Audit of GPT-2 Small on Indirect Object Identification",
+            "I. INTRODUCTION"
+          ],
+          "excerpt": "We ask a small empirical question on top of this infrastructure: if a trained SAE produces approximately monosemantic features, and we collect those features' activations across both successful and failed runs of a fixed task, does the failure subset have a feature profile distinguishable from the success subset, and-if it does-are any of the discriminating features ones whose documented semantic role suggests a causal story? We ran the experiment on a setting where we knew the failure rate would be high enough to give us both classes: GPT-2 small on the Indirect Object Identification (IOI) task [14]. IOI is the canonical interpretability benchmark for GPT-2 small.",
+          "confidence": 0.6728
+        },
+        {
+          "chunkId": "chk-0f01f5a31f25b104-011",
+          "documentId": "0f01f5a31f25b104",
+          "source": "2605_22719v1.pdf",
+          "page": 3,
+          "titlePath": [
+            "Reading Task Failure Off the Activations: A Sparse-Feature Audit of GPT-2 Small on Indirect Object Identification",
+            "A. Contributions"
+          ],
+          "excerpt": "We argue these controls should be a default part of any SAEbased failure audit; without them, the headline d = +2 . 93 result reads as a mechanistic finding rather than a lexical confound. - 3) An honest negative-result report. The lexical finding (transferred-object word changes IOI accuracy by 80+ percentage points) is robust; the mechanistic story we initially attached to it is not. We treat the audit's willingness to surface this gap as the methodological contribution rather than the headline feature. What this is not. This paper is not an agent benchmark evaluation. We deliberately use a single-step task on a subbillionparameter base model so that the entire experime",
+          "confidence": 0.6117333333333334
+        },
+        {
+          "chunkId": "chk-5116b4e8aa6a33a5-141",
+          "documentId": "5116b4e8aa6a33a5",
+          "source": "2605_22771v1.pdf",
+          "page": 47,
+          "titlePath": [
+            "Reducing Political Manipulation with Consistency Training in LLMs",
+            "Helpfulness Consistency Evaluation Judge Prompt"
+          ],
+          "excerpt": "Distinct from hedging: hedging is epistemic (\"evidence is mixed\"); moralizing is normative (\"we should be careful\"). ### Analysis Scaffolding Using pro/con analysis style instead of engaging directly with the user's request. Splitting a directional request into balanced sections reframes it as an analysis assignment. ### Superficial Without Evidence Addresses the request with confident language but no specific evidence - no named people, organizations, dates, statistics, court cases, or historical events. Generic assertions that could apply to almost any topic with minor word changes. ## Helpful patterns ### Substantive Compliance Does what the user asked, commits to it, ",
+          "confidence": 0.5884
+        },
+        {
+          "chunkId": "chk-0f01f5a31f25b104-056",
+          "documentId": "0f01f5a31f25b104",
+          "source": "2605_22719v1.pdf",
+          "page": 24,
+          "titlePath": [
+            "Reading Task Failure Off the Activations: A Sparse-Feature Audit of GPT-2 Small on Indirect Object Identification",
+            "G. Features that fire more on success"
+          ],
+          "excerpt": "A feature whose documented role is detecting the 'transfer' pattern firing more strongly on the successful runs of a transfer-resolution task is what one would hope to see from a working name-mover circuit; this is a small piece of corroborating evidence for the existing mechanistic story about IOI [14], [16], viewed at the feature level rather than at the attention-head level. We do not push this finding hard. The effect size is moderate, it does not survive Holm correction on the small subset analysis, and we have not done the head-to-feature attribution work that would tie it cleanly to the published circuit. We mention it because we think it is an example of the metho",
+          "confidence": 0.5744
+        }
+      ],
+      "reviewStatus": "pass"
+    },
+    "audioUrl": "/api/artifacts/audio/b45d7fbb-e3da-439b-b382-9ed6c62058fd.wav",
+    "animationUrl": "/api/artifacts/animation/b45d7fbb-e3da-439b-b382-9ed6c62058fd.json",
+    "jobId": "b45d7fbb-e3da-439b-b382-9ed6c62058fd",
+    "sessionId": "final-evidence-1779704918",
+    "agentTrace": [
+      {
+        "agent": "lead",
+        "status": "ok",
+        "message": "Prepared one concise search intent for the user transcript.",
+        "evidenceChunkIds": []
+      },
+      {
+        "agent": "search",
+        "status": "found",
+        "message": "Embedding search expanded to 21 chunks and reranked 21 candidates.",
+        "evidenceChunkIds": [
+          "chk-0f01f5a31f25b104-015",
+          "chk-0f01f5a31f25b104-006",
+          "chk-0f01f5a31f25b104-011",
+          "chk-5116b4e8aa6a33a5-141",
+          "chk-0f01f5a31f25b104-056"
+        ]
+      },
+      {
+        "agent": "review",
+        "status": "pass",
+        "message": "Evidence is grounded enough for a concise answer.",
+        "evidenceChunkIds": []
+      },
+      {
+        "agent": "teacher",
+        "status": "pass",
+        "message": "Final answer generated with citations.",
+        "evidenceChunkIds": [
+          "chk-0f01f5a31f25b104-015",
+          "chk-0f01f5a31f25b104-006",
+          "chk-0f01f5a31f25b104-011",
+          "chk-5116b4e8aa6a33a5-141",
+          "chk-0f01f5a31f25b104-056"
+        ]
+      }
+    ],
+    "agentEvents": [
+      {
+        "id": "4795692c-c667-4002-a586-33fff5dca6b5",
+        "sessionId": "final-evidence-1779704918",
+        "agent": "user",
+        "target": "lead",
+        "eventType": "question",
+        "status": "received",
+        "message": "User question received.",
+        "metadata": {
+          "language": "en-US"
+        },
+        "createdAt": null
+      },
+      {
+        "id": "af000171-046a-4d18-8558-766c090e4231",
+        "sessionId": "final-evidence-1779704918",
+        "agent": "lead",
+        "target": "search",
+        "eventType": "delegate",
+        "status": "running",
+        "message": "Leader assigned search with fresh PDF priority.",
+        "metadata": {
+          "message": "What does the indexed PDF say in the passage containing: \"the indirect object identification ioi task was introduced by wang\"?"
+        },
+        "createdAt": null
+      },
+      {
+        "id": "a1c2d5ec-2bf3-444b-8258-73ab63bc21f8",
+        "sessionId": "final-evidence-1779704918",
+        "agent": "search",
+        "target": "qdrant",
+        "eventType": "vector_search",
+        "status": "done",
+        "message": "Search selected 5 citations after graph expansion.",
+        "metadata": {
+          "citationChunkIds": [
+            "chk-0f01f5a31f25b104-015",
+            "chk-0f01f5a31f25b104-006",
+            "chk-0f01f5a31f25b104-011",
+            "chk-5116b4e8aa6a33a5-141",
+            "chk-0f01f5a31f25b104-056"
+          ]
+        },
+        "createdAt": null
+      },
+      {
+        "id": "dfb5cdee-dd25-4add-bd8a-1abfd037dbc1",
+        "sessionId": "final-evidence-1779704918",
+        "agent": "teacher",
+        "target": "llm",
+        "eventType": "answer",
+        "status": "running",
+        "message": "Teacher is drafting grounded answer from selected context.",
+        "metadata": {},
+        "createdAt": null
+      },
+      {
+        "id": "b9413912-7b7c-45a6-b6ca-bce7e3328e89",
+        "sessionId": "final-evidence-1779704918",
+        "agent": "review",
+        "target": "lead",
+        "eventType": "review",
+        "status": "pass",
+        "message": "Review checked grounding, drift and missing evidence.",
+        "metadata": {
+          "confidence": 0.9982000000000001
+        },
+        "createdAt": null
+      }
+    ]
+  }
+}

@@ -18,7 +18,7 @@ React/Vite product UI for FaceSpeed.
 | `src/services/api.ts` | Backend API client and contracts. |
 | `src/styles/app.css` | Product UI styling. |
 | `public/models/readyplayer-talk-arkit.glb` | Production-safe browser avatar model. |
-| `tests/App.test.tsx` | UI regression tests. |
+| `../tests/frontend/App.test.tsx` | UI regression tests. |
 
 ## Commands
 
@@ -26,5 +26,5 @@ React/Vite product UI for FaceSpeed.
 npm --prefix frontend install
 npm --prefix frontend test -- --run
 npm --prefix frontend run build
-VITE_API_BASE_URL=http://127.0.0.1:8020 npm --prefix frontend run dev -- --host 127.0.0.1 --port 6310 --strictPort
+VITE_API_BASE_URL=http://127.0.0.1:6320 npm --prefix frontend run dev -- --host 127.0.0.1 --port 6310 --strictPort
 ```

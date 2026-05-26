@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "status": 200,
+  "body": {
+    "asrAvailable": true,
+    "asrDetail": "Riva ASR endpoint 127.0.0.1:6052 is enabled by config.",
+    "documentCount": 100,
+    "chunkCount": 11022,
+    "languages": [
+      "en-US",
+      "vi-VN"
+    ],
+    "doclingBaseUrl": "http://127.0.0.1:6105",
+    "embeddingBaseUrl": "http://127.0.0.1:6106",
+    "parseProvider": "docling",
+    "retrievalProvider": "qdrant-graph-rerank",
+    "postgresAvailable": true,
+    "qdrantAvailable": true,
+    "llmAvailable": false,
+    "graphRagEnabled": true
+  }
+}

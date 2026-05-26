@@ -42,12 +42,32 @@ export function ServicesPage() {
     },
     {
       name: 'Embedding rerank',
-      state: 'ready',
+      state: status.qdrantAvailable ? 'graph' : 'local',
       healthy: true,
       detail: status.embeddingBaseUrl,
       meta: [
         ['Provider', status.retrievalProvider],
-        ['Mode', 'main path'],
+        ['Qdrant', status.qdrantAvailable ? 'ready on 6002' : 'not connected'],
+      ],
+    },
+    {
+      name: 'Postgres ledger',
+      state: status.postgresAvailable ? 'ready' : 'blocked',
+      healthy: status.postgresAvailable,
+      detail: status.postgresAvailable ? 'Agent session, task, history and prompt tables are online.' : 'Postgres DSN is not reachable.',
+      meta: [
+        ['Port', '127.0.0.1:6001'],
+        ['Mode', 'session memory'],
+      ],
+    },
+    {
+      name: 'LLM reasoning',
+      state: status.llmAvailable ? 'ready' : 'blocked',
+      healthy: status.llmAvailable,
+      detail: status.llmAvailable ? 'OpenAI-compatible LLM is reachable.' : 'LLM teacher/review is unavailable; benchmark pass is blocked.',
+      meta: [
+        ['Provider', 'vllm / openai-compatible'],
+        ['Graph RAG', status.graphRagEnabled ? 'enabled' : 'disabled'],
       ],
     },
     {

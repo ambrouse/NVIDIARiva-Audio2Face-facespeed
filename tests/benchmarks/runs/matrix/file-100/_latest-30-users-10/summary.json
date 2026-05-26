@@ -1,0 +1,543 @@
+{
+  "startedAt": "2026-05-25T10:23:12.863507+00:00",
+  "finishedAt": "2026-05-25T10:26:19.719022+00:00",
+  "durationSeconds": 186.855515,
+  "caseCount": 30,
+  "documentCount": 100,
+  "chunkCount": 11022,
+  "runtime": {
+    "asrAvailable": true,
+    "asrDetail": "Riva ASR endpoint 127.0.0.1:6052 is enabled by config.",
+    "documentCount": 100,
+    "chunkCount": 11022,
+    "languages": [
+      "en-US",
+      "vi-VN"
+    ],
+    "doclingBaseUrl": "http://127.0.0.1:6105",
+    "embeddingBaseUrl": "http://127.0.0.1:6106",
+    "parseProvider": "docling",
+    "retrievalProvider": "qdrant-graph-rerank",
+    "postgresAvailable": true,
+    "qdrantAvailable": true,
+    "llmAvailable": true,
+    "graphRagEnabled": true
+  },
+  "concurrency": 10,
+  "passCount": 30,
+  "failCount": 0,
+  "overallPassRate": 1.0,
+  "accepted": true,
+  "threshold": 0.95,
+  "checkPassRates": {
+    "animation_url": 1.0,
+    "answer_not_unjustified_not_found": 1.0,
+    "answer_source_cited": 1.0,
+    "answer_source_expected_document": 1.0,
+    "api": 1.0,
+    "audio_url": 1.0,
+    "dashboard_edges": 1.0,
+    "expected_chunk_cited": 1.0,
+    "expected_document_cited": 1.0,
+    "expected_page_cited": 1.0,
+    "has_answer": 1.0,
+    "has_citations": 1.0,
+    "judge_correct": 1.0,
+    "judge_grounded": 1.0,
+    "judge_no_hallucination": 1.0,
+    "keyword_overlap": 1.0,
+    "latency_ok": 1.0,
+    "review_pass": 1.0
+  },
+  "latency": {
+    "p50": 56.010360797998146,
+    "p95": 57.81998204499541,
+    "max": 57.90992681100033,
+    "mean": 56.1752359433638
+  },
+  "resourceSamples": [
+    {
+      "createdAt": "2026-05-25T10:25:32.011023+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86149.3,
+        "freePercent": 67.27656364556064
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 42.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89677.3,
+        "freePercent": 23.582279535667737
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:25:37.075157+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86157.1,
+        "freePercent": 67.28262500260055
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 40.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89678.2,
+        "freePercent": 23.582516823308524
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:25:42.136181+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86161.8,
+        "freePercent": 67.28627645925722
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 40.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89679.8,
+        "freePercent": 23.582924629340525
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:25:47.199637+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86171.9,
+        "freePercent": 67.29423828204241
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 40.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89679.8,
+        "freePercent": 23.582924629340525
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:25:52.258768+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86170.8,
+        "freePercent": 67.29336583709355
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 42.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89679.8,
+        "freePercent": 23.582924629340525
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:25:57.317691+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86172.9,
+        "freePercent": 67.29501006026642
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 40.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89679.8,
+        "freePercent": 23.582919493244408
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:02.353268+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86166.7,
+        "freePercent": 67.29013535037724
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 37.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89679.1,
+        "freePercent": 23.58274178431862
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:07.414131+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86168.2,
+        "freePercent": 67.29128539144622
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 40.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89679.1,
+        "freePercent": 23.58274178431862
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:12.473931+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86153.6,
+        "freePercent": 67.27990700102906
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 44.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89679.1,
+        "freePercent": 23.582735621003277
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:17.533099+00:00",
+      "label": "background-monitor",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86144.9,
+        "freePercent": 67.27311352235373
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89660.6,
+        "freePercent": 23.577889200703567
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:18.668561+00:00",
+      "label": "after-case-0021",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86151.0,
+        "freePercent": 67.2778601109567
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 98.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.5,
+        "freePercent": 23.576018634496325
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:18.728158+00:00",
+      "label": "after-case-0024",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86135.8,
+        "freePercent": 67.26603329603785
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.5,
+        "freePercent": 23.576014525619428
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:18.786306+00:00",
+      "label": "after-case-0025",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86135.2,
+        "freePercent": 67.2655330129203
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.5,
+        "freePercent": 23.57601247118098
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:18.860215+00:00",
+      "label": "after-case-0026",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86149.1,
+        "freePercent": 67.27643247376763
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.5,
+        "freePercent": 23.57600733508486
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:18.860503+00:00",
+      "label": "after-case-0022",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86149.1,
+        "freePercent": 67.27643247376763
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.4,
+        "freePercent": 23.575999117331065
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:18.860658+00:00",
+      "label": "after-case-0023",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86149.1,
+        "freePercent": 67.27643247376763
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.7,
+        "freePercent": 23.576061777703742
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:19.102289+00:00",
+      "label": "after-case-0027",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86145.3,
+        "freePercent": 67.27341857303514
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.4,
+        "freePercent": 23.57599706289262
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:19.190384+00:00",
+      "label": "after-case-0028",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86146.6,
+        "freePercent": 67.27440693724296
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.4,
+        "freePercent": 23.57599295401572
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:19.423515+00:00",
+      "label": "after-case-0029",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86147.0,
+        "freePercent": 67.27475164451297
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.4,
+        "freePercent": 23.575988845138824
+      },
+      "ok": true
+    },
+    {
+      "createdAt": "2026-05-25T10:26:19.682616+00:00",
+      "label": "after-case-0030",
+      "ram": {
+        "totalMiB": 128052.5,
+        "availableMiB": 86145.2,
+        "freePercent": 67.27333010833753
+      },
+      "gpu": {
+        "index": "0",
+        "name": "NVIDIA RTX PRO 5000 Blackwell",
+        "totalMiB": 48935.0,
+        "usedMiB": 39801.0,
+        "freeMiB": 8604.0,
+        "freeVramPercent": 17.582507407785837,
+        "utilizationPercent": 99.0
+      },
+      "disk": {
+        "totalMiB": 380274.2,
+        "freeMiB": 89653.4,
+        "freePercent": 23.575983709042703
+      },
+      "ok": true
+    }
+  ],
+  "targetCaseCount": 30,
+  "targetFileCount": 100,
+  "complete": true
+}

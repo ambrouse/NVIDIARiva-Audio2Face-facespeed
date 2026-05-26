@@ -58,6 +58,10 @@ export type RagRuntimeStatus = {
   embeddingBaseUrl: string;
   parseProvider: string;
   retrievalProvider: string;
+  postgresAvailable: boolean;
+  qdrantAvailable: boolean;
+  llmAvailable: boolean;
+  graphRagEnabled: boolean;
 };
 
 export type RagDocument = {
@@ -70,6 +74,14 @@ export type RagDocument = {
   pageCount: number;
   chunkCount: number;
   summary: string;
+};
+
+export type DocumentDeleteResult = {
+  id: string;
+  deleted: boolean;
+  removedChunkCount: number;
+  removedTurnCount: number;
+  removedFiles: string[];
 };
 
 export type Citation = {
@@ -89,6 +101,34 @@ export type AgentTrace = {
   evidenceChunkIds: string[];
 };
 
+export type AgentEvent = {
+  id: string;
+  sessionId: string;
+  agent: string;
+  target: string | null;
+  eventType: string;
+  status: string;
+  message: string;
+  metadata: Record<string, unknown>;
+  createdAt: string | null;
+};
+
+export type AgentSessionStatus = {
+  sessionId: string;
+  state: string;
+  question: string;
+  answer: string;
+  events: AgentEvent[];
+};
+
+export type PromptConfig = {
+  agent: string;
+  name: string;
+  content: string;
+  enabled: boolean;
+  updatedAt: string | null;
+};
+
 export type VoiceTurn = {
   id: string;
   language: string;
@@ -106,7 +146,9 @@ export type VoiceTurn = {
   audioUrl: string | null;
   animationUrl: string | null;
   jobId: string | null;
+  sessionId: string | null;
   agentTrace: AgentTrace[];
+  agentEvents: AgentEvent[];
 };
 
 export type Transcript = VoiceTurn['transcript'];
@@ -123,7 +165,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     });
   } catch (error) {
     const detail = error instanceof Error ? error.message : 'network error';
-    throw new Error(`Cannot reach backend API at ${resolveApiUrl(path)}. Check that the backend is running on port 8020. ${detail}`);
+    throw new Error(`Cannot reach backend API at ${resolveApiUrl(path)}. Check that the backend is running on the configured project port. ${detail}`);
   }
 
   if (!response.ok) {
@@ -187,6 +229,21 @@ export function fetchDocuments(): Promise<RagDocument[]> {
   return request<RagDocument[]>('/api/documents');
 }
 
+export function fetchAgentSession(sessionId: string): Promise<AgentSessionStatus> {
+  return request<AgentSessionStatus>(`/api/agent-sessions/${encodeURIComponent(sessionId)}`);
+}
+
+export function fetchPrompts(): Promise<PromptConfig[]> {
+  return request<PromptConfig[]>('/api/prompts');
+}
+
+export function updatePrompt(agent: string, input: { name?: string; content?: string; enabled?: boolean }): Promise<PromptConfig> {
+  return request<PromptConfig>(`/api/prompts/${encodeURIComponent(agent)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
+}
+
 export async function uploadDocument(file: File, language: string): Promise<RagDocument> {
   const response = await fetch(resolveApiUrl(`/api/documents?filename=${encodeURIComponent(file.name)}&language=${encodeURIComponent(language)}`), {
     method: 'POST',
@@ -200,7 +257,20 @@ export async function uploadDocument(file: File, language: string): Promise<RagD
   return response.json() as Promise<RagDocument>;
 }
 
-export function createVoiceTurn(input: { message: string; language: string; voice: string; outputMode: string }): Promise<VoiceTurn> {
+export function updateDocument(documentId: string, input: { title?: string; summary?: string; language?: string }): Promise<RagDocument> {
+  return request<RagDocument>(`/api/documents/${encodeURIComponent(documentId)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
+}
+
+export function deleteDocument(documentId: string): Promise<DocumentDeleteResult> {
+  return request<DocumentDeleteResult>(`/api/documents/${encodeURIComponent(documentId)}`, {
+    method: 'DELETE',
+  });
+}
+
+export function createVoiceTurn(input: { message: string; language: string; voice: string; outputMode: string; sessionId?: string }): Promise<VoiceTurn> {
   return request<VoiceTurn>('/api/voice/chat', {
     method: 'POST',
     body: JSON.stringify(input),

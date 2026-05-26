@@ -35,7 +35,7 @@ Audit snapshot:
 
 - Frontend currently has a dashboard shell with `Pipeline`, `Services`, `Logs`, and `System` pages.
 - Backend routes include jobs, artifacts, services, and system checks.
-- Runtime/generated folders present: `.cache/`, `.local-libs/`, `.local-rpms/`, `.pytest_cache/`, `backend/.venv-linux/`, `frontend/node_modules/`, `frontend/dist/`, `outputs/`, `logs/`, and previous `test/*evidence*`.
+- Runtime/generated folders present: `.cache/`, `.local-libs/`, `.local-rpms/`, `.pytest_cache/`, `backend/.venv-linux/`, `frontend/node_modules/`, `frontend/dist/`, `outputs/`, `logs/`, and previous `.cache/facespeed/evidence/*`.
 - Required skill folders exist in both `.codex/skills/` and `skills/`; user explicitly asked to keep skill folders.
 - Current live ports after previous fix: frontend `6310`, backend `8020`, Riva `50051`.
 
@@ -76,7 +76,7 @@ Cleanup performed:
   - `backend/.pytest_cache/`
   - Python `__pycache__/` folders under project source/tests/scripts.
   - Old `outputs/`, `backend/outputs/`, `backend/logs/`, and `logs/jobs/`.
-  - Previous ad-hoc evidence folders under `test/`.
+  - Previous ad-hoc evidence folders under `.cache/facespeed/evidence/`.
   - Duplicate/root FBX uploads and the unused frontend `head.fbx` model copy.
 - Kept intentionally:
   - `.cache/nvidia/` for downloaded NVIDIA assets and NGC CLI material.
@@ -88,7 +88,7 @@ Verification after cleanup/setup edits:
 
 - `npm --prefix frontend test -- --run`: passed, 3 tests. jsdom still prints expected canvas/WebGL stubs.
 - `npm --prefix frontend run build`: passed. Vite reports a non-fatal large chunk warning for the Three.js bundle.
-- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests`: passed, 33 tests.
+- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests`: passed, 33 tests.
 
 ## 2026-05-22 15:06
 
@@ -125,7 +125,7 @@ README/evidence:
 
 - Rebuilt `README.md` using the project README style.
 - Added real browser GIF banner at `docs/assets/voice-rag-avatar-demo.gif`.
-- Created evidence folder: `test/release-readiness-2026-05-23/`.
+- Created evidence folder: `.cache/facespeed/evidence/release-readiness-2026-05-23/`.
 - Evidence includes:
   - 6 screenshots, one per function/state.
   - `browser-report.json`.
@@ -150,7 +150,7 @@ Final verification:
 - `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests/test_setup_script.py`: passed, 9 tests after the port-owner status/stop enhancement.
 - `npm --prefix frontend test -- --run`: passed, 3 tests. jsdom canvas warnings are expected.
 - `npm --prefix frontend run build`: passed with a non-fatal Three.js bundle size warning.
-- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests`: passed, 33 tests.
+- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests`: passed, 33 tests.
 - Duplicate screenshot hash scan: no duplicates.
 - Secret scan: only placeholder NGC examples were matched; no concrete key material found.
 

@@ -1,0 +1,39 @@
+{
+  "ok": true,
+  "status": 200,
+  "body": [
+    {
+      "name": "riva",
+      "state": "stopped",
+      "healthy": false,
+      "detail": "riva container facespeed-riva is Exited (0) 4 days ago",
+      "managerMode": "docker",
+      "containerName": "facespeed-riva",
+      "containerState": "exited",
+      "containerStatus": "Exited (0) 4 days ago",
+      "containerImage": "nvcr.io/nvidia/riva/riva-speech:2.19.0"
+    },
+    {
+      "name": "audio2face",
+      "state": "stopped",
+      "healthy": false,
+      "detail": "audio2face is stopped; no project-labeled container is registered",
+      "managerMode": "docker",
+      "containerName": "facespeed-audio2face-3d",
+      "containerState": null,
+      "containerStatus": null,
+      "containerImage": null
+    },
+    {
+      "name": "backend-worker",
+      "state": "running",
+      "healthy": true,
+      "detail": "backend-worker is running; no project-labeled container is registered",
+      "managerMode": "docker",
+      "containerName": null,
+      "containerState": null,
+      "containerStatus": null,
+      "containerImage": null
+    }
+  ]
+}

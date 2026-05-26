@@ -135,12 +135,12 @@ Implemented:
 
 Validation:
 
-- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests` -> 38 passed.
+- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests` -> 38 passed.
 - `npm --prefix frontend test -- --run` -> 3 passed. jsdom reports canvas `getContext` as not implemented, so browser evidence remains required for 3D.
 - `npm --prefix frontend run build` -> passed. Vite reports the existing large Three.js chunk warning.
 - Source scan for `fallback`, `planned/limited`, and `seed` across active backend/frontend/plan/docs returned no matches.
 - Live QA servers started on backend `127.0.0.1:8120` and frontend `127.0.0.1:6410`; API status returned ASR blocked and frontend root returned HTTP 200.
-- Evidence folder created at `test/release-readiness-2026-05-23/` with blocker reports. No pass screenshot is claimed.
+- Evidence folder created at `.cache/facespeed/evidence/release-readiness-2026-05-23/` with blocker reports. No pass screenshot is claimed.
 
 Blocker:
 
@@ -161,7 +161,7 @@ Implemented:
 
 Validation:
 
-- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests` -> 38 passed.
+- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests` -> 38 passed.
 - `npm --prefix frontend test -- --run` -> 3 passed.
 - `npm --prefix frontend run build` -> passed.
 - `RIVA_ASR_ENABLED=true` direct ASR verification reached Riva and returned `UNIMPLEMENTED`, confirming runtime ASR is still not provisioned.
@@ -204,10 +204,10 @@ Validation:
   - audio artifact -> RIFF WAV.
   - animation artifact -> 1015 frames.
 - Browser evidence captured:
-  - `test/release-readiness-2026-05-23/app/05-desktop-asr-online-cited-answer.png`
-  - `test/release-readiness-2026-05-23/app/06-desktop-record-button-riva-asr-cited-answer.png`
+  - `.cache/facespeed/evidence/release-readiness-2026-05-23/app/05-desktop-asr-online-cited-answer.png`
+  - `.cache/facespeed/evidence/release-readiness-2026-05-23/app/06-desktop-record-button-riva-asr-cited-answer.png`
 - Test suite:
-  - `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests` -> 38 passed.
+  - `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests` -> 38 passed.
   - `npm --prefix frontend test -- --run` -> 3 passed.
   - `npm --prefix frontend run build` -> passed.
 
@@ -230,20 +230,20 @@ Implemented:
 
 Validation:
 
-- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests -q` -> 39 passed.
+- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests -q` -> 39 passed.
 - `npm --prefix frontend test -- --run` -> 3 passed. jsdom still warns that canvas `getContext` is not implemented, so browser evidence was used for 3D.
 - `npm --prefix frontend run build` -> passed with the existing large bundle warning.
 - Runtime provider-backed chain passed on backend `127.0.0.1:8020`:
-  - uploaded valid `test/release-readiness-2026-05-23/pipeline/docling-rag-evidence.pdf`;
+  - uploaded valid `.cache/facespeed/evidence/release-readiness-2026-05-23/pipeline/docling-rag-evidence.pdf`;
   - Docling parsed the PDF;
   - embedding/rerank returned a cited answer with confidence `0.762`;
   - Riva ASR transcribed `input-question.wav`;
   - Riva TTS generated `docling-output-answer.wav`;
   - avatar animation produced `docling-output-animation.json` with 1,655 frames.
 - Browser evidence passed:
-  - desktop UI with cited answer: `test/release-readiness-2026-05-23/app/02-chat-answer-avatar.png`;
-  - mobile UI answer view with no horizontal overflow: `test/release-readiness-2026-05-23/app/11-mobile-chat.png`;
-  - avatar movement recording: `test/release-readiness-2026-05-23/pipeline/docling-avatar-3d-moving.webm`, jaw delta `0.369`, `mouthRig=model-morphs`;
+  - desktop UI with cited answer: `.cache/facespeed/evidence/release-readiness-2026-05-23/app/02-chat-answer-avatar.png`;
+  - mobile UI answer view with no horizontal overflow: `.cache/facespeed/evidence/release-readiness-2026-05-23/app/11-mobile-chat.png`;
+  - avatar movement recording: `.cache/facespeed/evidence/release-readiness-2026-05-23/pipeline/docling-avatar-3d-moving.webm`, jaw delta `0.369`, `mouthRig=model-morphs`;
   - README GIF banner regenerated from the real browser canvas: `docs/assets/voice-rag-avatar-demo.gif`.
 - Riva ASR back-transcribed `docling-output-answer.wav`; meaning passes, with minor ASR wording errors such as `docking` for `Docling`.
 

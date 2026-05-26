@@ -35,7 +35,7 @@ Validation:
 
 - `npm --prefix frontend test -- --run` -> 3 passed.
 - `npm --prefix frontend run build` -> passed with the existing large bundle warning.
-- Browser QA evidence saved in `test/release-readiness-2026-05-23/`.
+- Browser QA evidence saved in `.cache/facespeed/evidence/release-readiness-2026-05-23/`.
 - Browser report: 0 console errors, 0 page errors, 0 failed HTTP responses, `mouthRig=model-morphs`, jaw delta `0.404`, blink max `0.702`, mobile horizontal overflow false.
 
 ## 2026-05-23 01:12

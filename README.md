@@ -1,181 +1,260 @@
 <div align="center">
 
-![FaceSpeed Voice RAG avatar demo](docs/assets/voice-rag-avatar-demo.gif)
+<img src="docs/assets/facespeed-readme-banner.png" alt="FaceSpeed Studio Sources popup showing indexed PDF knowledge base" width="100%">
 
 # FaceSpeed Studio
 
-Local Voice RAG over PDFs with NVIDIA Riva speech and a synchronized browser 3D speaking avatar.
+Voice RAG cục bộ trên PDF, dùng NVIDIA Riva cho ASR/TTS và avatar 3D chạy trong trình duyệt.
+
+Updated: 2026-05-26
 
 ![Version](https://img.shields.io/badge/version-0.3.0-4ade80?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-Studio-61DAFB?style=for-the-badge&logo=react&logoColor=0B1220)
-![Three.js](https://img.shields.io/badge/Three.js-3D%20Avatar-111111?style=for-the-badge&logo=threedotjs&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-Avatar-111111?style=for-the-badge&logo=threedotjs&logoColor=white)
 ![NVIDIA](https://img.shields.io/badge/NVIDIA-Riva-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-f472b6?style=for-the-badge)
 
-[Overview](#overview) · [Quick Start](#quick-start) · [Main Path](#main-path) · [Setup](#setup) · [Evidence](#evidence) · [Docs](#docs) · [Repository Map](#repository-map)
+[Chạy Nhanh](#chay-nhanh) · [Runtime](#runtime) · [Kiến Trúc](#kien-truc) · [Dữ Liệu Và Test](#du-lieu-va-test) · [Docs](#docs) · [Repo Map](#repo-map)
 
 </div>
 
-## Overview
+## Tổng Quan
 
-FaceSpeed Studio is a local product workspace for asking questions against PDF knowledge and hearing the answer through a 3D face.
+FaceSpeed Studio là workspace local để hỏi đáp trên kho PDF bằng text hoặc giọng nói. Luồng chính hiện tại:
 
-The current release path is:
-
-| Layer | Provider |
+| Bước | Service thật đang dùng |
 | --- | --- |
-| Speech input | NVIDIA Riva ASR |
-| PDF parsing | Docling provider service |
-| Retrieval | Embedding API plus rerank API |
-| Speech output | NVIDIA Riva TTS |
-| Face output | Browser ARKit/viseme timeline on a ReadyPlayer GLB |
+| Nhận câu hỏi | Text input hoặc NVIDIA Riva ASR |
+| Parse PDF | Docling provider `http://127.0.0.1:8005` |
+| Lưu metadata/chunk | Postgres `127.0.0.1:6001` |
+| Vector search | Qdrant `127.0.0.1:6002/6003` |
+| Embedding/rerank | Provider `http://127.0.0.1:8006` |
+| Teacher/review LLM | vLLM OpenAI-compatible `http://127.0.0.1:8007/v1` |
+| Đọc câu trả lời | NVIDIA Riva TTS `127.0.0.1:6051` |
+| Avatar nói | Browser ARKit/viseme timeline trên ReadyPlayer GLB |
 
-The product surface is intentionally small: chat history, hold-to-talk, provider status popups, avatar controls, autoplay voice, and one replay icon for the latest answer.
+App chạy sau nginx proxy để browser chỉ cần một URL: `http://127.0.0.1:6300/`. Backend và provider failure được báo lỗi thật; project không giả lập câu trả lời, không tự fallback sang mock khi main path fail.
 
-## Quick Start
+<a id="chay-nhanh"></a>
+
+## Chạy Nhanh
 
 ```bash
 ./setup.sh
 ```
 
-Open:
+Mở app:
 
 ```text
-http://127.0.0.1:6310/
+http://127.0.0.1:6300/
 ```
 
-The default root command is:
+Dừng toàn bộ phần project sở hữu:
 
 ```bash
-./setup.sh --setup-run
+./setup.sh --stop
 ```
 
-Fresh clones create `.env` from `.env.example` during setup, with the provider-backed main path enabled (`SERVICE_MANAGER_MODE=docker`, `PIPELINE_MODE=riva`). Processes started by setup stay detached after the command returns; stop them with `./setup.sh --stop`.
+`./setup.sh`, `./setup.sh --run`, và `./setup.sh --setup-run` đều stop runtime cũ trước, sau đó start lại bằng tmux. Không dùng `start.sh` riêng.
 
-## Main Path
+<a id="runtime"></a>
+
+## Runtime
+
+### Tmux
+
+| Session | Chức năng | Xem log |
+| --- | --- | --- |
+| `facespeed-riva-docker` | Docker Compose: nginx, Postgres, Qdrant | `tmux attach -t facespeed-riva-docker` |
+| `facespeed-riva-tts` | Riva TTS trên `127.0.0.1:6051` | `tmux attach -t facespeed-riva-tts` |
+| `facespeed-riva-asr` | Riva ASR trên `127.0.0.1:6052` | `tmux attach -t facespeed-riva-asr` |
+| `facespeed-riva-backend` | FastAPI backend trên `127.0.0.1:6320` | `tmux attach -t facespeed-riva-backend` |
+| `facespeed-riva-frontend` | Vite frontend trên `127.0.0.1:6310` | `tmux attach -t facespeed-riva-frontend` |
+
+Thoát tmux mà không tắt process: `Ctrl+B`, rồi `D`.
+
+### Port
+
+| Service | Default | Ghi chú |
+| --- | --- | --- |
+| App proxy | `http://127.0.0.1:6300` | URL chính để mở browser/IDE port forwarding |
+| Frontend | `http://127.0.0.1:6310` | Vite dev server, nginx proxy tới đây |
+| Backend | `http://127.0.0.1:6320` | FastAPI, nginx proxy `/api/*` tới đây |
+| Postgres | `127.0.0.1:6001` | Metadata PDF, prompt, session, agent events |
+| Qdrant HTTP/gRPC | `127.0.0.1:6002/6003` | Vector store |
+| Riva TTS | `127.0.0.1:6051` | Voice output |
+| Riva ASR | `127.0.0.1:6052` | Voice input |
+| Audio2Face optional | `127.0.0.1:6040/6041` | Không bắt buộc cho path hiện tại |
+| Docling | `http://127.0.0.1:8005` | Provider sẵn trên máy |
+| Embedding/rerank | `http://127.0.0.1:8006` | Provider sẵn trên máy |
+| vLLM | `http://127.0.0.1:8007/v1` | Provider sẵn trên máy |
+
+Các port project sở hữu nằm trong `6000-6500` và tránh `6000`. Provider `8005/8006/8007` là service ngoài project trên workstation này, không phải bridge benchmark `6105/6106/6107`.
+
+### Env Quan Trọng
+
+| Biến | Giá trị mặc định | Ý nghĩa |
+| --- | --- | --- |
+| `FACESPEED_PROXY_PORT` | `6300` | Port browser chính |
+| `TMUX_PREFIX` | `facespeed-riva` | Prefix tránh trùng tmux project khác |
+| `DOCLING_API_BASE_URL` | `http://127.0.0.1:8005` | PDF parser |
+| `EMBEDDING_API_BASE_URL` | `http://127.0.0.1:8006` | Embedding/rerank |
+| `LLM_API_BASE_URL` | `http://127.0.0.1:8007/v1` | vLLM judge/teacher |
+| `RIVA_TTS_MAX_CONCURRENCY` | `1` | Tránh Riva TTS timeout/crash khi nhiều request |
+| `VOICE_CHAT_TTS_MAX_CHARS` | `150` | Audio preview ngắn; câu trả lời text vẫn đầy đủ |
+
+`.env` thật được ignore. Cập nhật default public ở `.env.example`.
+
+<a id="kien-truc"></a>
+
+## Kiến Trúc
 
 ```mermaid
 flowchart LR
-  Mic[Voice / typed question] --> ASR[Riva ASR]
-  ASR --> Query[Voice RAG request]
-  PDF[Uploaded PDF] --> Docling[Docling parse]
-  Docling --> Chunks[Chunk store]
-  Query --> Embed[Embedding search]
-  Chunks --> Embed
-  Embed --> Rerank[Rerank]
-  Rerank --> Answer[Cited answer]
-  Answer --> TTS[Riva TTS]
-  TTS --> Audio[Autoplay voice]
-  Audio --> Timeline[Browser viseme timeline]
-  Timeline --> Avatar[Three.js ARKit face]
-  Answer --> Chat[Chat history + citations]
+  User[User: text hoặc voice] --> UI[React/Vite UI]
+  UI --> Nginx[Nginx proxy :6300]
+  Nginx --> API[FastAPI :6320]
+  API --> ASR[Riva ASR :6052]
+  API --> DB[(Postgres :6001)]
+  API --> Vec[(Qdrant :6002)]
+  API --> Docling[Docling :8005]
+  API --> Embed[Embedding/rerank :8006]
+  API --> LLM[vLLM :8007]
+  API --> TTS[Riva TTS :6051]
+  TTS --> Audio[WAV artifact]
+  API --> Timeline[Browser viseme JSON]
+  UI --> Avatar[Three.js ReadyPlayer GLB]
+  Audio --> Avatar
+  Timeline --> Avatar
 ```
 
-Provider failure is reported as an error. The main RAG path does not silently switch to keyword search or fake speech.
+Luồng nghiệp vụ:
 
-## Setup
+1. Upload PDF qua Sources popup.
+2. Backend gửi PDF sang Docling, normalize markdown, chia section/chunk.
+3. Embedding provider tạo vector; metadata/chunk ghi vào Postgres, vector ghi vào Qdrant.
+4. Khi hỏi, backend search Qdrant, mở rộng graph chunk, rerank bằng provider `8006`.
+5. Teacher/review tạo câu trả lời có citation; agent trace ghi lại các bước lead/search/review/teacher.
+6. Riva TTS tạo audio WAV; backend tạo viseme timeline; frontend phát audio và sync avatar.
 
-| Command | Purpose |
+Module chính:
+
+| Path | Vai trò |
 | --- | --- |
-| `./setup.sh --check` | Check OS, Python, Node, npm, Docker, GPU, ports, memory, disk, Riva, and Audio2Face. |
-| `./setup.sh --setup` | Install project-local backend/frontend dependencies. |
-| `./setup.sh --run` | Start backend and frontend on localhost. |
-| `./setup.sh --setup-run` | Check, install, and run the local app. |
-| `./setup.sh --verify` | Run setup checks, frontend tests/build, and backend tests. |
-| `./setup.sh --capture-demo` | Capture the README GIF from the real browser app. |
-| `./setup.sh --logs-clean` | Remove disposable runtime logs. |
+| `backend/src/routes/` | FastAPI route cho jobs, artifacts, system, services, Voice RAG |
+| `backend/src/services/rag_service.py` | Orchestrator RAG: ingest, search, answer, trace, voice turn |
+| `backend/src/services/rag_store.py` | Postgres/Qdrant persistence |
+| `backend/src/services/*_client.py` | Client Docling, embedding/rerank, LLM, Riva, Audio2Face |
+| `frontend/src/pages/PipelinePage.tsx` | UI chat/voice/Sources/avatar runtime chính |
+| `frontend/src/components/AgentTraceCanvas.tsx` | Canvas trace cho agent/provider/database |
+| `docker-compose.yml` | Nginx, Postgres, Qdrant |
+| `docker/nginx/` | Template nginx proxy một port |
+| `scripts/setup.sh` | Entrypoint check/setup/run/stop/verify |
 
-Machine support:
+<a id="du-lieu-va-test"></a>
 
-| Machine | Status |
-| --- | --- |
-| Linux workstation with NVIDIA RTX GPU, Docker GPU access, Python 3.10+, Node 20+ | Supported target |
-| WSL2 with NVIDIA GPU passthrough and Docker Desktop | Best effort |
-| CPU-only Linux/macOS/Windows | Development only; full provider runtime incomplete |
-| No terminal/network | Unsupported |
+## Dữ Liệu Và Test
 
-Full provider runtime expects:
+Runtime hiện tại đã index:
 
-| Provider | Default |
-| --- | --- |
-| Frontend | `http://127.0.0.1:6310` |
-| Backend | `http://127.0.0.1:8020` |
-| Riva TTS | `127.0.0.1:50051` |
-| Riva ASR | `127.0.0.1:50151` |
-| Docling | `http://127.0.0.1:8005` |
-| Embedding/rerank | `http://127.0.0.1:8006` |
+| Metric | Value |
+| --- | ---: |
+| PDF | 100 |
+| Chunk | 11,022 |
+| Ngôn ngữ | `en-US`, `vi-VN` |
+| Postgres | available |
+| Qdrant | available |
+| vLLM | available |
 
-NVIDIA model assets and NGC credentials are not bundled. Keep `NGC_API_KEY` local and out of logs/docs/screenshots.
+Benchmark RAG Voice ngày 2026-05-25:
 
-## Evidence
+| Metric | Value |
+| --- | ---: |
+| Test case | 80 |
+| Pass | 80/80 |
+| Đúng file/page/chunk | 100% |
+| Single-user p50 | khoảng 6.3s |
+| 10-user p95 | khoảng 57-58s |
 
-Current release evidence:
+Đọc nhanh:
 
-```text
-test/release-readiness-2026-05-23/
-```
+- Benchmark summary: [`tests/benchmarks/README.md`](tests/benchmarks/README.md)
+- Benchmark report đầy đủ: [`tests/benchmarks/REPORT-2026-05-25-rag-voice.md`](tests/benchmarks/REPORT-2026-05-25-rag-voice.md)
+- Nginx/voice smoke: [`tests/nginx-proxy/test-nginx-proxy-20260526-v1.md`](tests/nginx-proxy/test-nginx-proxy-20260526-v1.md)
+- Screenshot Sources 100 PDF: [`tests/nginx-proxy/evidence-2026-05-26/sources-popup-100-docs.png`](tests/nginx-proxy/evidence-2026-05-26/sources-popup-100-docs.png)
 
-Highlights:
-
-| Check | Result |
-| --- | --- |
-| GIF banner | `demo/facespeed-release-demo.gif`, 960x540, 2.1 MB |
-| Browser errors | 0 console errors, 0 page errors, 0 failed responses |
-| Audio UI | 1 hidden audio element, 0 visible audio controls, 1 replay button |
-| Avatar | ReadyPlayer ARKit GLB, 208 morph targets, `mouthRig=model-morphs` |
-| RAG answer | Cited `docling-rag-evidence.pdf p.1` |
-| Mobile | No horizontal overflow |
-
-Key artifacts:
-
-| File | Purpose |
-| --- | --- |
-| `test/release-readiness-2026-05-23/app/02-chat-answer-avatar.png` | RAG answer, citation, replay icon, no audio bar. |
-| `test/release-readiness-2026-05-23/pipeline/input-question.wav` | Test voice input. |
-| `test/release-readiness-2026-05-23/pipeline/docling-output-answer.wav` | Riva voice answer. |
-| `test/release-readiness-2026-05-23/pipeline/docling-avatar-3d-moving.webm` | Avatar video output. |
-| `test/release-readiness-2026-05-23/browser-report.json` | Browser metrics. |
-
-## Tests
+Validation thường dùng:
 
 ```bash
-bash setup.sh --check
+bash -n scripts/setup.sh
+docker compose config --quiet
+curl -fsS http://127.0.0.1:6300/api/rag/status
 npm --prefix frontend test -- --run
 npm --prefix frontend run build
-PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests
-node scripts/capture-release-demo.mjs
+backend/.venv-linux/bin/python -m pytest tests
 ```
 
-Current release notes are in [`RELEASE.md`](RELEASE.md), and changes are tracked in [`CHANGELOG.md`](CHANGELOG.md).
+## Vận Hành Nhanh
+
+| Tình huống | Cách kiểm tra |
+| --- | --- |
+| Không thấy file PDF trong UI | Mở Sources popup, nút database ở header; backend check `curl http://127.0.0.1:6300/api/documents` |
+| Browser báo backend connection refused | Mở `6300`, không mở trực tiếp frontend `6310` nếu IDE không forward backend |
+| `/api/voice/chat` trả 503 embedding | Kiểm tra provider thật `curl http://127.0.0.1:8006/health` |
+| Riva TTS timeout | Giữ `RIVA_TTS_MAX_CONCURRENCY=1`, `VOICE_CHAT_TTS_MAX_CHARS=150` |
+| Cần xem log | Attach tmux session tương ứng, không tìm log rời rạc trước |
+| Dừng sạch | `./setup.sh --stop` |
+
+## VRAM Và Tài Nguyên
+
+Ước tính từ benchmark 2026-05-25 trên NVIDIA RTX PRO 5000 Blackwell:
+
+| Item | Value |
+| --- | ---: |
+| GPU total | 48,935 MiB |
+| Max observed used | 39,833 MiB |
+| Min observed free | 8,574 MiB |
+| Estimated FaceSpeed incremental VRAM | khoảng 4,006 MiB |
+| Recommended free before start | khoảng 9,000 MiB |
+
+Các ngưỡng này là operational guardrail từ máy benchmark, không phải cam kết vendor.
+
+<a id="docs"></a>
 
 ## Docs
 
-| Document | Purpose |
+| File | Nội dung |
 | --- | --- |
-| [`docs/installation.md`](docs/installation.md) | Machine support and setup modes. |
-| [`docs/operations.md`](docs/operations.md) | Ports, logs, evidence, verification, cleanup. |
-| [`docs/voice-rag-chatbot-handoff.md`](docs/voice-rag-chatbot-handoff.md) | Provider-backed Voice RAG handoff. |
-| [`docs/nvidia-host-setup.md`](docs/nvidia-host-setup.md) | NVIDIA host notes. |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution and QA rules. |
-| [`LICENSE`](LICENSE) | MIT license. |
+| [`docs/README.md`](docs/README.md) | Index tài liệu |
+| [`docs/installation.md`](docs/installation.md) | Cài đặt, machine support, setup mode |
+| [`docs/operations.md`](docs/operations.md) | Port, tmux, cleanup, verification |
+| [`docs/troubleshooting/resource-and-ports.md`](docs/troubleshooting/resource-and-ports.md) | Debug port/tài nguyên |
+| [`docs/voice-rag-chatbot-handoff.md`](docs/voice-rag-chatbot-handoff.md) | Handoff Voice RAG provider-backed |
+| [`docs/task/task-nginx-proxy-docs-20260526-v1.md`](docs/task/task-nginx-proxy-docs-20260526-v1.md) | Ghi nhận nginx/proxy/provider update |
+| [`CHANGELOG.md`](CHANGELOG.md) | Thay đổi theo version |
+| [`RELEASE.md`](RELEASE.md) | Release metadata hiện tại |
 
-## Repository Map
+<a id="repo-map"></a>
 
-| Path | Purpose |
+## Repo Map
+
+| Path | Nội dung |
 | --- | --- |
-| `backend/` | FastAPI backend, provider clients, RAG orchestration, API tests. |
-| `frontend/` | React/Vite product UI and Three.js avatar renderer. |
-| `scripts/` | Setup, log cleanup, demo capture, NVIDIA helpers. |
-| `docs/` | Installation, operations, troubleshooting, phase reports. |
-| `logs/plans/` | Curated implementation logs. Runtime logs are disposable. |
-| `test/release-readiness-2026-05-23/` | Current release evidence. |
-| `tests/` | Automated pytest source tests. |
+| `backend/` | FastAPI, provider clients, RAG orchestration, persistence |
+| `frontend/` | React/Vite UI, Three.js avatar, trace canvas |
+| `docker/` | Nginx proxy config |
+| `docs/` | Tài liệu vận hành, plan, task, troubleshooting |
+| `logs/` | Curated task logs; runtime logs xem qua tmux |
+| `plans/` | Plan đã đóng và plan đang chạy |
+| `scripts/` | Setup, Playwright helper, Riva helper |
+| `tests/` | Benchmark, smoke evidence, reports |
 
-## Notes On Accuracy
+## Ghi Chú Chính Xác
 
-- This release is verified on the local Linux workstation used for the evidence package.
-- CPU-only machines can build and inspect the UI, but cannot complete the provider-backed Riva/Docling/embedding runtime alone.
-- Audio2Face-3D NIM is optional; the current product path uses Riva voice plus browser ARKit morph animation.
-- `frontend/public/models/readyplayer-talk-arkit.glb` is the only production browser avatar asset kept in the repo.
+- Project không bundle NVIDIA model asset, NGC key hoặc secret.
+- Audio2Face-3D NIM vẫn là optional; path chính hiện tại dùng Riva voice + browser ARKit morph animation.
+- `frontend/public/models/readyplayer-talk-arkit.glb` là avatar browser asset chính.
+- README này mô tả trạng thái repo và runtime đã verify trên workstation local ngày 2026-05-26.
+
+dev by ambrouse

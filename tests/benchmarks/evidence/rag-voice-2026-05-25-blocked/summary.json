@@ -1,0 +1,23 @@
+{
+  "createdAt": "2026-05-25T09:12:05.452987+00:00",
+  "accepted": false,
+  "blocked": true,
+  "reason": "Provider dependencies are offline: embedding API 6106 refused, Riva ASR 6052 refused, Riva/A2F containers stopped, LLM unavailable.",
+  "documentCount": 100,
+  "indexedCount": 100,
+  "chunkCount": 11022,
+  "artifacts": [
+    "01-frontend-loaded.png",
+    "02-runtime-modal.png",
+    "03-voice-chat-provider-error.png",
+    "asr-response.json",
+    "audio-input-smoke-synthetic.wav",
+    "audio-output-unavailable.txt",
+    "browser-report.json",
+    "rag-search-response.json",
+    "rag-status.json",
+    "resource-snapshot.json",
+    "services.json",
+    "voice-chat-response.json"
+  ]
+}

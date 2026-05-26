@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, Depends, Header, HTTPException, Query
 
 from src.dependencies import getRagService, getRivaAsrClient
-from src.models.rag import Document, DocumentDetail, LanguageCode, RagRuntimeStatus, RagSearchRequest, RagSearchResult, Transcript, VoiceChatRequest, VoiceTurn
+from src.models.rag import AgentSessionStatus, Document, DocumentDeleteResult, DocumentDetail, DocumentUpdateRequest, LanguageCode, PromptConfig, PromptUpdateRequest, RagRuntimeStatus, RagSearchRequest, RagSearchResult, Transcript, VoiceChatRequest, VoiceTurn
 from src.services.riva_client import RivaAsrClient
 from src.services.rag_service import RagService
 
@@ -44,6 +44,24 @@ def getVoiceTurn(turnId: str, ragService: RagService = Depends(getRagService)) -
     return turn
 
 
+@router.get("/agent-sessions/{sessionId}", response_model=AgentSessionStatus)
+def getAgentSession(sessionId: str, ragService: RagService = Depends(getRagService)) -> AgentSessionStatus:
+    status = ragService.getSessionStatus(sessionId)
+    if status.state == "unknown":
+        raise HTTPException(status_code=404, detail="agent session not found")
+    return status
+
+
+@router.get("/prompts", response_model=list[PromptConfig])
+def listPrompts(ragService: RagService = Depends(getRagService)) -> list[PromptConfig]:
+    return ragService.listPrompts()
+
+
+@router.patch("/prompts/{agent}", response_model=PromptConfig)
+def updatePrompt(agent: str, request: PromptUpdateRequest, ragService: RagService = Depends(getRagService)) -> PromptConfig:
+    return ragService.updatePrompt(agent, request)
+
+
 @router.post("/documents", response_model=DocumentDetail)
 def ingestDocument(
     payload: bytes = Body(..., media_type="application/pdf"),
@@ -73,6 +91,22 @@ def getDocument(documentId: str, ragService: RagService = Depends(getRagService)
     if document is None:
         raise HTTPException(status_code=404, detail="document not found")
     return document
+
+
+@router.patch("/documents/{documentId}", response_model=DocumentDetail)
+def updateDocument(documentId: str, request: DocumentUpdateRequest, ragService: RagService = Depends(getRagService)) -> DocumentDetail:
+    document = ragService.updateDocument(documentId, request)
+    if document is None:
+        raise HTTPException(status_code=404, detail="document not found")
+    return document
+
+
+@router.delete("/documents/{documentId}", response_model=DocumentDeleteResult)
+def deleteDocument(documentId: str, ragService: RagService = Depends(getRagService)) -> DocumentDeleteResult:
+    result = ragService.deleteDocument(documentId)
+    if result is None:
+        raise HTTPException(status_code=404, detail="document not found")
+    return result
 
 
 @router.get("/documents/{documentId}/chunks")

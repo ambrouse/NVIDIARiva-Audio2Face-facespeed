@@ -1,0 +1,19 @@
+{
+  "createdAt": "2026-05-25T09:40:48.515Z",
+  "frontendUrl": "http://127.0.0.1:6310/",
+  "backendUrl": "http://127.0.0.1:6320",
+  "question": "What does the indexed PDF say about benchmark evaluation?",
+  "audioInput": {
+    "path": "tests/benchmarks/evidence/rag-voice-2026-05-25-smoke/audio-input-question.wav",
+    "bytes": 147756,
+    "synthetic": false
+  },
+  "outputAudio": {
+    "ok": true,
+    "path": "tests/benchmarks/evidence/rag-voice-2026-05-25-smoke/audio-output.wav",
+    "bytes": 1226284
+  },
+  "screenshot": "tests/benchmarks/evidence/rag-voice-2026-05-25-smoke/frontend-answer.png",
+  "consoleErrors": [],
+  "failedResponses": []
+}

@@ -1,0 +1,1 @@
+No audio output was produced because /api/voice/chat failed before TTS. This is blocker evidence, not a pass artifact.

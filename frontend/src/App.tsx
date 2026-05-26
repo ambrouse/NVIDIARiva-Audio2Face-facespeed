@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { Activity, Database, MessageCircle, Settings, SlidersHorizontal } from 'lucide-react';
+import { Activity, Database, MessageCircle, ScrollText, Settings, SlidersHorizontal } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { LogsPage } from './pages/LogsPage';
 import { PipelinePage } from './pages/PipelinePage';
+import { PromptsPage } from './pages/PromptsPage';
 import { ServicesPage } from './pages/ServicesPage';
 import { SystemPage } from './pages/SystemPage';
 import './styles/app.css';
 
-type Page = 'studio' | 'operations' | 'activity' | 'setup';
+type Page = 'studio' | 'operations' | 'prompts' | 'activity' | 'setup';
 
 const navigation: { id: Page; label: string; Icon: LucideIcon }[] = [
   { id: 'studio', label: 'Voice', Icon: MessageCircle },
   { id: 'operations', label: 'Operations', Icon: Database },
+  { id: 'prompts', label: 'Prompts', Icon: ScrollText },
   { id: 'activity', label: 'Activity', Icon: Activity },
   { id: 'setup', label: 'Setup', Icon: SlidersHorizontal },
 ];
@@ -47,6 +49,7 @@ export function App() {
       <div className="content">
         {page === 'studio' && <PipelinePage />}
         {page === 'operations' && <ServicesPage />}
+        {page === 'prompts' && <PromptsPage />}
         {page === 'activity' && <LogsPage />}
         {page === 'setup' && <SystemPage />}
       </div>

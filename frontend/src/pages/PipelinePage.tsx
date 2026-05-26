@@ -5,22 +5,31 @@ import {
   Database,
   FileUp,
   Mic,
+  Pencil,
+  RefreshCw,
+  Save,
   Send,
   Sparkles,
+  Trash2,
   Waypoints,
   User,
   X,
 } from 'lucide-react';
 
+import { AgentTraceCanvas } from '../components/AgentTraceCanvas';
 import { FaceViewer } from '../components/FaceViewer';
 import {
+  AgentSessionStatus,
   createVoiceTurn,
+  deleteDocument,
+  fetchAgentSession,
   fetchDocuments,
   fetchRagStatus,
   RagDocument,
   RagRuntimeStatus,
   resolveApiUrl,
   transcribeVoice,
+  updateDocument,
   uploadDocument,
   VoiceTurn,
 } from '../services/api';
@@ -56,8 +65,12 @@ export function PipelinePage() {
   const [draft, setDraft] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [turn, setTurn] = useState<VoiceTurn | null>(null);
+  const [activeSession, setActiveSession] = useState<AgentSessionStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [documentDrafts, setDocumentDrafts] = useState<Record<string, { title: string; summary: string; language: string }>>({});
+  const [busyDocumentId, setBusyDocumentId] = useState<string | null>(null);
+  const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
   const [isAnswering, setIsAnswering] = useState(false);
   const [dialog, setDialog] = useState<DialogName>(null);
   const [selectedModelId, setSelectedModelId] = useState(faceModels[0].id);
@@ -92,10 +105,41 @@ export function PipelinePage() {
     }
   }, [messages, isAnswering]);
 
+  useEffect(() => {
+    if (!isAnswering || !activeSession?.sessionId) {
+      return;
+    }
+    let cancelled = false;
+    const interval = window.setInterval(() => {
+      fetchAgentSession(activeSession.sessionId)
+        .then((nextStatus) => {
+          if (!cancelled) {
+            setActiveSession(nextStatus);
+          }
+        })
+        .catch(() => undefined);
+    }, 800);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [activeSession?.sessionId, isAnswering]);
+
   async function refreshRuntime() {
     const [nextStatus, nextDocuments] = await Promise.all([fetchRagStatus(), fetchDocuments()]);
     setStatus(nextStatus);
     setDocuments(nextDocuments);
+    setDocumentDrafts((current) => {
+      const next: Record<string, { title: string; summary: string; language: string }> = {};
+      nextDocuments.forEach((document) => {
+        next[document.id] = current[document.id] ?? {
+          title: document.title,
+          summary: document.summary,
+          language: document.language,
+        };
+      });
+      return next;
+    });
   }
 
   async function handleUpload(event: ChangeEvent<HTMLInputElement>) {
@@ -115,6 +159,58 @@ export function PipelinePage() {
       setIsUploading(false);
       event.target.value = '';
     }
+  }
+
+  async function saveDocument(document: RagDocument) {
+    const draft = documentDrafts[document.id];
+    if (!draft) {
+      return;
+    }
+    setBusyDocumentId(document.id);
+    setError(null);
+    try {
+      await updateDocument(document.id, {
+        title: draft.title,
+        summary: draft.summary,
+        language: draft.language,
+      });
+      setEditingDocumentId(null);
+      await refreshRuntime();
+    } catch (currentError) {
+      setError(currentError instanceof Error ? currentError.message : 'Update failed');
+    } finally {
+      setBusyDocumentId(null);
+    }
+  }
+
+  async function removeDocument(document: RagDocument) {
+    setBusyDocumentId(document.id);
+    setError(null);
+    try {
+      await deleteDocument(document.id);
+      setMessages((current) => current.filter((message) => !message.citations?.some((citation) => citation.documentId === document.id)));
+      if (turn?.answer.citations.some((citation) => citation.documentId === document.id)) {
+        setTurn(null);
+      }
+      setEditingDocumentId(null);
+      await refreshRuntime();
+    } catch (currentError) {
+      setError(currentError instanceof Error ? currentError.message : 'Delete failed');
+    } finally {
+      setBusyDocumentId(null);
+    }
+  }
+
+  function updateDocumentDraft(documentId: string, patch: Partial<{ title: string; summary: string; language: string }>) {
+    setDocumentDrafts((current) => ({
+      ...current,
+      [documentId]: {
+        title: current[documentId]?.title ?? '',
+        summary: current[documentId]?.summary ?? '',
+        language: current[documentId]?.language ?? language,
+        ...patch,
+      },
+    }));
   }
 
   async function handleVoicePressStart(event: PointerEvent<HTMLButtonElement>) {
@@ -178,13 +274,16 @@ export function PipelinePage() {
     }
 
     const userMessage: ChatMessage = { id: crypto.randomUUID(), role: 'user', text: message };
+    const sessionId = crypto.randomUUID();
+    setActiveSession({ sessionId, state: 'running', question: message, answer: '', events: [] });
     setMessages((current) => [...current, userMessage]);
     setDraft('');
     setIsAnswering(true);
     setError(null);
     try {
-      const nextTurn = await createVoiceTurn({ message, language, voice, outputMode: 'preview' });
+      const nextTurn = await createVoiceTurn({ message, language, voice, outputMode: 'preview', sessionId });
       setTurn(nextTurn);
+      setActiveSession({ sessionId: nextTurn.sessionId ?? sessionId, state: 'completed', question: message, answer: nextTurn.answer.text, events: nextTurn.agentEvents });
       setMessages((current) => [
         ...current,
         {
@@ -331,15 +430,56 @@ export function PipelinePage() {
 
             {dialog === 'sources' && (
               <div className="documentList">
-                <button className="uploadButton" type="button" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
-                  <FileUp size={18} />
-                  {isUploading ? 'Indexing PDF' : 'Upload PDF'}
-                </button>
+                <div className="sourceToolbar">
+                  <button className="uploadButton" type="button" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+                    <FileUp size={18} />
+                    {isUploading ? 'Indexing PDF' : 'Upload PDF'}
+                  </button>
+                  <button className="iconButton secondary" type="button" aria-label="Refresh sources" title="Refresh sources" onClick={() => void refreshRuntime()}>
+                    <RefreshCw size={18} />
+                  </button>
+                </div>
                 {documents.length ? documents.map((document) => (
                   <article className="documentItem" id={`doc-${document.id}`} key={document.id}>
-                    <strong>{document.title}</strong>
-                    <span>{document.filename} - {document.language} - {document.pageCount} page - {document.chunkCount} chunks</span>
-                    <p>{document.summary || 'Indexed and ready for retrieval.'}</p>
+                    {editingDocumentId === document.id ? (
+                      <div className="documentEditor">
+                        <label>
+                          <span>Title</span>
+                          <input value={documentDrafts[document.id]?.title ?? document.title} onChange={(event) => updateDocumentDraft(document.id, { title: event.target.value })} />
+                        </label>
+                        <label>
+                          <span>Summary</span>
+                          <textarea value={documentDrafts[document.id]?.summary ?? document.summary} onChange={(event) => updateDocumentDraft(document.id, { summary: event.target.value })} />
+                        </label>
+                        <label>
+                          <span>Language</span>
+                          <select value={documentDrafts[document.id]?.language ?? document.language} onChange={(event) => updateDocumentDraft(document.id, { language: event.target.value })}>
+                            <option value="en-US">English</option>
+                            <option value="vi-VN">Vietnamese</option>
+                          </select>
+                        </label>
+                      </div>
+                    ) : (
+                      <>
+                        <strong>{document.title}</strong>
+                        <span>{document.filename} - {document.language} - {document.pageCount} page - {document.chunkCount} chunks</span>
+                        <p>{document.summary || 'Indexed and ready for retrieval.'}</p>
+                      </>
+                    )}
+                    <div className="documentActions">
+                      {editingDocumentId === document.id ? (
+                        <button className="iconButton secondary" type="button" aria-label={`Save ${document.filename}`} title="Save" disabled={busyDocumentId === document.id} onClick={() => void saveDocument(document)}>
+                          <Save size={17} />
+                        </button>
+                      ) : (
+                        <button className="iconButton secondary" type="button" aria-label={`Edit ${document.filename}`} title="Edit" disabled={busyDocumentId === document.id} onClick={() => setEditingDocumentId(document.id)}>
+                          <Pencil size={17} />
+                        </button>
+                      )}
+                      <button className="iconButton danger" type="button" aria-label={`Delete ${document.filename}`} title="Delete" disabled={busyDocumentId === document.id} onClick={() => void removeDocument(document)}>
+                        <Trash2 size={17} />
+                      </button>
+                    </div>
                   </article>
                 )) : (
                   <div className="emptyState">No source PDF indexed.</div>
@@ -351,22 +491,33 @@ export function PipelinePage() {
               <div className="runtimeGrid">
                 <div><strong>{status?.asrAvailable ? 'ASR ready' : 'ASR blocked'}</strong><span>{status?.asrDetail ?? 'Checking Riva ASR'}</span></div>
                 <div><strong>Docling</strong><span>{status?.doclingBaseUrl ?? '-'}</span></div>
-                <div><strong>Embedding</strong><span>{status?.embeddingBaseUrl ?? '-'}</span></div>
+                <div><strong>{status?.qdrantAvailable ? 'Qdrant graph ready' : 'Embedding local'}</strong><span>{status?.retrievalProvider ?? status?.embeddingBaseUrl ?? '-'}</span></div>
+                <div><strong>{status?.postgresAvailable ? 'Postgres ledger ready' : 'Postgres blocked'}</strong><span>Agent session, task, history, context and prompts.</span></div>
+                <div><strong>{status?.llmAvailable ? 'LLM ready' : 'LLM fallback'}</strong><span>{status?.graphRagEnabled ? 'Graph RAG enabled' : 'Graph RAG disabled'}</span></div>
                 <div><strong>Sources</strong><span>{status?.documentCount ?? 0} documents, {status?.chunkCount ?? 0} chunks</span></div>
               </div>
             )}
 
             {dialog === 'trace' && (
-              <div className="traceGrid">
-                {turn ? turn.agentTrace.map((trace) => (
-                  <div key={trace.agent}>
-                    <strong>{trace.agent}</strong>
-                    <span>{trace.status}</span>
-                    <p>{trace.message}</p>
-                  </div>
-                )) : (
-                  <div className="emptyState">No completed trace.</div>
-                )}
+              <div className="traceCanvasStack">
+                <AgentTraceCanvas turn={turn} status={status} events={activeSession?.events ?? turn?.agentEvents ?? []} />
+                <div className="agentStatusStrip">
+                  {(activeSession?.events ?? turn?.agentEvents ?? []).slice(-5).map((event) => (
+                    <span key={event.id}>{event.agent}{event.target ? ` -> ${event.target}` : ''}: {event.status}</span>
+                  ))}
+                  {!(activeSession?.events ?? turn?.agentEvents ?? []).length && <span>No live agent events yet.</span>}
+                </div>
+                <div className="traceGrid compact">
+                  {turn ? turn.agentTrace.map((trace) => (
+                    <div key={trace.agent}>
+                      <strong>{trace.agent}</strong>
+                      <span>{trace.status}</span>
+                      <p>{trace.message}</p>
+                    </div>
+                  )) : (
+                    <div className="emptyState">No completed trace.</div>
+                  )}
+                </div>
               </div>
             )}
 

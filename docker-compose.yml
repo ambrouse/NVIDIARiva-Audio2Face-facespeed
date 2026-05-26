@@ -1,0 +1,50 @@
+services:
+  facespeed-nginx:
+    image: nginx:1.27-alpine
+    container_name: facespeed-nginx
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      FACESPEED_PROXY_HOST: ${FACESPEED_PROXY_HOST:-127.0.0.1}
+      FACESPEED_PROXY_PORT: ${FACESPEED_PROXY_PORT:-6300}
+      BACKEND_HOST: ${BACKEND_HOST:-127.0.0.1}
+      BACKEND_PORT: ${BACKEND_PORT:-6320}
+      FRONTEND_HOST: ${FRONTEND_HOST:-127.0.0.1}
+      FRONTEND_PORT: ${FRONTEND_PORT:-6310}
+      DOLLAR: "$$"
+    volumes:
+      - ./docker/nginx/facespeed.conf.template:/etc/nginx/templates/default.conf.template:ro
+    labels:
+      com.facespeed.project: NVIDIARiva-Audio2Face-facespeed
+
+  facespeed-postgres:
+    image: postgres:16.2
+    container_name: facespeed-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: facespeed
+      POSTGRES_USER: facespeed
+      POSTGRES_PASSWORD: facespeed_dev_password
+    ports:
+      - "127.0.0.1:6001:5432"
+    volumes:
+      - ./.cache/facespeed/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U facespeed -d facespeed"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    labels:
+      com.facespeed.project: NVIDIARiva-Audio2Face-facespeed
+
+  facespeed-qdrant:
+    image: qdrant/qdrant:v1.9.1
+    container_name: facespeed-qdrant
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6002:6333"
+      - "127.0.0.1:6003:6334"
+    volumes:
+      - ./.cache/facespeed/qdrant:/qdrant/storage
+    labels:
+      com.facespeed.project: NVIDIARiva-Audio2Face-facespeed

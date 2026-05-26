@@ -1,0 +1,7 @@
+{
+  "ok": false,
+  "status": 503,
+  "body": {
+    "detail": "Riva ASR request failed: UNAVAILABLE failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:6052: Failed to connect to remote host: connect: Connection refused (111)"
+  }
+}

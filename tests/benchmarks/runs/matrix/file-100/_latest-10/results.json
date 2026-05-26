@@ -1,0 +1,1499 @@
+[
+  {
+    "caseId": "a05cf50733c653a8-chk-a05cf50733c653a8-006-2",
+    "question": "Summarize the source evidence around this phrase: \"differential subordination and form the foundation for the results developed\".",
+    "expected": {
+      "documentId": "a05cf50733c653a8",
+      "documentName": "2605_22688v1.pdf",
+      "chunkId": "chk-a05cf50733c653a8-006",
+      "page": 3,
+      "topic": "differential subordination and form the foundation for the results developed",
+      "keywords": [
+        "differential",
+        "subordination",
+        "form",
+        "foundation",
+        "results",
+        "developed"
+      ],
+      "sourceExcerpt": "A function F ∈ A belongs to the Janowski starlike class S ∗ ( C, D ) if zF ′ ( z ) F ( z ) ∈ P ( C, D ) . These subclasses provide a broad framework for investigating geometric properties through differential subordination and form the foundation for the results developed in this article. 2020 Mathematics Subject Classification. 30D15; 30C45; 30H10. Key words and phrases. Convex functions, starlike functions, Laguerre polynomial. The extended Sonine polynomials or Laguerre polynomials of degree n and parameter α ∈ R are given using Rodrigues formulae <!-- formula-not-decoded --> They hold the condintion of secnd order differential equation, <!-- formula-not-decoded --> Particularly using α = 0 is the Laguerre polynomial L n ( z ) which has been discussed in article."
+    },
+    "answerText": "Based on 2605_22688v1.pdf page 3, the cited passage says: Subordination Associated with Laguerre Polynomial. 1. Introduction and Motivation. A function F ∈ A belongs to the Janowski starlike class S ∗ ( C, D ) if zF ′ ( z ) F ( z ) ∈ P ( C, D ) . These subclasses provide a broad framework for investigating geometric properties through differential subordination and form the foundation for the results developed in this article. 2020 Mathematics Subject Classification. 30D15; 30C45; 30H10. Key words and phrases. Convex functions, starlike functions, Laguerre polynomial. Source: 2605_22688v1.pdf, page 3.",
+    "answerPreview": "Based on 2605_22688v1.pdf page 3, the cited passage says: Subordination Associated with Laguerre Polynomial. 1. Introduction and Motivation. A function F ∈ A belongs to the Janowski starlike class S ∗ ( C, D ) if zF ′ ( z ) F ( z ) ∈ P ( C, D ) . These subclasses provide a broad framework for investigating geometric properties through differential subordination and form the foundation for the results developed in this article. 2020 Mathematics Subject Classification. 30D15; 30C45; 30H10. Key words and phrases. Convex functions, starlike functions, Laguerre polynomial. Source: 2605_22688v1.pdf,",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      1,
+      3,
+      19,
+      26,
+      64
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-a05cf50733c653a8-006",
+        "documentId": "a05cf50733c653a8",
+        "source": "2605_22688v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "Subordination Associated with Laguerre Polynomial",
+          "1. Introduction and Motivation"
+        ],
+        "excerpt": "A function F ∈ A belongs to the Janowski starlike class S ∗ ( C, D ) if zF ′ ( z ) F ( z ) ∈ P ( C, D ) . These subclasses provide a broad framework for investigating geometric properties through differential subordination and form the foundation for the results developed in this article. 2020 Mathematics Subject Classification. 30D15; 30C45; 30H10. Key words and phrases. Convex functions, starlike functions, Laguerre polynomial. The extended Sonine polynomials or Laguerre polynomials of degree n and parameter α ∈ R are given using Rodrigues formulae <!-- formula-not-decoded --> They hold the condintion of secnd order differential equation, <!-- formula-not-decoded --> Pa",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-a05cf50733c653a8-001",
+        "documentId": "a05cf50733c653a8",
+        "source": "2605_22688v1.pdf",
+        "page": 1,
+        "titlePath": [
+          "Subordination Associated with Laguerre Polynomial",
+          "ANISH KUMAR"
+        ],
+        "excerpt": "Abstract. In this work, we have considered the Laguerre polynomial. This polynomial has been studied in several branches of theoretical physics and applied Mathematics. J. K. Prajapat at.al derived condition so that Laguerre polynomial satisfy convexity, strong starlikeness, closeto-convexity and strongly convexity. In this article, characteristics properties such as exponential subordination have been studied. Moreover Janowski starlikeness and convexity have been investigated for this polynomial. Several examples and corollaries have been mentioned to validates the result.",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-32f9c5e56426f98b-085",
+        "documentId": "32f9c5e56426f98b",
+        "source": "2605_22785v1.pdf",
+        "page": 26,
+        "titlePath": [
+          "Evaluating Commercial AI Chatbots as News Intermediaries",
+          "5.1. Limitations"
+        ],
+        "excerpt": "Our evaluation uses five-option multiple-choice questions, which provide structure that aids performance: a single-day free-response validation showed a 16-17% accuracy drop (§2.5), though model rankings remained stable. Open-ended queries in naturalistic settings would likely yield even lower accuracy and expose additional failure modes such as hallucinated details within otherwise correct responses. The 15 System-prompt design is a further source of cross-product variation that we cannot characterize symmetrically across all evaluated products: of the five frontier systems we test, only Grok and Claude publish default system-prompt text in a form we can quote. We summar",
+        "confidence": 0.8056
+      },
+      {
+        "chunkId": "chk-5de6ea2f200e0038-129",
+        "documentId": "5de6ea2f200e0038",
+        "source": "2605_22734v1.pdf",
+        "page": 64,
+        "titlePath": [
+          "ChronoMedKG: A Temporally-Grounded Biomedical Knowledge Graph and Benchmark for Clinical Reasoning",
+          "G.1 Primary Extraction Prompt"
+        ],
+        "excerpt": "TEMPORAL FACTS: onset ages, disease milestones, progression timelines, treatment timing, discovery dates 2. EVIDENCE-DATED FACTS: relationships anchored by publication year 3. CONDITIONAL FACTS: relationships that depend on age, stage, genetic subtype 4. STATIC FACTS: general relationships without temporal context Output format (JSON): { \"triples\": [ { \"subject\": \"entity name\", \"subject_type\": \"disease|gene/protein|drug|phenotype|anatomy|...\", \"relation\": \"disease_protein|indication|disease_phenotype_positive|...\", \"object\": \"entity name\", \"object_type\": \"same vocabulary as subject_type\", \"confidence\": \"high|medium|low\", \"evidence_text\": \"exact quote from source (max 200 ",
+        "confidence": 0.6584
+      },
+      {
+        "chunkId": "chk-32f9c5e56426f98b-064",
+        "documentId": "32f9c5e56426f98b",
+        "source": "2605_22785v1.pdf",
+        "page": 19,
+        "titlePath": [
+          "Evaluating Commercial AI Chatbots as News Intermediaries",
+          "Source divergence: anatomy of a dominant failure mode."
+        ],
+        "excerpt": "'enacted') | not because it cannot process Hindi. Scope mismatch is a language-independent variant of the same failure: the retrieved source covers the correct topic at the wrong level of aggregation, time period, or demographic scope (e.g., crude oil imports rather than total imports; men's cricket participants rather than the combined total). Quote-attribution displacement occurs when models, lacking the target article, reconstruct domain knowledge rather than recovering a speaker's specific quoted claim. These three sub-types form a gradient from retrieval-language failure to retrieval-scope failure to retrieval-specificity failure; what unifies them is that the model ",
+        "confidence": 0.5884
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22688v1.pdf",
+      "answer_page": 3
+    },
+    "keywordHits": [
+      "differential",
+      "subordination",
+      "form",
+      "foundation",
+      "results",
+      "developed"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 13.899851670008502,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer accurately quotes the relevant passage from the cited source context."
+    },
+    "attempts": 1,
+    "caseIndex": 1,
+    "concurrency": 1,
+    "artifactEvidence": {
+      "audioUrl": {
+        "ok": true,
+        "path": "tests/benchmarks/runs/_latest-artifacts/001-answer.wav",
+        "bytes": 1691692
+      },
+      "animationUrl": {
+        "ok": true,
+        "path": "tests/benchmarks/runs/_latest-artifacts/001-animation.json",
+        "bytes": 869848
+      }
+    }
+  },
+  {
+    "caseId": "5190fc8fd38c1bc3-chk-5190fc8fd38c1bc3-005-0",
+    "question": "What does the indexed PDF say in the passage containing: \"moreover the scarcity of experimental data and in particular of\"?",
+    "expected": {
+      "documentId": "5190fc8fd38c1bc3",
+      "documentName": "2605_22689v1.pdf",
+      "chunkId": "chk-5190fc8fd38c1bc3-005",
+      "page": 3,
+      "topic": "moreover the scarcity of experimental data and in particular of",
+      "keywords": [
+        "moreover",
+        "scarcity",
+        "experimental",
+        "data",
+        "particular"
+      ],
+      "sourceExcerpt": "Moreover, the scarcity of experimental data, and in particular, of state-selective observation makes benchmarking existing models difficult. This process also drew strong attention due to the hypothesized presence of an unidentified weak spectral feature at 3 . 55 keV energy in the stacked X-ray spectra from various galaxies and galaxy clusters [20, 21]. A small excess at that energy was attributed to the decay of a sterile neutrino [22], a hypothetical dark matter particle, since it could not initially be assigned to any tabulated atomic lines. Soon after, Gu, L. et al. [12] explained it based on expected CX processes in hot intracluster media inducing a transitions at that energy. Subsequently, a dedicated experiment by Shah et al."
+    },
+    "answerText": "Based on 2605_22689v1.pdf page 3, the cited passage says: X-ray and Extreme-Ultraviolet Spectra from Collisions of Ar 18+ and O 8+ Ions with Neutrals. 1 Introduction. Moreover, the scarcity of experimental data, and in particular, of state-selective observation makes benchmarking existing models difficult. This process also drew strong attention due to the hypothesized presence of an unidentified weak spectral feature at 3 . 55 keV energy in the stacked X-ray spectra from various galaxies and galaxy clusters [20, 21]. A small excess at that energy was attributed to the decay of a sterile neutrino [22], a hypothetical dark matter particle, since it could not initially be assigned to any tabulated atomic lines. Soon after, Gu, L. Source: 2605_22689v1.pdf, page 3.",
+    "answerPreview": "Based on 2605_22689v1.pdf page 3, the cited passage says: X-ray and Extreme-Ultraviolet Spectra from Collisions of Ar 18+ and O 8+ Ions with Neutrals. 1 Introduction. Moreover, the scarcity of experimental data, and in particular, of state-selective observation makes benchmarking existing models difficult. This process also drew strong attention due to the hypothesized presence of an unidentified weak spectral feature at 3 . 55 keV energy in the stacked X-ray spectra from various galaxies and galaxy clusters [20, 21]. A small excess at that energy was attributed to the decay of a sterile neutr",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      1,
+      3,
+      26,
+      51
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-5190fc8fd38c1bc3-005",
+        "documentId": "5190fc8fd38c1bc3",
+        "source": "2605_22689v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "X-ray and Extreme-Ultraviolet Spectra from Collisions of Ar 18+ and O 8+ Ions with Neutrals",
+          "1 Introduction"
+        ],
+        "excerpt": "Moreover, the scarcity of experimental data, and in particular, of state-selective observation makes benchmarking existing models difficult. This process also drew strong attention due to the hypothesized presence of an unidentified weak spectral feature at 3 . 55 keV energy in the stacked X-ray spectra from various galaxies and galaxy clusters [20, 21]. A small excess at that energy was attributed to the decay of a sterile neutrino [22], a hypothetical dark matter particle, since it could not initially be assigned to any tabulated atomic lines. Soon after, Gu, L. et al. [12] explained it based on expected CX processes in hot intracluster media inducing a transitions at t",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-5190fc8fd38c1bc3-001",
+        "documentId": "5190fc8fd38c1bc3",
+        "source": "2605_22689v1.pdf",
+        "page": 1,
+        "titlePath": [
+          "X-ray and Extreme-Ultraviolet Spectra from Collisions of Ar 18+ and O 8+ Ions with Neutrals",
+          "X-ray and extreme-ultraviolet spectra from collisions of Ar 18+ and O 8+ ions with neutrals"
+        ],
+        "excerpt": "Stepan Dobrodey 1* , Chintan Shah 1,2,3 , Sonja Bernitt 1,4,5 , Ming Feng Gu 6 , Liyi Gu 7 , Thomas Pfeifer 1 , José R. Crespo López-Urrutia 1 1* Max-Planck-Institut für Kernphysik, Saupfercheckweg 1, Heidelberg, 69117, Germany. 3 Department of Physics and Astronomy, Johns Hopkins University, 3400 N. Charles Street, Baltimore, 21218, MD, USA. 2 NASA Goddard Space Flight Center, 8800 Greenbelt Rd, Greenbelt, 20771, MD, USA. 4 Helmholtz-Institut Jena, Fröbelstieg 3, Jena, 07743, Germany. 6 Space Science Laboratory, University of California, 7 Gauss Way, Berkeley, CA 94720, USA. 5 GSI Helmholtzzentrum für Schwerionenforschung, Planckstraße 1, 64291, Darmstadt, Germany. 7 SRO",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-5de6ea2f200e0038-069",
+        "documentId": "5de6ea2f200e0038",
+        "source": "2605_22734v1.pdf",
+        "page": 26,
+        "titlePath": [
+          "ChronoMedKG: A Temporally-Grounded Biomedical Knowledge Graph and Benchmark for Clinical Reasoning",
+          "5. Open access to data and code"
+        ],
+        "excerpt": "Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results? Answer: [Yes] Justification: Section J provides URLs to the dataset (Zenodo DOI) and code repository (GitLab). Instructions include exact Python environment (Python 3.12), dependencies ( requirements.txt ), and random seeds for all experiments.",
+        "confidence": 0.8005599999999999
+      },
+      {
+        "chunkId": "chk-d967210482db709c-172",
+        "documentId": "d967210482db709c",
+        "source": "2605_22738v1.pdf",
+        "page": 51,
+        "titlePath": [
+          "ProxySHAP: Proxy-Based Approximation of Shapley and Banzhaf Interactions",
+          "5. Open access to data and code"
+        ],
+        "excerpt": "Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material? Answer: [Yes] Justification: Please see the code: https://github.com/Advueu963/ProxySHAP Guidelines: - The answer [N/A] means that paper does not include experiments requiring code. - Please see the NeurIPS code and data submission guidelines ( https://neurips.cc/ public/guides/CodeSubmissionPolicy ) for more details. - While we encourage the release of code and data, we understand that this might not be possible, so [No] is an acceptable answer. Papers cannot be rejected simply for no",
+        "confidence": 0.6605599999999999
+      },
+      {
+        "chunkId": "chk-f1ef28569f984294-003",
+        "documentId": "f1ef28569f984294",
+        "source": "2605_22767v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "Synthetic Data Alone for Pediatric Rare Disease Recognition",
+          "Abstract"
+        ],
+        "excerpt": "Children with rare genetic diseases often exhibit distinctive facial phenotypes, yet developing computer vision systems for early diagnosis remains challenging due to extreme data scarcity, privacy constraints, and limited data sharing in pediatric settings. These challenges not only hinder automated diagnosis but also restrict the availability of visual resources for clinical genetic counseling. While prior work has shown that synthetic data can augment real datasets and preserve phenotype-level semantics, it remains unclear whether synthetic data alone is sufficient for learning in ultra-low-resource pediatric settings. In this work, we study the synthetic-only regime f",
+        "confidence": 0.6138933333333333
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22689v1.pdf",
+      "answer_page": 3
+    },
+    "keywordHits": [
+      "moreover",
+      "scarcity",
+      "experimental",
+      "data",
+      "particular"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.449499793990981,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer correctly quotes the relevant passage from the ground-truth source and answers the question."
+    },
+    "attempts": 1,
+    "caseIndex": 2,
+    "concurrency": 1,
+    "artifactEvidence": {
+      "audioUrl": {
+        "ok": true,
+        "path": "tests/benchmarks/runs/_latest-artifacts/002-answer.wav",
+        "bytes": 1596972
+      },
+      "animationUrl": {
+        "ok": true,
+        "path": "tests/benchmarks/runs/_latest-artifacts/002-animation.json",
+        "bytes": 821743
+      }
+    }
+  },
+  {
+    "caseId": "28577b4a5307e113-chk-28577b4a5307e113-002-1",
+    "question": "Answer from the indexed PDF only. What is discussed around: \"negative in this paper we present an algorithm that runs\"?",
+    "expected": {
+      "documentId": "28577b4a5307e113",
+      "documentName": "2605_22690v1.pdf",
+      "chunkId": "chk-28577b4a5307e113-002",
+      "page": 2,
+      "topic": "negative in this paper we present an algorithm that runs",
+      "keywords": [
+        "negative",
+        "paper",
+        "present",
+        "algorithm",
+        "runs"
+      ],
+      "sourceExcerpt": "Let P be a set of n points in the plane, where each element of P is assigned a weight ω ( p ), positive or negative. In this paper, we present an algorithm that runs in O ( n 4 log n ) time and O ( n ) space to find two possibly overlapping axis-aligned rectangles A and B so as to maximize the total weight of the points contained in the symmetric difference of A and B . The same optimization framework can easily be adapted to solve related problems such as to maximize the total weight in the symmetric difference of k ≥ 3 boxes and/or in the union of k ≥ 2 boxes. Keywords : Computational Geometry, Plane Points Covering, Axis-aligned Rectangles, MCS-Tree."
+    },
+    "answerText": "Based on 2605_22690v1.pdf page 2, the cited passage says: Maximum-Weight Two Boxes Symmetric Difference Problem. Abstract. Let P be a set of n points in the plane, where each element of P is assigned a weight ω ( p ), positive or negative. In this paper, we present an algorithm that runs in O ( n 4 log n ) time and O ( n ) space to find two possibly overlapping axis-aligned rectangles A and B so as to maximize the total weight of the points contained in the symmetric difference of A and B . The same optimization framework can easily be adapted to solve related problems such as to maximize the total weight in the symmetric difference of k ≥ 3 boxes and/or in the union of k ≥ 2 boxes. Keywords : Computational Geometry, Plane Points Covering, Axis-aligned Rectangles, MCS-Tree. Source: 2605_22690v1.pdf, page 2.",
+    "answerPreview": "Based on 2605_22690v1.pdf page 2, the cited passage says: Maximum-Weight Two Boxes Symmetric Difference Problem. Abstract. Let P be a set of n points in the plane, where each element of P is assigned a weight ω ( p ), positive or negative. In this paper, we present an algorithm that runs in O ( n 4 log n ) time and O ( n ) space to find two possibly overlapping axis-aligned rectangles A and B so as to maximize the total weight of the points contained in the symmetric difference of A and B . The same optimization framework can easily be adapted to solve related problems such as to maximize the ",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      1,
+      2,
+      3,
+      25
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-28577b4a5307e113-002",
+        "documentId": "28577b4a5307e113",
+        "source": "2605_22690v1.pdf",
+        "page": 2,
+        "titlePath": [
+          "Maximum-Weight Two Boxes Symmetric Difference Problem",
+          "Abstract"
+        ],
+        "excerpt": "Let P be a set of n points in the plane, where each element of P is assigned a weight ω ( p ), positive or negative. In this paper, we present an algorithm that runs in O ( n 4 log n ) time and O ( n ) space to find two possibly overlapping axis-aligned rectangles A and B so as to maximize the total weight of the points contained in the symmetric difference of A and B . The same optimization framework can easily be adapted to solve related problems such as to maximize the total weight in the symmetric difference of k ≥ 3 boxes and/or in the union of k ≥ 2 boxes. Keywords : Computational Geometry, Plane Points Covering, Axis-aligned Rectangles, MCS-Tree.",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-28577b4a5307e113-001",
+        "documentId": "28577b4a5307e113",
+        "source": "2605_22690v1.pdf",
+        "page": 1,
+        "titlePath": [
+          "Maximum-Weight Two Boxes Symmetric Difference Problem",
+          "Maximum-Weight Two Boxes Symmetric Difference Problem"
+        ],
+        "excerpt": "Jos´ e Fern´ andez Goycoolea ∗ Luis H. Herrera † Carlos Seara § May 22, 2026",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-6f49aa31874c89d9-005",
+        "documentId": "6f49aa31874c89d9",
+        "source": "2605_22714v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "Accumulated Message Effects on LLM Judgments (AMEL)",
+          "1 Introduction"
+        ],
+        "excerpt": "Language models are being used as judges. They review code, moderate user-generated content, score exam responses, and rate creative outputs [34]. In production, efficiency often wins: multiple items get assessed in a single conversation, building up a history of prior judgments. This setup creates an obvious concern. If a code reviewer has just rejected ten pull requests in a row, does submission We test this directly. We present identical items either in a clean context (baseline) or after a conversation history loaded with predominantly 'yes' or 'no' evaluations, then measure whether the history shifts the model's answer. We call this the accumulated message effect (AM",
+        "confidence": 0.7984
+      },
+      {
+        "chunkId": "chk-0f01f5a31f25b104-011",
+        "documentId": "0f01f5a31f25b104",
+        "source": "2605_22719v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "Reading Task Failure Off the Activations: A Sparse-Feature Audit of GPT-2 Small on Indirect Object Identification",
+          "A. Contributions"
+        ],
+        "excerpt": "We argue these controls should be a default part of any SAEbased failure audit; without them, the headline d = +2 . 93 result reads as a mechanistic finding rather than a lexical confound. - 3) An honest negative-result report. The lexical finding (transferred-object word changes IOI accuracy by 80+ percentage points) is robust; the mechanistic story we initially attached to it is not. We treat the audit's willingness to surface this gap as the methodological contribution rather than the headline feature. What this is not. This paper is not an agent benchmark evaluation. We deliberately use a single-step task on a subbillionparameter base model so that the entire experime",
+        "confidence": 0.6656
+      },
+      {
+        "chunkId": "chk-8befca519d25dd6a-098",
+        "documentId": "8befca519d25dd6a",
+        "source": "2605_22781v1.pdf",
+        "page": 25,
+        "titlePath": [
+          "DeltaBox: Scaling Stateful AI Agents with Millisecond-Level Sandbox Checkpoint/Rollback",
+          "6.3 Extended Studies"
+        ],
+        "excerpt": "6.3.1 Checkpoint/Restore Latency We present the detailed latency breakdown in Table.4, which shows the cost of each component in DeltaBox in a real-world workload (SWE-bench). Checkpoint latency. Per-step checkpoint cost is dominated by the incremental CRIU dump plus the serial template-fork tail; the DeltaFS ioctl runs concurrently and is the smaller term (Table.4). Restore latency. On the fast path the template fork() dominates (scaling linearly with agent RSS via page-table CoW) and the DeltaFS ioctl overlaps inside the fork window; the slow path is used only on first restore or after GC eviction (Table.4). Scaling with FS dirt. Across 1-128 MB of urandomfilled (incomp",
+        "confidence": 0.6117333333333334
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22690v1.pdf",
+      "answer_page": 2
+    },
+    "keywordHits": [
+      "negative",
+      "paper",
+      "present",
+      "algorithm",
+      "runs"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.334620551991975,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer accurately quotes the relevant passage from the cited source, which discusses the algorithm running in O(n^4 log n) time, directly addressing the query."
+    },
+    "attempts": 1,
+    "caseIndex": 3,
+    "concurrency": 1
+  },
+  {
+    "caseId": "f658663e60f82734-chk-f658663e60f82734-015-1",
+    "question": "Answer from the indexed PDF only. What is discussed around: \"intrinsic properties of the data or the model family they\"?",
+    "expected": {
+      "documentId": "f658663e60f82734",
+      "documentName": "2605_22691v1.pdf",
+      "chunkId": "chk-f658663e60f82734-015",
+      "page": 4,
+      "topic": "intrinsic properties of the data or the model family they",
+      "keywords": [
+        "intrinsic",
+        "properties",
+        "data",
+        "model",
+        "family",
+        "they"
+      ],
+      "sourceExcerpt": "Statements such as ' 𝛽 = 1 gives 𝐾 active latent dimensions' are not intrinsic properties of the data or the model family: they depend on input scaling, loss normalization, and reconstruction convention. By using normalized units, one obtains a control parameter 𝑇 that can be meaningfully compared across datasets. For instance, in the extreme case where a single spectral mode carries essentially all the variance, that mode would collapse at 𝑇 ≃ 1 ."
+    },
+    "answerText": "Based on 2605_22691v1.pdf page 4, the cited passage says: Posterior Collapse as Automatic Spectral Pruning in $\\beta$-VAEs. II. COLLAPSE SPECTROSCOPY. Statements such as ' 𝛽 = 1 gives 𝐾 active latent dimensions' are not intrinsic properties of the data or the model family: they depend on input scaling, loss normalization, and reconstruction convention. By using normalized units, one obtains a control parameter 𝑇 that can be meaningfully compared across datasets. For instance, in the extreme case where a single spectral mode carries essentially all the variance, that mode would collapse at 𝑇 ≃ 1 . Source: 2605_22691v1.pdf, page 4.",
+    "answerPreview": "Based on 2605_22691v1.pdf page 4, the cited passage says: Posterior Collapse as Automatic Spectral Pruning in $\\beta$-VAEs. II. COLLAPSE SPECTROSCOPY. Statements such as ' 𝛽 = 1 gives 𝐾 active latent dimensions' are not intrinsic properties of the data or the model family: they depend on input scaling, loss normalization, and reconstruction convention. By using normalized units, one obtains a control parameter 𝑇 that can be meaningfully compared across datasets. For instance, in the extreme case where a single spectral mode carries essentially all the variance, that mode would collapse at 𝑇 ≃ ",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      4,
+      33,
+      40,
+      67
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-f658663e60f82734-015",
+        "documentId": "f658663e60f82734",
+        "source": "2605_22691v1.pdf",
+        "page": 4,
+        "titlePath": [
+          "Posterior Collapse as Automatic Spectral Pruning in $\\beta$-VAEs",
+          "II. COLLAPSE SPECTROSCOPY"
+        ],
+        "excerpt": "Statements such as ' 𝛽 = 1 gives 𝐾 active latent dimensions' are not intrinsic properties of the data or the model family: they depend on input scaling, loss normalization, and reconstruction convention. By using normalized units, one obtains a control parameter 𝑇 that can be meaningfully compared across datasets. For instance, in the extreme case where a single spectral mode carries essentially all the variance, that mode would collapse at 𝑇 ≃ 1 .",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-32f9c5e56426f98b-131",
+        "documentId": "32f9c5e56426f98b",
+        "source": "2605_22785v1.pdf",
+        "page": 33,
+        "titlePath": [
+          "Evaluating Commercial AI Chatbots as News Intermediaries",
+          "A. Related Work"
+        ],
+        "excerpt": "Their finding that some models refuse to answer at elevated rates for such users-and, when they do answer, sometimes adopt condescending language-suggests that the retrieval-mediated inequities we document are embedded within a broader pattern of differential model behavior toward linguistically and demographically diverse users. where the challenge is not only whether the model understands the language but whether the full system-retrieval, ranking, synthesis-operates with comparable reliability across scripts and regions. False premises, sycophancy, and robustness. TruthfulQA showed that models often reproduce plausible-sounding falsehoods rather than rejecting them (Li",
+        "confidence": 0.8032
+      },
+      {
+        "chunkId": "chk-5de6ea2f200e0038-137",
+        "documentId": "5de6ea2f200e0038",
+        "source": "2605_22734v1.pdf",
+        "page": 67,
+        "titlePath": [
+          "ChronoMedKG: A Temporally-Grounded Biomedical Knowledge Graph and Benchmark for Clinical Reasoning",
+          "H.2 Parametric-Knowledge Gap Across Four LLMs"
+        ],
+        "excerpt": "The pattern is especially stark on free-text Phenopackets onset questions ('At what age does phenotype X typically present in disease Y ?'): the four models score 0%, 12%, 0%, and 6% (mean 4.5%), against an 80%+ static-control ceiling (main paper Table 7). This is precisely the task where parametric knowledge is insufficient and where ChronoMedKG provides directly queryable answers with PMID-grounded provenance. Full per-model breakdowns and answer logs are released in data/benchmark/chat\\_eval\\_summary.json .",
+        "confidence": 0.6632
+      },
+      {
+        "chunkId": "chk-5de6ea2f200e0038-085",
+        "documentId": "5de6ea2f200e0038",
+        "source": "2605_22734v1.pdf",
+        "page": 40,
+        "titlePath": [
+          "ChronoMedKG: A Temporally-Grounded Biomedical Knowledge Graph and Benchmark for Clinical Reasoning",
+          "B.2 Composition"
+        ],
+        "excerpt": "Coverage is limited by (a) PubMed's indexed literature, (b) the 4-agent pipeline's extraction scope (13,431 of 17,080 PrimeKG diseases processed), and (c) the consensus filter (only triples with ≥ 2-model agreement retained). What data does each instance consist of? See main paper Section 3.2. Each triple has: subject, relation, object, temporal metadata ( onset\\_age\\_min , onset\\_age\\_max , progression\\_stage , milestone ), evidence ( source\\_ids list of PMIDs, credibility\\_score , study\\_type , consensus\\_confidence ), and quality grade (A = PrimeKG-confirmed, B = novel). Is there a label or target associated with each instance? Triples are not labeled instances for sup",
+        "confidence": 0.6231333333333333
+      },
+      {
+        "chunkId": "chk-28e1fc65748542fc-008",
+        "documentId": "28e1fc65748542fc",
+        "source": "2605_22794v1.pdf",
+        "page": 4,
+        "titlePath": [
+          "MOSS: Self-Evolution through Source-Level Rewriting in Autonomous Agent Systems",
+          "1 Introduction"
+        ],
+        "excerpt": "It is Turing-complete: because programming languages are Turing-complete, the source-code design space constitutes a universal search space within which every text-mutable agent-design space-prompts, skills, memory schemas, workflow graphs-sits as a strict subset [Hu et al., 2025]; editing code can reach not only every configuration these subsets can represent, but arbitrary agentic structures they cannot. It is a strict superset of every text-mutable scope: whatever a prompt edit can achieve, an equivalent code edit can also achieve, and not the other way around. It takes effect deterministically: routing logic, hook ordering, and state-machine invariants run as code, an",
+        "confidence": 0.5792
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22691v1.pdf",
+      "answer_page": 4
+    },
+    "keywordHits": [
+      "intrinsic",
+      "properties",
+      "data",
+      "model",
+      "family",
+      "they"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.4317189570138,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer directly quotes the relevant passage from the specified source and page, accurately addressing the question."
+    },
+    "attempts": 1,
+    "caseIndex": 4,
+    "concurrency": 1
+  },
+  {
+    "caseId": "9198261b73f3999d-chk-9198261b73f3999d-002-2",
+    "question": "Summarize the source evidence around this phrase: \"data assimilation in conditional gaussian systems filtering and smoothing\".",
+    "expected": {
+      "documentId": "9198261b73f3999d",
+      "documentName": "2605_22692v1.pdf",
+      "chunkId": "chk-9198261b73f3999d-002",
+      "page": 2,
+      "topic": "data assimilation in conditional gaussian systems filtering and smoothing",
+      "keywords": [
+        "data",
+        "assimilation",
+        "conditional",
+        "gaussian",
+        "systems",
+        "filtering",
+        "smoothing"
+      ],
+      "sourceExcerpt": "| 1 Introduction | 1 Introduction | 1 Introduction | 2 | |------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|-----| | 2 | Hidden-State Inference Framework for Extreme-Event Diagnostics | Hidden-State Inference Framework for Extreme-Event Diagnostics | 3 | | | 2.1 | Problem setup . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . | 3 | | | 2.2 | Conditional Gaussian nonlinear stochastic systems . . . . . . . . . . . . . . . . | 4 | | | 2.3 | Data assimilation in conditional Gaussian systems: filtering and smoothing . ."
+    },
+    "answerText": "Based on 2605_22692v1.pdf page 7, the cited passage says: Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems. 2.3 Data assimilation in conditional Gaussian systems: filtering and smoothing. The diagnostics developed later require estimates of the conditional distributions of hidden variables given partial observations. In general nonlinear systems, these distributions are obtained approximately through numerical data assimilation methods, including ensemble Kalman filters, particle filters, and related smoothing approaches [8, 48, 72]. However, for conditional Gaussian systems, the filtering and smoothing distributions remain Gaussian and satisfy closed-form evolution equations. We summarize this exact setting below, which will be used extensively in the first two numerical examples. Source: 2605_22692v1.pdf, page 7.",
+    "answerPreview": "Based on 2605_22692v1.pdf page 7, the cited passage says: Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems. 2.3 Data assimilation in conditional Gaussian systems: filtering and smoothing. The diagnostics developed later require estimates of the conditional distributions of hidden variables given partial observations. In general nonlinear systems, these distributions are obtained approximately through numerical data assimilation methods, including ensemble Kalman filters, particle filters, and related smoothing approaches [8, 48, 72]. However, for con",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      1,
+      2,
+      7,
+      10
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-9198261b73f3999d-002",
+        "documentId": "9198261b73f3999d",
+        "source": "2605_22692v1.pdf",
+        "page": 2,
+        "titlePath": [
+          "Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems",
+          "Contents"
+        ],
+        "excerpt": "| 1 Introduction | 1 Introduction | 1 Introduction | 2 | |------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|-----| | 2 | Hidden-State Inference Framework for Extreme-Event Diagnostics | Hidden-State Inference Framework for Extreme-Event Diagnostics | 3 | | | 2.1 | Problem setup . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . | 3 | | | 2.2 | Conditional Gaussian nonlinear stochastic systems . . . . . . . . . . . . . . . . | 4 | | | 2.3 | Data assimilation in conditi",
+        "confidence": 0.9982000000000001
+      },
+      {
+        "chunkId": "chk-9198261b73f3999d-001",
+        "documentId": "9198261b73f3999d",
+        "source": "2605_22692v1.pdf",
+        "page": 1,
+        "titlePath": [
+          "Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems",
+          "Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems"
+        ],
+        "excerpt": "Charlotte Moser, Nan Chen, and Marios Andreou May 22, 2026",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-9198261b73f3999d-025",
+        "documentId": "9198261b73f3999d",
+        "source": "2605_22692v1.pdf",
+        "page": 7,
+        "titlePath": [
+          "Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems",
+          "2.3 Data assimilation in conditional Gaussian systems: filtering and smoothing"
+        ],
+        "excerpt": "The diagnostics developed later require estimates of the conditional distributions of hidden variables given partial observations. In general nonlinear systems, these distributions are obtained approximately through numerical data assimilation methods, including ensemble Kalman filters, particle filters, and related smoothing approaches [8, 48, 72]. However, for conditional Gaussian systems, the filtering and smoothing distributions remain Gaussian and satisfy closed-form evolution equations. We summarize this exact setting below, which will be used extensively in the first two numerical examples. In what follows, for simplicity, the observed time series of X is assumed t",
+        "confidence": 0.6896
+      },
+      {
+        "chunkId": "chk-9198261b73f3999d-027",
+        "documentId": "9198261b73f3999d",
+        "source": "2605_22692v1.pdf",
+        "page": 7,
+        "titlePath": [
+          "Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems",
+          "2.3 Data assimilation in conditional Gaussian systems: filtering and smoothing"
+        ],
+        "excerpt": "The filter equations (2.4) are random differential equations due to their dependence on the observed process X , with the covariance equation (2.4b) being a random continuous-time Riccati equation. The conditional distribution p ( Y ( t ) | X ( s ) , s ≤ t ) corresponds to the posterior distribution in Bayesian data assimilation, specifically the filtering solution. Accordingly, µ f and R f are referred to as the posterior filter mean and posterior filter covariance, respectively. The classical Kalman-Bucy filter [39] arises as a special case of (2.4) when the system is fully linear with constant or time-dependent coefficients. Filtering provides an online estimate of the",
+        "confidence": 0.6165333333333334
+      },
+      {
+        "chunkId": "chk-9198261b73f3999d-051",
+        "documentId": "9198261b73f3999d",
+        "source": "2605_22692v1.pdf",
+        "page": 10,
+        "titlePath": [
+          "Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems",
+          "3 Mechanisms and Pathways of Extreme Events"
+        ],
+        "excerpt": "The diagnostics in this section are formulated in terms of filtering and smoothing distributions and therefore apply broadly beyond conditional Gaussian models. When closed-form posteriors are unavailable, these quantities can be replaced by ensemble or particle approximations [29, 8, 28, 3, 74].",
+        "confidence": 0.5932
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22692v1.pdf",
+      "answer_page": 7
+    },
+    "keywordHits": [
+      "data",
+      "assimilation",
+      "conditional",
+      "gaussian",
+      "systems",
+      "filtering",
+      "smoothing"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.302305928998976,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer correctly summarizes the relevant passage from page 7, which discusses data assimilation in conditional Gaussian systems."
+    },
+    "attempts": 1,
+    "caseIndex": 5,
+    "concurrency": 1
+  },
+  {
+    "caseId": "7890701a639371cb-chk-7890701a639371cb-010-1",
+    "question": "Answer from the indexed PDF only. What is discussed around: \"learning-informed planning framework for heterogeneous robot teams that is tractable\"?",
+    "expected": {
+      "documentId": "7890701a639371cb",
+      "documentName": "2605_22693v1.pdf",
+      "chunkId": "chk-7890701a639371cb-010",
+      "page": 5,
+      "topic": "learning-informed planning framework for heterogeneous robot teams that is tractable",
+      "keywords": [
+        "learning",
+        "informed",
+        "planning",
+        "framework",
+        "heterogeneous",
+        "robot",
+        "teams",
+        "tractable"
+      ],
+      "sourceExcerpt": "We present Scout-Assisted Planning (SAP) with Information Gain Action Pruning (SAP-IAP), a learning-informed planning framework for heterogeneous robot teams that is tractable at scale. Our contributions are: - An Information-Gain (IG) formulation that estimates the value of each UAV scouting action and focuses exploration on a compact, high-utility subset of edges. - A GNNbased predictor that approximates IG values in real time, reducing planning overhead from seconds to milliseconds and enabling deployment in dynamic environments. - Empirical evaluation on three types of environments demonstrating up to (31.5-51.2)% reduction in ground robot travel cost compared to baselines."
+    },
+    "answerText": "Based on 2605_22693v1.pdf page 5, the cited passage says: Scout-Assisted Planning for Heterogeneous Robot Teams under Partially Known Environments. Introduction. We present Scout-Assisted Planning (SAP) with Information Gain Action Pruning (SAP-IAP), a learning-informed planning framework for heterogeneous robot teams that is tractable at scale. Our contributions are: - An Information-Gain (IG) formulation that estimates the value of each UAV scouting action and focuses exploration on a compact, high-utility subset of edges. - A GNNbased predictor that approximates IG values in real time, reducing planning overhead from seconds to milliseconds and enabling deployment in dynamic environments. - Empirical evaluation on three types of environments demonstrating up to (31.5-51.2)% reduction in ground robot travel cost compared to baselines. Source: 2605_22693v1.pdf, page 5.",
+    "answerPreview": "Based on 2605_22693v1.pdf page 5, the cited passage says: Scout-Assisted Planning for Heterogeneous Robot Teams under Partially Known Environments. Introduction. We present Scout-Assisted Planning (SAP) with Information Gain Action Pruning (SAP-IAP), a learning-informed planning framework for heterogeneous robot teams that is tractable at scale. Our contributions are: - An Information-Gain (IG) formulation that estimates the value of each UAV scouting action and focuses exploration on a compact, high-utility subset of edges. - A GNNbased predictor that approximates IG values in real time, redu",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      2,
+      5,
+      6,
+      19
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-7890701a639371cb-010",
+        "documentId": "7890701a639371cb",
+        "source": "2605_22693v1.pdf",
+        "page": 5,
+        "titlePath": [
+          "Scout-Assisted Planning for Heterogeneous Robot Teams under Partially Known Environments",
+          "Introduction"
+        ],
+        "excerpt": "We present Scout-Assisted Planning (SAP) with Information Gain Action Pruning (SAP-IAP), a learning-informed planning framework for heterogeneous robot teams that is tractable at scale. Our contributions are: - An Information-Gain (IG) formulation that estimates the value of each UAV scouting action and focuses exploration on a compact, high-utility subset of edges. - A GNNbased predictor that approximates IG values in real time, reducing planning overhead from seconds to milliseconds and enabling deployment in dynamic environments. - Empirical evaluation on three types of environments demonstrating up to (31.5-51.2)% reduction in ground robot travel cost compared to base",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-7890701a639371cb-003",
+        "documentId": "7890701a639371cb",
+        "source": "2605_22693v1.pdf",
+        "page": 2,
+        "titlePath": [
+          "Scout-Assisted Planning for Heterogeneous Robot Teams under Partially Known Environments",
+          "Abstract"
+        ],
+        "excerpt": "Experiments across three environment types show that SAP with Information Gain Action Pruning (SAP-IAP) reduces ground robot travel cost by 31.9-37.7% over the Canadian Traveler Problem (CTP) baseline, and outperforms proximity-based scouting guidance by an additional 8-14%, confirming that principled information-gain-guided scouting is both more effective and computationally feasible for real-world deployment.",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-7890701a639371cb-063",
+        "documentId": "7890701a639371cb",
+        "source": "2605_22693v1.pdf",
+        "page": 19,
+        "titlePath": [
+          "Scout-Assisted Planning for Heterogeneous Robot Teams under Partially Known Environments",
+          "Results"
+        ],
+        "excerpt": "We evaluate SAP, SAP with Distance-based Action Pruning (SAP-DAP), SAP-IAP, and SAP with Learning-informed Action Pruning (SAP-LIAP) against the CTP baseline across three environments with team configurations of up to 3 UGVs and 2 UAVs, measuring ground robot travel distance and planning runtime. For SAP-DAP, SAP-IAP, and SAP-LIAP, we apply aggressive pruning in which each scouting drone is assigned exactly one action per decision step-the highest-scoring candidate under the respective pruning strategy. The drone velocity is set to be three times that of the ground robots. Results are reported in Table 1 and Fig. 5. Does scouting guidance reduce ground robot travel cost? ",
+        "confidence": 0.8050857142857143
+      },
+      {
+        "chunkId": "chk-7890701a639371cb-026",
+        "documentId": "7890701a639371cb",
+        "source": "2605_22693v1.pdf",
+        "page": 6,
+        "titlePath": [
+          "Scout-Assisted Planning for Heterogeneous Robot Teams under Partially Known Environments",
+          "Scout-Assisted Planning (SAP)"
+        ],
+        "excerpt": "We present Scout-Assisted Planning (SAP), a model-based planning framework for heterogeneous robot teams operating in partially known environments. SAP enables concurrent action execution across ground robots and scouting drones, allowing the team to share observations in real time and update behavior as new environmental information arrives. Building on the multi-robot sub-goal planning framework of Khanal and Stein [2023], in which robot actions are concurrent and may finish at different times, we extend the transition model to support heterogeneous robot teams composed of both UGVs and and UAVs. The key distinction of our model is that robots may terminate their curren",
+        "confidence": 0.6650857142857143
+      },
+      {
+        "chunkId": "chk-7890701a639371cb-002",
+        "documentId": "7890701a639371cb",
+        "source": "2605_22693v1.pdf",
+        "page": 2,
+        "titlePath": [
+          "Scout-Assisted Planning for Heterogeneous Robot Teams under Partially Known Environments",
+          "Abstract"
+        ],
+        "excerpt": "Autonomous robot teams navigating partially known environments face costly backtracking when ground robots encounter blocked roads that are only revealed upon physical traversal. We address this with Scout-Assisted Planning (SAP), a heterogeneous planning framework in which scouting Unmanned Aerial Vehicle s (UAVs) proactively gather environmental information to improve Unmanned Ground Vehicle (UGV) navigation. To focus scouting on the most consequential edges, we propose Information Gain-based Action Pruning (IAP), which scores candidate scouting actions by their expected impact on ground robot behavior. Since exact Information Gain-based Action Pruning (IAP) computation",
+        "confidence": 0.6240761904761905
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22693v1.pdf",
+      "answer_page": 5
+    },
+    "keywordHits": [
+      "learning",
+      "informed",
+      "planning",
+      "framework",
+      "heterogeneous",
+      "robot",
+      "teams",
+      "tractable"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.314606753003318,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer directly quotes the relevant passage from the source that discusses the 'learning-informed planning framework for heterogeneous robot teams that is tractable'."
+    },
+    "attempts": 1,
+    "caseIndex": 6,
+    "concurrency": 1
+  },
+  {
+    "caseId": "cddbea6a6cc81cfd-chk-cddbea6a6cc81cfd-007-1",
+    "question": "Answer from the indexed PDF only. What is discussed around: \"approach by rogers de witt sheaf theorhetic approach by leites\"?",
+    "expected": {
+      "documentId": "cddbea6a6cc81cfd",
+      "documentName": "2605_22694v1.pdf",
+      "chunkId": "chk-cddbea6a6cc81cfd-007",
+      "page": 5,
+      "topic": "approach by rogers de witt sheaf theorhetic approach by leites",
+      "keywords": [
+        "approach",
+        "rogers",
+        "witt",
+        "sheaf",
+        "theorhetic",
+        "leites"
+      ],
+      "sourceExcerpt": "There has been several approaches made for supermanifold theory such as concrete approach by Rogers [22], De Witt [23]; sheaf theorhetic approach by Leites [24], Kostant [25] to name some. The dynamics of a control system Σ on a Lie supergroup 𝒢 can be given by the vector field on 𝒢 parameterized by some control vector 𝑢 . At the outset, the control systems were studied on ordinary Euclidean space ℝ 𝑛 until 1972, when Brockett [26] discovered the existence of control systems on Lie group. Subsequently, Jurdjevic and Sussmann [27, 28] produced many striking results that reshaped the study of non-linear control systems and this led to the development of geometric control theory by Sachkov [29, 30], Agrachev [31] and many others."
+    },
+    "answerText": "Based on 2605_22694v1.pdf page 5, the cited passage says: Characterization of Normalizer of Lie Superalgebra and its Application to Control Theory. 1 Introduction. There has been several approaches made for supermanifold theory such as concrete approach by Rogers [22], De Witt [23]; sheaf theorhetic approach by Leites [24], Kostant [25] to name some. The dynamics of a control system Σ on a Lie supergroup 𝒢 can be given by the vector field on 𝒢 parameterized by some control vector 𝑢 . At the outset, the control systems were studied on ordinary Euclidean space ℝ 𝑛 until 1972, when Brockett [26] discovered the existence of control systems on Lie group. Subsequently, Jurdjevic and Sussmann [27, 28] produced many striking results that reshaped the study of non-linear control systems and this led to the development of geometric control theory by Sachkov [29, 30], Agrachev [31] and many others. Source: 2605_22694v1.pdf, page 5.",
+    "answerPreview": "Based on 2605_22694v1.pdf page 5, the cited passage says: Characterization of Normalizer of Lie Superalgebra and its Application to Control Theory. 1 Introduction. There has been several approaches made for supermanifold theory such as concrete approach by Rogers [22], De Witt [23]; sheaf theorhetic approach by Leites [24], Kostant [25] to name some. The dynamics of a control system Σ on a Lie supergroup 𝒢 can be given by the vector field on 𝒢 parameterized by some control vector 𝑢 . At the outset, the control systems were studied on ordinary Euclidean space ℝ 𝑛 until 1972, when Brockett [26] ",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      2,
+      5,
+      6,
+      8,
+      23
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-cddbea6a6cc81cfd-002",
+        "documentId": "cddbea6a6cc81cfd",
+        "source": "2605_22694v1.pdf",
+        "page": 2,
+        "titlePath": [
+          "Characterization of Normalizer of Lie Superalgebra and its Application to Control Theory",
+          "Abstract"
+        ],
+        "excerpt": "The dynamical systems having both bosonic and fermionic variables play an important role in the theory of supersymmetry. This article addresses the control problems including both bosonic and fermionic variables on Lie supergroup as the configuration space. Here, the control systems are characterized using the normalizer of Lie subsuperalgebra of leftinvariant vector fields in the Lie superalgebra of all smooth vector fields of Lie supergroup. Then, the linear control system is studied in detail and its controllability criterion is proposed along with suitable examples. Keywords: Control system, Controllability, Lie supergroup, Lie superalgebras, Vector fields MSC (2020):",
+        "confidence": 0.985
+      },
+      {
+        "chunkId": "chk-cddbea6a6cc81cfd-007",
+        "documentId": "cddbea6a6cc81cfd",
+        "source": "2605_22694v1.pdf",
+        "page": 5,
+        "titlePath": [
+          "Characterization of Normalizer of Lie Superalgebra and its Application to Control Theory",
+          "1 Introduction"
+        ],
+        "excerpt": "There has been several approaches made for supermanifold theory such as concrete approach by Rogers [22], De Witt [23]; sheaf theorhetic approach by Leites [24], Kostant [25] to name some. The dynamics of a control system Σ on a Lie supergroup 𝒢 can be given by the vector field on 𝒢 parameterized by some control vector 𝑢 . At the outset, the control systems were studied on ordinary Euclidean space ℝ 𝑛 until 1972, when Brockett [26] discovered the existence of control systems on Lie group. Subsequently, Jurdjevic and Sussmann [27, 28] produced many striking results that reshaped the study of non-linear control systems and this led to the development of geometric control th",
+        "confidence": 0.985
+      },
+      {
+        "chunkId": "chk-9b02d93e056cd83a-017",
+        "documentId": "9b02d93e056cd83a",
+        "source": "2605_22735v1.pdf",
+        "page": 6,
+        "titlePath": [
+          "Shokurov's Global Index Conjecture for Threefold Foliations",
+          "2. Preliminaries"
+        ],
+        "excerpt": "For a normal projective klt variety V and a foliation G on V with canonical singularities and K G Q -Cartier with K G ≡ 0 , there exist normal projective klt varieties Y 0 , Z 0 and a finite quasi-´ etale cover u : Y 0 × Z 0 → V such that u -1 G is the pullback by the projection Y 0 × Z 0 → Y 0 of a foliation H 0 on Y 0 , no positive-dimensional algebraic subvariety tangent to H 0 passes through a general point of Y 0 , K Z 0 ∼ 0 , H 0 has canonical singularities, and K H 0 ≡ 0 . Theorem 2.7 ([DO22, Theorem 1.1]) .",
+        "confidence": 0.7928585856129179
+      },
+      {
+        "chunkId": "chk-06e4c439acfc53d5-050",
+        "documentId": "06e4c439acfc53d5",
+        "source": "2605_22728v1.pdf",
+        "page": 8,
+        "titlePath": [
+          "A Prox-Based Semi-Smooth Newton Method for TV-Minimization",
+          "2.2.1 General convex variational problems"
+        ],
+        "excerpt": "A minimizer u ∈ W 1 ,p D (Ω) of the primal energy functional (2.20), called primal solution , and a maximizer z ∈ W p ′ N (div; Ω) of the dual energy functional (2.21), called dual solution , are characterized and related by the primal optimality inclusions <!-- formula-not-decoded --> where ∂ t ϕ : Ω × R d → 2 R d and ∂ s ψ : Ω × R → 2 R denote the subdifferentials (with respect to the second argument) of the energy densities ϕ and ψ , respectively. Note that the primal optimality inclusions (2.22) are equivalent to the strong duality relation I ( u ) = D ( z ) ( cf . [12, p. 2255]).",
+        "confidence": 0.6117074441519651
+      },
+      {
+        "chunkId": "chk-3077f9771b454d44-254",
+        "documentId": "3077f9771b454d44",
+        "source": "2605_22742v1.pdf",
+        "page": 23,
+        "titlePath": [
+          "Lattice QCD Calculation of Form Factors for Rare Charged Kaon Decay K → ℓ⁻ν ℓℓ' + ℓ'⁻",
+          "VIII. FINAL RESULTS FOR THE FORM FACTORS F V , F A , H 1 , AND H 2"
+        ],
+        "excerpt": "Since H 1 provides the dominant contribution to the K ℓ 2 ℓ ′ decay rates, this enhancement has a significant impact on the predicted branching fractions, which will be discussed in a companion paper [2]. Fig. 44 shows the real parts of the form factors as functions of the photon momentum for three representative values of the photon virtuality: x k ≃ 0 . 5 (black triangles), x k ≃ 0 . 6 (blue circles), and x k ≃ 0 . 75 (red squares). Similarly to what we observed for x k &lt; 2 m π /m K (Fig. 23), the form factors exhibit only a very mild dependence on the photon momentum.",
+        "confidence": 0.5866
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22694v1.pdf",
+      "answer_page": 5
+    },
+    "keywordHits": [
+      "approach",
+      "rogers",
+      "witt",
+      "sheaf",
+      "theorhetic",
+      "leites"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.356875527999364,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer correctly quotes the relevant passage from the source that discusses the approaches by Rogers, De Witt, and Leites."
+    },
+    "attempts": 1,
+    "caseIndex": 7,
+    "concurrency": 1
+  },
+  {
+    "caseId": "7fcfee783339650e-chk-7fcfee783339650e-002-2",
+    "question": "Summarize the source evidence around this phrase: \"detection methods often struggle with limited viewpoint diversity during training\".",
+    "expected": {
+      "documentId": "7fcfee783339650e",
+      "documentName": "2605_22695v1.pdf",
+      "chunkId": "chk-7fcfee783339650e-002",
+      "page": 2,
+      "topic": "detection methods often struggle with limited viewpoint diversity during training",
+      "keywords": [
+        "detection",
+        "methods",
+        "often",
+        "struggle",
+        "limited",
+        "viewpoint",
+        "diversity",
+        "during",
+        "training"
+      ],
+      "sourceExcerpt": "Viewpoint change invariance and action temporal consistency are critical aspects for the effective deployment of human action detection of untrimmed videos. Existing appearance-based video detection methods often struggle with limited viewpoint diversity during training, while motion-based detection approaches frequently fail to model fine-grained temporal relationships across consecutive motion windows. This paper introduces a novel two-stage action detection approach designed to improve both view-invariance and global temporal coherence properties. In the first stage, we extract motion features from augmented virtual viewpoints, solely used at training. Then, the second stage introduces a new view-invariant, multi-scale temporal encoder based on selective state-space sequence modelling to aggregate information across viewpoints and time scales. Experiments on PKU-MMD and BABEL benchmarks demonstrate that this approach significantly outperforms state-of-the-art methods in all considered splits."
+    },
+    "answerText": "Based on 2605_22695v1.pdf page 2, the cited passage says: Improving Viewpoint-Invariance and Temporal Consistency for Action Detection. ABSTRACT. Viewpoint change invariance and action temporal consistency are critical aspects for the effective deployment of human action detection of untrimmed videos. Existing appearance-based video detection methods often struggle with limited viewpoint diversity during training, while motion-based detection approaches frequently fail to model fine-grained temporal relationships across consecutive motion windows. This paper introduces a novel two-stage action detection approach designed to improve both view-invariance and global temporal coherence properties. In the first stage, we extract motion features from augmented virtual viewpoints, solely used at training. Then, the second stage introduces a new view-invariant, multi-scale temporal encoder based on selective state-space sequence modelling to aggregate information across viewpoints and time scales. Experiments on PKU-MMD and BABEL benchmarks demonstrate that this approach significantly outperforms state-of-the-art methods in all considered splits. Source: 2605_22695v1.pdf, page 2.",
+    "answerPreview": "Based on 2605_22695v1.pdf page 2, the cited passage says: Improving Viewpoint-Invariance and Temporal Consistency for Action Detection. ABSTRACT. Viewpoint change invariance and action temporal consistency are critical aspects for the effective deployment of human action detection of untrimmed videos. Existing appearance-based video detection methods often struggle with limited viewpoint diversity during training, while motion-based detection approaches frequently fail to model fine-grained temporal relationships across consecutive motion windows. This paper introduces a novel two-stage action",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      1,
+      2,
+      3,
+      15
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-7fcfee783339650e-002",
+        "documentId": "7fcfee783339650e",
+        "source": "2605_22695v1.pdf",
+        "page": 2,
+        "titlePath": [
+          "Improving Viewpoint-Invariance and Temporal Consistency for Action Detection",
+          "ABSTRACT"
+        ],
+        "excerpt": "Viewpoint change invariance and action temporal consistency are critical aspects for the effective deployment of human action detection of untrimmed videos. Existing appearance-based video detection methods often struggle with limited viewpoint diversity during training, while motion-based detection approaches frequently fail to model fine-grained temporal relationships across consecutive motion windows. This paper introduces a novel two-stage action detection approach designed to improve both view-invariance and global temporal coherence properties. In the first stage, we extract motion features from augmented virtual viewpoints, solely used at training. Then, the second",
+        "confidence": 0.9982000000000001
+      },
+      {
+        "chunkId": "chk-7fcfee783339650e-001",
+        "documentId": "7fcfee783339650e",
+        "source": "2605_22695v1.pdf",
+        "page": 1,
+        "titlePath": [
+          "Improving Viewpoint-Invariance and Temporal Consistency for Action Detection",
+          "IMPROVING VIEWPOINT-INVARIANCE AND TEMPORAL CONSISTENCY FOR ACTION DETECTION"
+        ],
+        "excerpt": "Yannick Porto ⋆ † Renato Martins ⋆ Thomas Chalumeau † Cedric Demonceaux ⋆ ⋆ Universit Bourgogne Europe, CNRS, ICB † TEB Group, Prynel SAS",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-7fcfee783339650e-035",
+        "documentId": "7fcfee783339650e",
+        "source": "2605_22695v1.pdf",
+        "page": 15,
+        "titlePath": [
+          "Improving Viewpoint-Invariance and Temporal Consistency for Action Detection",
+          "5. CONCLUSION"
+        ],
+        "excerpt": "This paper introduces a novel temporal action detection framework that jointly improves view invariance and temporal consistency. While existing video-based approaches generally lack robustness to viewpoint variations, motionbased detection methods often fail to model temporal relationships across adjacent windows. To overcome these limitations, we design a method based on two main components (SWGCN and HydraView) that leverages multiple viewpoints during training to enhance frame-level action localization in single-view untrimmed videos during inference. Our method combines multi-view learning on short temporal windows to enforce view-invariant yet discriminative motion ",
+        "confidence": 0.6707428571428571
+      },
+      {
+        "chunkId": "chk-7fcfee783339650e-006",
+        "documentId": "7fcfee783339650e",
+        "source": "2605_22695v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "Improving Viewpoint-Invariance and Temporal Consistency for Action Detection",
+          "1. INTRODUCTION"
+        ],
+        "excerpt": "Compared to other skeleton-based action detectors [1, 2, 3], the spatial features are then frozen to train the temporal encoder. Learning relations on windows is costly, especially for long sequences, and moreover for multiple views. We therefore operate the same strategy than RGB-based TAD methods [4, 5, 6] with a two-step training. Second, we propose a view-invariant multi-scale temporal encoder, termed HydraView, which aggregates information across both time and views to perform frame-level action detection, as illustrated in Fig. 1. HydraView is built upon a sequence of ViewMamba blocks that extend recent state Fig. 2 . Overview of our temporal action detection method",
+        "confidence": 0.6127619047619047
+      },
+      {
+        "chunkId": "chk-7da07cf6378b86c7-004",
+        "documentId": "7da07cf6378b86c7",
+        "source": "2605_22697v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions",
+          "1 Introduction"
+        ],
+        "excerpt": "Afundamental challenge in the deployment of Human Action Recognition (HAR) systems, in typical cross-domain real-world conditions, lies in the reliance on large amounts of annotated motion data, which are difficult and costly to obtain for every new deployment domain [10,20]. In real-world scenarios, action labels are often incomplete, inconsistent, or defined using different vocabularies across datasets and applications [21,27], making it impractical to anticipate all action categories at training time. For example, an action labeled as 'pick up' during Fig. 1. Geometric domain gaps actions over four different datasets. The benchmarks contain sequences with clear distinc",
+        "confidence": 0.5894285714285714
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22695v1.pdf",
+      "answer_page": 2
+    },
+    "keywordHits": [
+      "detection",
+      "methods",
+      "often",
+      "struggle",
+      "limited",
+      "viewpoint",
+      "diversity",
+      "during",
+      "training"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.291682736002258,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer accurately summarizes the relevant passage from the cited source context."
+    },
+    "attempts": 1,
+    "caseIndex": 8,
+    "concurrency": 1
+  },
+  {
+    "caseId": "e26a64f9ff5e6d86-chk-e26a64f9ff5e6d86-088-0",
+    "question": "What does the indexed PDF say in the passage containing: \"to simplify the analysis we adopt an idealized model in\"?",
+    "expected": {
+      "documentId": "e26a64f9ff5e6d86",
+      "documentName": "2605_22696v1.pdf",
+      "chunkId": "chk-e26a64f9ff5e6d86-088",
+      "page": 7,
+      "topic": "to simplify the analysis we adopt an idealized model in",
+      "keywords": [
+        "simplify",
+        "analysis",
+        "adopt",
+        "idealized",
+        "model"
+      ],
+      "sourceExcerpt": "To simplify the analysis, we adopt an idealized model in which the photon emitting gas is assumed to be distributed spherically around the black hole. With this assumption, the spectral properties can be estimated analytically without relying on detailed numerical simulations. Observations indicating low radiative efficiency in supermassive black holes such as M87* and Sgr A* further suggest that the emission region is unlikely to be a thin disk; instead, it is more plausibly associated with a geometrically thick, hot accretion flow (see, e.g., [87]). Within this context, the spherical gas model employed here should provide a reasonable order-of-magnitude estimate of the expected spectra. Assuming the spherical gas model, we aim to calculate the number of photons approaching the photon region of the Kerr BH."
+    },
+    "answerText": "Based on 2605_22696v1.pdf page 7, the cited passage says: Dimming of Photon Ring due to Photon-Axion Conversion around Kerr Black Holes. III. ESTIMATION OF PHOTON FLUX IN THE VICINITY OF THE PHOTON REGION OF KERR BLACK HOLES. To simplify the analysis, we adopt an idealized model in which the photon emitting gas is assumed to be distributed spherically around the black hole. With this assumption, the spectral properties can be estimated analytically without relying on detailed numerical simulations. Observations indicating low radiative efficiency in supermassive black holes such as M87* and Sgr A* further suggest that the emission region is unlikely to be a thin disk; instead, it is more plausibly associated with a geometrically thick, hot accretion flow (see, e.g., [87]). Within this context, the spherical gas model employed here should provide a reasonable order-of-magnitude estimate of the expected spectra. Assuming the spherical gas model, we aim to calculate the number of photons approaching the photon region of the Kerr BH. Source: 2605_22696v1.pdf, page 7.",
+    "answerPreview": "Based on 2605_22696v1.pdf page 7, the cited passage says: Dimming of Photon Ring due to Photon-Axion Conversion around Kerr Black Holes. III. ESTIMATION OF PHOTON FLUX IN THE VICINITY OF THE PHOTON REGION OF KERR BLACK HOLES. To simplify the analysis, we adopt an idealized model in which the photon emitting gas is assumed to be distributed spherically around the black hole. With this assumption, the spectral properties can be estimated analytically without relying on detailed numerical simulations. Observations indicating low radiative efficiency in supermassive black holes such as M87* and Sg",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      3,
+      6,
+      7,
+      8,
+      16
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-e26a64f9ff5e6d86-088",
+        "documentId": "e26a64f9ff5e6d86",
+        "source": "2605_22696v1.pdf",
+        "page": 7,
+        "titlePath": [
+          "Dimming of Photon Ring due to Photon-Axion Conversion around Kerr Black Holes",
+          "III. ESTIMATION OF PHOTON FLUX IN THE VICINITY OF THE PHOTON REGION OF KERR BLACK HOLES"
+        ],
+        "excerpt": "To simplify the analysis, we adopt an idealized model in which the photon emitting gas is assumed to be distributed spherically around the black hole. With this assumption, the spectral properties can be estimated analytically without relying on detailed numerical simulations. Observations indicating low radiative efficiency in supermassive black holes such as M87* and Sgr A* further suggest that the emission region is unlikely to be a thin disk; instead, it is more plausibly associated with a geometrically thick, hot accretion flow (see, e.g., [87]). Within this context, the spherical gas model employed here should provide a reasonable order-of-magnitude estimate of the ",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-9198261b73f3999d-073",
+        "documentId": "9198261b73f3999d",
+        "source": "2605_22692v1.pdf",
+        "page": 16,
+        "titlePath": [
+          "Mechanisms and Pathways of Extreme Events in Partially-Observed Stochastic Dynamical Systems",
+          "3.2.2 Most probable hidden paths and representative trajectories"
+        ],
+        "excerpt": "The distribution-based analysis in the previous sections identifies latent directions and probability structures associated with extreme events. A complementary question concerns the temporal evolution of the hidden variables: among all hidden trajectories consistent with the observations, The optimizer satisfies what is the dominant route toward an extreme event? The smoothing distribution provides a natural probabilistic framework for addressing this question. For simplicity, we assume a discrete-time setting with observations at times t 0 &lt; t 1 &lt; . . . &lt; t N and consider an observed realization X 0: N containing an extreme event. Let <!-- formula-not-decoded -",
+        "confidence": 0.8005599999999999
+      },
+      {
+        "chunkId": "chk-32f9c5e56426f98b-015",
+        "documentId": "32f9c5e56426f98b",
+        "source": "2605_22785v1.pdf",
+        "page": 6,
+        "titlePath": [
+          "Evaluating Commercial AI Chatbots as News Intermediaries",
+          "1. Introduction"
+        ],
+        "excerpt": "Hindi performance is lowest in all models tested: accuracy falls to 79% compared with 89-91% for all other regions, a gap that persists even when excluding the weakest model. Detailed error analysis reveals that this is not a languagecomprehension failure (models generate fluent Hindi and reason competently in the language), but a retrieval-andgrounding failure in which models pivot to English-language sources that report different specific details than the Hindi original. Citation analysis exposes the mechanism: mod- 1 Three limitations of our design warrant upfront acknowledgment. First, BBC is well-indexed on the open web, so our results describe retrieval performance ",
+        "confidence": 0.6605599999999999
+      },
+      {
+        "chunkId": "chk-6f49aa31874c89d9-005",
+        "documentId": "6f49aa31874c89d9",
+        "source": "2605_22714v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "Accumulated Message Effects on LLM Judgments (AMEL)",
+          "1 Introduction"
+        ],
+        "excerpt": "Language models are being used as judges. They review code, moderate user-generated content, score exam responses, and rate creative outputs [34]. In production, efficiency often wins: multiple items get assessed in a single conversation, building up a history of prior judgments. This setup creates an obvious concern. If a code reviewer has just rejected ten pull requests in a row, does submission We test this directly. We present identical items either in a clean context (baseline) or after a conversation history loaded with predominantly 'yes' or 'no' evaluations, then measure whether the history shifts the model's answer. We call this the accumulated message effect (AM",
+        "confidence": 0.6138933333333333
+      },
+      {
+        "chunkId": "chk-397a37f4fb49edb8-029",
+        "documentId": "397a37f4fb49edb8",
+        "source": "2605_22702v1.pdf",
+        "page": 8,
+        "titlePath": [
+          "Statistical methods to detect astrometric binary asteroids in Gaia FPR",
+          "2.2. Data model and parameter estimation"
+        ],
+        "excerpt": "This leads to a time series y : = [ y 1 , · · · , yK ] ⊤ . As discussed in L24, the detection method relies on a GLSP analysis, that compares the sums of the weighted least square residuals obtained by fitting only a constant, and a constant plus a sinusoid. The 'significance' of the score reflecting this comparison is calibrated by MC simulations with a p-value. Note that in the transit data model (4) the systematic term µ is not indexed by k . This is an approximation as this bias indeed slightly varies within the window.",
+        "confidence": 0.59056
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22696v1.pdf",
+      "answer_page": 7
+    },
+    "keywordHits": [
+      "simplify",
+      "analysis",
+      "adopt",
+      "idealized",
+      "model"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.2006246550008655,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer accurately quotes the relevant passage from the specified source and page."
+    },
+    "attempts": 1,
+    "caseIndex": 9,
+    "concurrency": 1
+  },
+  {
+    "caseId": "7da07cf6378b86c7-chk-7da07cf6378b86c7-003-1",
+    "question": "Answer from the indexed PDF only. What is discussed around: \"with improved cross-domain capabilities our approach combines motion cues of\"?",
+    "expected": {
+      "documentId": "7da07cf6378b86c7",
+      "documentName": "2605_22697v1.pdf",
+      "chunkId": "chk-7da07cf6378b86c7-003",
+      "page": 2,
+      "topic": "with improved cross-domain capabilities our approach combines motion cues of",
+      "keywords": [
+        "improved",
+        "cross",
+        "domain",
+        "capabilities",
+        "approach",
+        "combines",
+        "motion",
+        "cues"
+      ],
+      "sourceExcerpt": "In this context, this paper presents a novel orientation-aware action recognition approach with improved cross-domain capabilities. Our approach combines motion cues of multiple camera viewpoints and text descriptions of human actions in the training phase. We present a new orientation-aware motion encoding network to learn different motion features, and adapt a specific orientation-aware text prompt to match the corresponding features at inference. Extensive experiments demonstrate that the proposed method consistently improves ZSAR performance across different recognition benchmarks, outperforming recent state-of-the-art zero-shot approaches on NTU-RGB+D, BABEL, NW-UCLA, and on two surveillance datasets. In addition, the learned representations exhibit strong transfer learning capabilities, yielding competitive performance on both cross-domain and same-domain recognition of seen actions. Code and trained models are available at: https://icb-vision-ai.github.io/ OrientationAware-HAR"
+    },
+    "answerText": "Based on 2605_22697v1.pdf page 2, the cited passage says: Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions. Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions. In this context, this paper presents a novel orientation-aware action recognition approach with improved cross-domain capabilities. Our approach combines motion cues of multiple camera viewpoints and text descriptions of human actions in the training phase. We present a new orientation-aware motion encoding network to learn different motion features, and adapt a specific orientation-aware text prompt to match the corresponding features at inference. Extensive experiments demonstrate that the proposed method consistently improves ZSAR performance across different recognition benchmarks, outperforming recent state-of-the-art zero-shot approaches on NTU-RGB+D, BABEL, NW-UCLA, and on two surveillance datasets. In addition, the learned representations exhibit strong transfer learning capabilities, yielding competitive performance on both cross-domain and same-domain recognition of seen actions. Code and trained models are available at: https://icb-vision-ai.github.io/ OrientationAware-HAR Source: 2605_22697v1.pdf, page 2.",
+    "answerPreview": "Based on 2605_22697v1.pdf page 2, the cited passage says: Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions. Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions. In this context, this paper presents a novel orientation-aware action recognition approach with improved cross-domain capabilities. Our approach combines motion cues of multiple camera viewpoints and text descriptions of human actions in the training phase. We present a new orientation-aware motion encoding network to learn different motion features, and adapt a speci",
+    "reviewStatus": "pass",
+    "citationCount": 5,
+    "citationPages": [
+      1,
+      2,
+      3,
+      6,
+      16
+    ],
+    "citations": [
+      {
+        "chunkId": "chk-7da07cf6378b86c7-003",
+        "documentId": "7da07cf6378b86c7",
+        "source": "2605_22697v1.pdf",
+        "page": 2,
+        "titlePath": [
+          "Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions",
+          "Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions"
+        ],
+        "excerpt": "In this context, this paper presents a novel orientation-aware action recognition approach with improved cross-domain capabilities. Our approach combines motion cues of multiple camera viewpoints and text descriptions of human actions in the training phase. We present a new orientation-aware motion encoding network to learn different motion features, and adapt a specific orientation-aware text prompt to match the corresponding features at inference. Extensive experiments demonstrate that the proposed method consistently improves ZSAR performance across different recognition benchmarks, outperforming recent state-of-the-art zero-shot approaches on NTU-RGB+D, BABEL, NW-UCLA",
+        "confidence": 0.9982000000000001
+      },
+      {
+        "chunkId": "chk-7da07cf6378b86c7-001",
+        "documentId": "7da07cf6378b86c7",
+        "source": "2605_22697v1.pdf",
+        "page": 1,
+        "titlePath": [
+          "Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions"
+        ],
+        "excerpt": "Preprint paper version accepted and presented at 2026 International Conference on Pattern Recognition (ICPR)",
+        "confidence": 0.995
+      },
+      {
+        "chunkId": "chk-2d2a25ca032f0c56-005",
+        "documentId": "2d2a25ca032f0c56",
+        "source": "2605_22715v1.pdf",
+        "page": 3,
+        "titlePath": [
+          "AnyMo: Geometry-Aware Setup-Agnostic Modeling of Human Motion in the Wild",
+          "1 Introduction"
+        ],
+        "excerpt": "Inertial measurement unit (IMU) signals are semantically ambiguous: similar inertial patterns can arise from different activities depending on who is moving, how, and in what context. Resolving this ambiguity requires knowledge beyond closed-set activity labels. Language provides a natural source of such knowledge, as it is grounded in human descriptions of everyday behavior and supports compositional, open-ended semantics. Connecting ∗ Corresponding authors: breeze.chen@unsw.edu.au, flora.salim@unsw.edu.au. Figure 1: Method families for wearable human motion understanding and radar plot comparing the performance of AnyMo with baselines across various tasks and capabiliti",
+        "confidence": 0.6537714285714286
+      },
+      {
+        "chunkId": "chk-7da07cf6378b86c7-057",
+        "documentId": "7da07cf6378b86c7",
+        "source": "2605_22697v1.pdf",
+        "page": 16,
+        "titlePath": [
+          "Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions",
+          "5 Conclusion"
+        ],
+        "excerpt": "Several experiments and evaluations on three widely adopted action recognition benchmarks (NTU, BABEL and NW-UCLA) and two in the wild applications (RHM-HAR and MCAD) indicate two key findings: first, significant recognition improvements can be achieved within the same domain when leveraging action viewpoint cues; secondly, cross-domain evaluations demonstrate that the proposed approach generalizes effectively to unseen motion and action classes, supporting zero-shot action recognition and highlighting its potential for real-world deployment in diverse scenarios as closed-circuit television (CCTV) footage, surveillance or human-robot interaction. Acknowledgements. This wo",
+        "confidence": 0.6184190476190476
+      },
+      {
+        "chunkId": "chk-7da07cf6378b86c7-018",
+        "documentId": "7da07cf6378b86c7",
+        "source": "2605_22697v1.pdf",
+        "page": 6,
+        "titlePath": [
+          "Cross-Domain Human Action Recognition from Multiview Motion and Textual Descriptions",
+          "3 Method"
+        ],
+        "excerpt": "This section presents our action recognition method taking into account multiview information in the training and available textual action descriptions extended with body orientation cues. Our method comprises four main components, as shown in the schematic representation in Fig. 2. A major insight is to condition the feature extraction of the motion ('Orientation-Aware Network') with the actor orientation, considering different virtual camera viewpoints ('Projection Component'). The projection is done solely in the training phase. Then, available action textual descriptions ('Action Description') are leveraged to guide the feature learning and align the motion and textua",
+        "confidence": 0.5894285714285714
+      }
+    ],
+    "diagnostics": {
+      "expected_page": true,
+      "expected_chunk": true,
+      "answer_source": "2605_22697v1.pdf",
+      "answer_page": 2
+    },
+    "keywordHits": [
+      "improved",
+      "cross",
+      "domain",
+      "capabilities",
+      "approach",
+      "combines",
+      "motion",
+      "cues"
+    ],
+    "eventEdges": [
+      "lead->search",
+      "review->lead",
+      "search->qdrant",
+      "teacher->llm",
+      "user->lead"
+    ],
+    "latencySeconds": 6.242326410996611,
+    "checks": {
+      "api": true,
+      "review_pass": true,
+      "has_answer": true,
+      "has_citations": true,
+      "answer_source_cited": true,
+      "answer_source_expected_document": true,
+      "keyword_overlap": true,
+      "expected_document_cited": true,
+      "expected_chunk_cited": true,
+      "expected_page_cited": true,
+      "answer_not_unjustified_not_found": true,
+      "dashboard_edges": true,
+      "audio_url": true,
+      "animation_url": true,
+      "latency_ok": true,
+      "judge_correct": true,
+      "judge_grounded": true,
+      "judge_no_hallucination": true
+    },
+    "score": 1.0,
+    "status": "pass",
+    "judge": {
+      "correct": true,
+      "grounded": true,
+      "hallucination": false,
+      "score": 1.0,
+      "reason": "The answer directly quotes the relevant passage from the ground-truth source that addresses the query."
+    },
+    "attempts": 1,
+    "caseIndex": 10,
+    "concurrency": 1
+  }
+]

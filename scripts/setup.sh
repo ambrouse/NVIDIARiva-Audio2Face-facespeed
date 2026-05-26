@@ -2,35 +2,76 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-LOG_DIR="${ROOT_DIR}/logs/setup"
-LOG_FILE="${LOG_DIR}/setup.log"
+
+load_env_defaults() {
+  local env_file="$1"
+  [[ -f "$env_file" ]] || return 0
+  local line key value
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+    [[ -z "$line" || "$line" == \#* || "$line" != *=* ]] && continue
+    key="${line%%=*}"
+    value="${line#*=}"
+    key="${key%"${key##*[![:space:]]}"}"
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+    value="${value%\"}"
+    value="${value#\"}"
+    value="${value%\'}"
+    value="${value#\'}"
+    [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || continue
+    if [[ -z "${!key+x}" ]]; then
+      export "$key=$value"
+    fi
+  done < "$env_file"
+}
+
+load_env_defaults "${ROOT_DIR}/.env"
+
+LOG_FILE="/dev/null"
 MODE="${1:---auto}"
 RUNTIME_DIR="${ROOT_DIR}/logs/runtime"
 BACKEND_PID_FILE="${RUNTIME_DIR}/backend.pid"
 FRONTEND_PID_FILE="${RUNTIME_DIR}/frontend.pid"
-RIVA_QUICKSTART_DIR="${RIVA_QUICKSTART_DIR:-${ROOT_DIR}/.cache/nvidia/riva}"
+RIVA_QUICKSTART_DIR="${RIVA_QUICKSTART_DIR:-${ROOT_DIR}/.cache/nvidia/riva/riva_quickstart_v2.19.0}"
 BACKEND_HOST="${BACKEND_HOST:-127.0.0.1}"
-BACKEND_PORT="${BACKEND_PORT:-8020}"
+BACKEND_PORT="${BACKEND_PORT:-6320}"
 FRONTEND_HOST="${FRONTEND_HOST:-127.0.0.1}"
 FRONTEND_PORT="${FRONTEND_PORT:-6310}"
+FACESPEED_PROXY_HOST="${FACESPEED_PROXY_HOST:-127.0.0.1}"
+FACESPEED_PROXY_PORT="${FACESPEED_PROXY_PORT:-6300}"
+TMUX_PREFIX="${TMUX_PREFIX:-facespeed-riva}"
+TMUX_DOCKER_SESSION="${TMUX_DOCKER_SESSION:-${TMUX_PREFIX}-docker}"
+TMUX_BACKEND_SESSION="${TMUX_BACKEND_SESSION:-${TMUX_PREFIX}-backend}"
+TMUX_FRONTEND_SESSION="${TMUX_FRONTEND_SESSION:-${TMUX_PREFIX}-frontend}"
+TMUX_RIVA_TTS_SESSION="${TMUX_RIVA_TTS_SESSION:-${TMUX_PREFIX}-tts}"
+TMUX_RIVA_ASR_SESSION="${TMUX_RIVA_ASR_SESSION:-${TMUX_PREFIX}-asr}"
+PROJECT_COMPOSE_NAME="${PROJECT_COMPOSE_NAME:-nvidiariva-audio2face-facespeed}"
 RIVA_HOST="${RIVA_HOST:-127.0.0.1}"
-RIVA_PORT="${RIVA_PORT:-50051}"
+RIVA_PORT="${RIVA_PORT:-6051}"
+RIVA_ASR_HOST="${RIVA_ASR_HOST:-127.0.0.1}"
+RIVA_ASR_PORT="${RIVA_ASR_PORT:-6052}"
 A2F_HOST="${A2F_HOST:-127.0.0.1}"
-A2F_PORT="${A2F_PORT:-8040}"
-A2F_HTTP_PORT="${A2F_HTTP_PORT:-8041}"
+A2F_PORT="${A2F_PORT:-6040}"
+A2F_HTTP_PORT="${A2F_HTTP_PORT:-6041}"
 A2F_HEALTH_PATH="${A2F_HEALTH_PATH:-/health}"
 CUDA_TEST_IMAGE="${CUDA_TEST_IMAGE:-nvidia/cuda:12.4.1-base-ubuntu22.04}"
 NGC_RIVA_QUICKSTART_RESOURCE="${NGC_RIVA_QUICKSTART_RESOURCE:-}"
 RESOURCE_RESERVE_PERCENT="${RESOURCE_RESERVE_PERCENT:-10}"
 GPU_MIN_FREE_VRAM_PERCENT="${GPU_MIN_FREE_VRAM_PERCENT:-${RESOURCE_RESERVE_PERCENT}}"
+PROJECT_VRAM_EXPECTED_MIB="${PROJECT_VRAM_EXPECTED_MIB:-4000}"
+PROJECT_VRAM_RECOMMENDED_FREE_MIB="${PROJECT_VRAM_RECOMMENDED_FREE_MIB:-9000}"
 RAM_MIN_FREE_PERCENT="${RAM_MIN_FREE_PERCENT:-${RESOURCE_RESERVE_PERCENT}}"
 DISK_MIN_FREE_PERCENT="${DISK_MIN_FREE_PERCENT:-${RESOURCE_RESERVE_PERCENT}}"
-PROJECT_DOCKER_LABEL="com.facespeed.project=NVIDIARiva-Audio2Face-facespeed"
+PROJECT_DOCKER_LABEL="${PROJECT_DOCKER_LABEL:-com.facespeed.project=NVIDIARiva-Audio2Face-facespeed}"
 RIVA_CONTAINER_NAME="${RIVA_CONTAINER_NAME:-facespeed-riva}"
 A2F_CONTAINER_NAME="${A2F_CONTAINER_NAME:-facespeed-audio2face-3d}"
 RIVA_CONTAINER_IMAGE="${RIVA_CONTAINER_IMAGE:-}"
 A2F_CONTAINER_IMAGE="${A2F_CONTAINER_IMAGE:-nvcr.io/nim/nvidia/audio2face-3d:2.0}"
 RIVA_ASSET_DIR="${RIVA_ASSET_DIR:-${ROOT_DIR}/.cache/nvidia/riva}"
+RIVA_TTS_CONFIG="${RIVA_TTS_CONFIG:-${ROOT_DIR}/.cache/nvidia/riva/config-facespeed-tts-6051.sh}"
+RIVA_ASR_CONFIG="${RIVA_ASR_CONFIG:-${ROOT_DIR}/.cache/nvidia/riva/config-facespeed-asr-6052.sh}"
 A2F_ASSET_DIR="${A2F_ASSET_DIR:-${ROOT_DIR}/.cache/nvidia/audio2face}"
 A2F_CONTAINER_GRPC_PORT="${A2F_CONTAINER_GRPC_PORT:-52000}"
 A2F_CONTAINER_HTTP_PORT="${A2F_CONTAINER_HTTP_PORT:-8000}"
@@ -41,16 +82,86 @@ CONTAINER_MEMORY_LIMIT="${CONTAINER_MEMORY_LIMIT:-16g}"
 CONTAINER_CPU_LIMIT="${CONTAINER_CPU_LIMIT:-8}"
 GPU_DEVICE_FLAG="${GPU_DEVICE_FLAG:---gpus device=0}"
 
-mkdir -p "$LOG_DIR" "$RUNTIME_DIR"
+for path_var in RIVA_QUICKSTART_DIR RIVA_ASSET_DIR RIVA_TTS_CONFIG RIVA_ASR_CONFIG A2F_ASSET_DIR; do
+  case "${!path_var}" in
+    /*) ;;
+    *) printf -v "$path_var" '%s/%s' "$ROOT_DIR" "${!path_var}" ;;
+  esac
+done
+
+mkdir -p "$RUNTIME_DIR"
 
 log() {
   local level="$1"
   local message="$2"
-  printf '%s %s setup - %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$level" "$message" | tee -a "$LOG_FILE"
+  printf '[%s] %s\n' "$level" "$message"
 }
 
 has_command() {
   command -v "$1" >/dev/null 2>&1
+}
+
+require_tmux() {
+  if has_command tmux; then
+    return 0
+  fi
+  log "ERROR" "tmux is required for --run/--setup-run. Install tmux, then rerun the command."
+  return 1
+}
+
+tmux_has_session() {
+  local session="$1"
+  has_command tmux && tmux has-session -t "$session" >/dev/null 2>&1
+}
+
+tmux_start_session() {
+  local session="$1"
+  local workdir="$2"
+  local command="$3"
+  if tmux_has_session "$session"; then
+    log "INFO" "tmux session ${session} already exists"
+    return 0
+  fi
+  tmux new-session -d -s "$session" -c "$workdir" "$command"
+  log "INFO" "started tmux session ${session}"
+}
+
+tmux_stop_project_sessions() {
+  if ! has_command tmux; then
+    return 0
+  fi
+  local sessions session
+  mapfile -t sessions < <(tmux list-sessions -F '#S' 2>/dev/null | grep -E "^${TMUX_PREFIX}($|-)" || true)
+  if (( ${#sessions[@]} == 0 )); then
+    log "INFO" "no ${TMUX_PREFIX} tmux sessions to stop"
+    return 0
+  fi
+  for session in "${sessions[@]}"; do
+    log "INFO" "stopping tmux session ${session}"
+    tmux kill-session -t "$session" >/dev/null 2>&1 || true
+  done
+}
+
+print_tmux_summary() {
+  cat <<EOF
+
+Tmux sessions for this project:
+  ${TMUX_DOCKER_SESSION}    docker compose: nginx proxy + Postgres + Qdrant
+  ${TMUX_RIVA_TTS_SESSION}  Riva TTS on ${RIVA_HOST}:${RIVA_PORT}
+  ${TMUX_RIVA_ASR_SESSION}  Riva ASR on ${RIVA_ASR_HOST:-127.0.0.1}:${RIVA_ASR_PORT:-6052}
+  ${TMUX_BACKEND_SESSION}   FastAPI backend on http://${BACKEND_HOST}:${BACKEND_PORT}
+  ${TMUX_FRONTEND_SESSION}  Vite frontend on http://${FRONTEND_HOST}:${FRONTEND_PORT}
+
+Open:
+  http://${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT}/
+
+Attach examples:
+  tmux attach -t ${TMUX_RIVA_TTS_SESSION}
+  tmux attach -t ${TMUX_RIVA_ASR_SESSION}
+  tmux attach -t ${TMUX_BACKEND_SESSION}
+  tmux attach -t ${TMUX_FRONTEND_SESSION}
+  tmux attach -t ${TMUX_DOCKER_SESSION}
+EOF
 }
 
 detect_platform() {
@@ -182,7 +293,8 @@ check_ports() {
   local failed=0
   check_single_port "backend" "$BACKEND_HOST" "$BACKEND_PORT" || failed=1
   check_single_port "frontend" "$FRONTEND_HOST" "$FRONTEND_PORT" || failed=1
-  check_single_port "riva" "$RIVA_HOST" "$RIVA_PORT" || failed=1
+  check_single_port "riva-tts" "$RIVA_HOST" "$RIVA_PORT" || failed=1
+  check_single_port "riva-asr" "$RIVA_ASR_HOST" "$RIVA_ASR_PORT" || failed=1
   check_single_port "audio2face-grpc" "$A2F_HOST" "$A2F_PORT" || failed=1
   check_single_port "audio2face-http" "$A2F_HOST" "$A2F_HTTP_PORT" || failed=1
   return "$failed"
@@ -237,6 +349,10 @@ check_gpu_light() {
   free="$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -n 1 | tr -d ' ')"
   if [[ -n "$total" && -n "$free" ]] && (( free * 100 < total * GPU_MIN_FREE_VRAM_PERCENT )); then
     log "WARN" "GPU free VRAM is below ${GPU_MIN_FREE_VRAM_PERCENT}% reserve threshold"
+    return 1
+  fi
+  if [[ -n "$free" ]] && (( free < PROJECT_VRAM_RECOMMENDED_FREE_MIB )); then
+    log "WARN" "GPU free VRAM is ${free} MiB; recommended free before FaceSpeed start is ${PROJECT_VRAM_RECOMMENDED_FREE_MIB} MiB"
     return 1
   fi
 }
@@ -310,27 +426,59 @@ print_container_rollback() {
   log "INFO" "cache/volumes are kept by default; remove only after explicit confirmation"
 }
 
+project_container_ids() {
+  local scope="${1:---running}"
+  local docker_args=(ps -q)
+  if [[ "$scope" == "--all" ]]; then
+    docker_args=(ps -aq)
+  fi
+  local cid info
+  for cid in $(docker "${docker_args[@]}" 2>/dev/null); do
+    info="$(docker inspect "$cid" --format 'NAME={{.Name}} PROJECT={{index .Config.Labels "com.docker.compose.project"}} LABEL={{index .Config.Labels "com.facespeed.project"}} MOUNTS={{range .Mounts}}{{.Source}};{{end}}' 2>/dev/null || true)"
+    if printf '%s' "$info" | grep -Fq "$ROOT_DIR" \
+      || printf '%s' "$info" | grep -Fq "PROJECT=${PROJECT_COMPOSE_NAME}" \
+      || printf '%s' "$info" | grep -Fq "LABEL=NVIDIARiva-Audio2Face-facespeed"; then
+      printf '%s\n' "$cid"
+    fi
+  done | sort -u
+}
+
 list_project_containers() {
   if ! check_docker; then
     return 1
   fi
-  log "INFO" "project-labeled containers"
-  docker ps -a --filter "label=${PROJECT_DOCKER_LABEL}" --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}' 2>&1 | tee -a "$LOG_FILE"
+  log "INFO" "project containers by label, compose project, or repo bind mount"
+  project_container_ids --all | while read -r cid; do
+    [[ -n "$cid" ]] || continue
+    docker ps -a --filter "id=$cid" --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}'
+  done | awk 'NR == 1 || !seen[$0]++'
 }
 
 stop_project_containers() {
   if ! check_docker; then
     return 1
   fi
-  mapfile -t running_ids < <(docker ps -q --filter "label=${PROJECT_DOCKER_LABEL}")
-  if (( ${#running_ids[@]} == 0 )); then
-    log "INFO" "no running project-labeled containers to stop"
-    list_project_containers || true
+  if [[ -f "${ROOT_DIR}/docker-compose.yml" ]]; then
+    log "INFO" "stopping docker compose project ${PROJECT_COMPOSE_NAME}"
+    docker compose -p "$PROJECT_COMPOSE_NAME" -f "${ROOT_DIR}/docker-compose.yml" down --remove-orphans >/dev/null 2>&1 || true
+  fi
+  mapfile -t ids < <(project_container_ids --all)
+  if (( ${#ids[@]} == 0 )); then
+    log "INFO" "no project Docker containers to clear"
     return 0
   fi
-  log "INFO" "stopping running project-labeled containers: ${running_ids[*]}"
-  docker stop "${running_ids[@]}" 2>&1 | tee -a "$LOG_FILE"
-  list_project_containers || true
+  log "INFO" "clearing project Docker containers: ${ids[*]}"
+  local running_ids=()
+  local cid
+  for cid in "${ids[@]}"; do
+    if docker inspect -f '{{.State.Running}}' "$cid" 2>/dev/null | grep -qx true; then
+      running_ids+=("$cid")
+    fi
+  done
+  if (( ${#running_ids[@]} > 0 )); then
+    docker stop "${running_ids[@]}" >/dev/null 2>&1 || true
+  fi
+  docker rm "${ids[@]}" >/dev/null 2>&1 || true
 }
 
 run_container_dry_run() {
@@ -494,18 +642,41 @@ download_riva_quickstart() {
 }
 
 start_riva() {
-  if [[ -x "${RIVA_QUICKSTART_DIR}/riva_init.sh" && -x "${RIVA_QUICKSTART_DIR}/riva_start.sh" ]]; then
-    log "INFO" "initializing and starting Riva from ${RIVA_QUICKSTART_DIR}"
-    (cd "$RIVA_QUICKSTART_DIR" && ./riva_init.sh && ./riva_start.sh)
+  start_riva_service "Riva TTS" "$TMUX_RIVA_TTS_SESSION" "$RIVA_TTS_CONFIG" "$RIVA_HOST" "$RIVA_PORT" || true
+  start_riva_service "Riva ASR" "$TMUX_RIVA_ASR_SESSION" "$RIVA_ASR_CONFIG" "$RIVA_ASR_HOST" "$RIVA_ASR_PORT" || true
+}
+
+start_riva_service() {
+  local label="$1"
+  local session="$2"
+  local config_path="$3"
+  local host="$4"
+  local port="$5"
+  require_tmux || return 1
+  if tcp_reachable "$host" "$port"; then
+    log "INFO" "${label} already reachable at ${host}:${port}"
     return 0
   fi
-  if [[ -f "${RIVA_QUICKSTART_DIR}/riva_init.sh" && -f "${RIVA_QUICKSTART_DIR}/riva_start.sh" ]]; then
-    chmod +x "${RIVA_QUICKSTART_DIR}/riva_init.sh" "${RIVA_QUICKSTART_DIR}/riva_start.sh"
-    (cd "$RIVA_QUICKSTART_DIR" && ./riva_init.sh && ./riva_start.sh)
-    return 0
+  if [[ ! -x "${RIVA_QUICKSTART_DIR}/riva_start.sh" || ! -x "${RIVA_QUICKSTART_DIR}/riva_init.sh" ]]; then
+    if [[ -f "${RIVA_QUICKSTART_DIR}/riva_start.sh" && -f "${RIVA_QUICKSTART_DIR}/riva_init.sh" ]]; then
+      chmod +x "${RIVA_QUICKSTART_DIR}/riva_start.sh" "${RIVA_QUICKSTART_DIR}/riva_init.sh"
+    else
+      log "WARN" "Riva quickstart scripts not found in ${RIVA_QUICKSTART_DIR}"
+      return 1
+    fi
   fi
-  log "WARN" "Riva quickstart scripts not found in ${RIVA_QUICKSTART_DIR}"
-  return 1
+  if [[ ! -f "$config_path" ]]; then
+    log "WARN" "${label} config not found: ${config_path}"
+    return 1
+  fi
+
+  local config_q label_q
+  printf -v config_q '%q' "$config_path"
+  printf -v label_q '%q' "$label"
+  log "INFO" "starting ${label} in tmux session ${session}"
+  tmux_start_session "$session" "$RIVA_QUICKSTART_DIR" \
+    "set -euo pipefail; config=${config_q}; source \"\$config\"; if [ ! -d \"\$riva_model_loc/models\" ] || [ -z \"\$(find \"\$riva_model_loc/models\" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | head -n 1)\" ]; then ./riva_init.sh \"\$config\"; fi; ./riva_start.sh \"\$config\"; printf '\n%s finished. Keep this tmux session for logs.\n' ${label_q}; exec bash"
+  wait_for_tcp "$label" "$host" "$port" 120 2 || return 1
 }
 
 check_riva_container() {
@@ -519,26 +690,21 @@ check_riva_container() {
 
 check_riva_tts() {
   log "INFO" "checking Riva TTS TCP ${RIVA_HOST}:${RIVA_PORT}"
-  local py_cmd
-  py_cmd="$(python_cmd)"
-  if [[ -z "$py_cmd" ]]; then
-    log "WARN" "python not found; cannot run Riva TCP check"
-    return 1
-  fi
-  if RIVA_HOST="$RIVA_HOST" RIVA_PORT="$RIVA_PORT" "$py_cmd" - 2>>"$LOG_FILE" <<'PY'
-import os
-import socket
-host = os.environ.get('RIVA_HOST', '127.0.0.1')
-port = int(os.environ.get('RIVA_PORT', '50051'))
-with socket.create_connection((host, port), timeout=5):
-    pass
-print(f'Riva TCP reachable at {host}:{port}')
-PY
-  then
+  if tcp_reachable "$RIVA_HOST" "$RIVA_PORT"; then
     log "INFO" "Riva TCP port is reachable"
     return 0
   fi
   log "WARN" "Riva TCP port is not reachable at ${RIVA_HOST}:${RIVA_PORT}"
+  return 1
+}
+
+check_riva_asr() {
+  log "INFO" "checking Riva ASR TCP ${RIVA_ASR_HOST}:${RIVA_ASR_PORT}"
+  if tcp_reachable "$RIVA_ASR_HOST" "$RIVA_ASR_PORT"; then
+    log "INFO" "Riva ASR TCP port is reachable"
+    return 0
+  fi
+  log "WARN" "Riva ASR TCP port is not reachable at ${RIVA_ASR_HOST}:${RIVA_ASR_PORT}"
   return 1
 }
 
@@ -558,7 +724,7 @@ check_audio2face() {
 import os
 import socket
 host = os.environ.get("A2F_HOST", "127.0.0.1")
-port = int(os.environ.get("A2F_PORT", "8040"))
+port = int(os.environ.get("A2F_PORT", "6040"))
 with socket.create_connection((host, port), timeout=5):
     pass
 print(f"Audio2Face-3D gRPC TCP reachable at {host}:{port}")
@@ -647,6 +813,7 @@ run_check() {
   check_docker_space || true
   check_riva_container || true
   check_riva_tts || true
+  check_riva_asr || true
   check_audio2face || true
   log "INFO" "system check completed"
 }
@@ -682,6 +849,22 @@ http_ok() {
   return 1
 }
 
+tcp_reachable() {
+  local host="$1"
+  local port="$2"
+  local py_cmd
+  py_cmd="$(python_cmd)"
+  [[ -n "$py_cmd" ]] || return 1
+  TCP_HOST="$host" TCP_PORT="$port" "$py_cmd" - <<'PY' >/dev/null 2>&1
+import os
+import socket
+host = os.environ["TCP_HOST"]
+port = int(os.environ["TCP_PORT"])
+with socket.create_connection((host, port), timeout=3):
+    pass
+PY
+}
+
 pid_is_alive() {
   local pid_file="$1"
   [[ -f "$pid_file" ]] || return 1
@@ -696,19 +879,46 @@ wait_for_http() {
   local url="$2"
   local attempts="${3:-40}"
   local delay="${4:-0.5}"
-  local i
+  local i spin_index=0
+  local spin='|/-\'
   for ((i = 1; i <= attempts; i += 1)); do
     if http_ok "$url"; then
+      printf '\r[OK] %s is reachable at %s%*s\n' "$label" "$url" 12 ""
       log "INFO" "${label} is reachable at ${url}"
       return 0
     fi
+    printf '\r[WAIT] %s %s' "$label" "${spin:spin_index++%4:1}"
     sleep "$delay"
   done
+  printf '\r[WARN] %s did not become reachable at %s%*s\n' "$label" "$url" 12 ""
   log "WARN" "${label} did not become reachable at ${url}"
   return 1
 }
 
+wait_for_tcp() {
+  local label="$1"
+  local host="$2"
+  local port="$3"
+  local attempts="${4:-90}"
+  local delay="${5:-2}"
+  local i spin_index=0
+  local spin='|/-\'
+  for ((i = 1; i <= attempts; i += 1)); do
+    if tcp_reachable "$host" "$port"; then
+      printf '\r[OK] %s is reachable at %s:%s%*s\n' "$label" "$host" "$port" 12 ""
+      log "INFO" "${label} is reachable at ${host}:${port}"
+      return 0
+    fi
+    printf '\r[WAIT] %s %s' "$label" "${spin:spin_index++%4:1}"
+    sleep "$delay"
+  done
+  printf '\r[WARN] %s did not become reachable at %s:%s%*s\n' "$label" "$host" "$port" 12 ""
+  log "WARN" "${label} did not become reachable at ${host}:${port}"
+  return 1
+}
+
 start_backend_app() {
+  require_tmux || return 1
   local health_url="http://${BACKEND_HOST}:${BACKEND_PORT}/health"
   if http_ok "$health_url"; then
     log "INFO" "backend already reachable at ${health_url}"
@@ -724,26 +934,14 @@ start_backend_app() {
     log "WARN" "backend requirements not found"
     return 1
   fi
-  local backend_log="${ROOT_DIR}/logs/backend-${BACKEND_PORT}.log"
-  log "INFO" "starting backend on ${BACKEND_HOST}:${BACKEND_PORT}"
-  (
-    cd "$ROOT_DIR"
-    setsid nohup env \
-      BACKEND_HOST="$BACKEND_HOST" \
-      BACKEND_PORT="$BACKEND_PORT" \
-      FRONTEND_PORT="$FRONTEND_PORT" \
-      ALLOWED_ORIGINS="${ALLOWED_ORIGINS:-http://${FRONTEND_HOST}:${FRONTEND_PORT},http://localhost:${FRONTEND_PORT}}" \
-      "$py_cmd" -m uvicorn src.main:app --host "$BACKEND_HOST" --port "$BACKEND_PORT" --app-dir backend \
-      >>"$backend_log" 2>&1 &
-    echo "$!" > "$BACKEND_PID_FILE"
-  )
-  wait_for_http "backend" "$health_url" 50 0.4 || {
-    log "WARN" "backend log: ${backend_log}"
-    return 1
-  }
+  log "INFO" "starting backend on ${BACKEND_HOST}:${BACKEND_PORT} in tmux session ${TMUX_BACKEND_SESSION}"
+  tmux_start_session "$TMUX_BACKEND_SESSION" "$ROOT_DIR" \
+    "env BACKEND_HOST='${BACKEND_HOST}' BACKEND_PORT='${BACKEND_PORT}' FRONTEND_PORT='${FRONTEND_PORT}' ALLOWED_ORIGINS='${ALLOWED_ORIGINS:-http://${FRONTEND_HOST}:${FRONTEND_PORT},http://localhost:${FRONTEND_PORT}}' '${py_cmd}' -m uvicorn src.main:app --host '${BACKEND_HOST}' --port '${BACKEND_PORT}' --app-dir backend"
+  wait_for_http "backend" "$health_url" 50 0.4 || return 1
 }
 
 start_frontend_app() {
+  require_tmux || return 1
   local frontend_url="http://${FRONTEND_HOST}:${FRONTEND_PORT}/"
   if http_ok "$frontend_url"; then
     log "INFO" "frontend already reachable at ${frontend_url}"
@@ -757,36 +955,33 @@ start_frontend_app() {
     log "WARN" "frontend/node_modules missing; run ./setup.sh --setup first"
     return 1
   fi
-  local frontend_log="${ROOT_DIR}/logs/frontend-${FRONTEND_PORT}.log"
-  log "INFO" "starting frontend on ${FRONTEND_HOST}:${FRONTEND_PORT}"
-  (
-    cd "$ROOT_DIR"
-    setsid nohup env \
-      VITE_API_BASE_URL="${VITE_API_BASE_URL:-http://${BACKEND_HOST}:${BACKEND_PORT}}" \
-      npm --prefix frontend run dev -- --host "$FRONTEND_HOST" --port "$FRONTEND_PORT" --strictPort \
-      >>"$frontend_log" 2>&1 &
-    echo "$!" > "$FRONTEND_PID_FILE"
-  )
-  wait_for_http "frontend" "$frontend_url" 50 0.4 || {
-    log "WARN" "frontend log: ${frontend_log}"
-    return 1
-  }
+  log "INFO" "starting frontend on ${FRONTEND_HOST}:${FRONTEND_PORT} in tmux session ${TMUX_FRONTEND_SESSION}"
+  tmux_start_session "$TMUX_FRONTEND_SESSION" "$ROOT_DIR" \
+    "env VITE_API_BASE_URL='${VITE_API_BASE_URL:-}' npm --prefix frontend run dev -- --host '${FRONTEND_HOST}' --port '${FRONTEND_PORT}' --strictPort"
+  wait_for_http "frontend" "$frontend_url" 50 0.4 || return 1
 }
 
 run_app() {
   log "INFO" "starting FaceSpeed app"
+  stop_project_core || true
+  run_start_services || true
   check_ports || true
   check_resources || true
   check_gpu_light || true
+  start_riva || true
   check_riva_tts || true
+  check_riva_asr || true
   check_audio2face || true
   start_backend_app || true
   start_frontend_app || true
+  wait_for_http "nginx proxy" "http://${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT}/" 30 0.5 || true
   print_project_status
+  print_tmux_summary
 }
 
 run_setup_run() {
   log "INFO" "starting one-command setup + run"
+  stop_project_core || true
   run_check || true
   run_install || true
   run_app || true
@@ -827,7 +1022,7 @@ run_verify() {
     log "ERROR" "python not found; cannot run backend tests"
     return 1
   fi
-  (cd "$ROOT_DIR" && PYTHONPATH=backend "$py_cmd" -m pytest backend/tests tests)
+  (cd "$ROOT_DIR" && "$py_cmd" -m pytest tests)
   log "INFO" "release verification completed"
 }
 
@@ -875,16 +1070,60 @@ stop_pid_file() {
 }
 
 stop_project_processes() {
+  stop_project_runtime_pids || true
   stop_pid_file "backend" "$BACKEND_PID_FILE" || true
   stop_pid_file "frontend" "$FRONTEND_PID_FILE" || true
   stop_project_port_owner "backend-port" "$BACKEND_PORT" || true
   stop_project_port_owner "frontend-port" "$FRONTEND_PORT" || true
 }
 
-stop_project() {
-  log "INFO" "stopping project-owned processes and containers"
+stop_project_runtime_pids() {
+  local pids=()
+  local d pid cwd cmd state
+  for d in /proc/[0-9]*; do
+    pid="${d##*/}"
+    cwd="$(readlink -f "$d/cwd" 2>/dev/null || true)"
+    [[ -n "$cwd" ]] || continue
+    case "$cwd" in
+      "$ROOT_DIR"|"$ROOT_DIR"/*)
+        cmd="$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null || true)"
+        case "$cmd" in
+          *"uvicorn src.main:app"*|*"npm run dev"*|*"/frontend/node_modules/.bin/vite"*|*"tests/benchmarks/http_bridge.py"*|*"tests/benchmarks/tcp_bridge.py"*)
+            pids+=("$pid")
+            ;;
+        esac
+        ;;
+    esac
+  done
+  if (( ${#pids[@]} == 0 )); then
+    log "INFO" "no project runtime processes found by cwd scan"
+    return 0
+  fi
+  log "INFO" "stopping project runtime PIDs: ${pids[*]}"
+  kill -TERM "${pids[@]}" >/dev/null 2>&1 || true
+  sleep 1
+  local remaining=()
+  for pid in "${pids[@]}"; do
+    [[ -d "/proc/$pid" ]] || continue
+    state="$(awk '/^State:/ {print $2}' "/proc/$pid/status" 2>/dev/null || true)"
+    [[ "$state" == "Z" ]] && continue
+    remaining+=("$pid")
+  done
+  if (( ${#remaining[@]} > 0 )); then
+    log "WARN" "runtime PIDs still running; sending SIGKILL: ${remaining[*]}"
+    kill -KILL "${remaining[@]}" >/dev/null 2>&1 || true
+  fi
+}
+
+stop_project_core() {
+  log "INFO" "stopping project-owned tmux sessions, processes, and containers"
+  tmux_stop_project_sessions || true
   stop_project_processes
   stop_project_containers || true
+}
+
+stop_project() {
+  stop_project_core
   print_project_status
 }
 
@@ -914,7 +1153,13 @@ is_project_owned_pid() {
   local cmdline
   cmdline="$(ps -p "$pid" -o args= 2>/dev/null || true)"
   [[ -n "$cmdline" ]] || return 1
-  [[ "$cmdline" == *"$ROOT_DIR"* || "$cmdline" == *"uvicorn src.main:app"* || "$cmdline" == *"vite --host"* || "$cmdline" == *"npm run dev"* ]]
+  local cwd
+  cwd="$(readlink -f "/proc/$pid/cwd" 2>/dev/null || true)"
+  case "$cwd" in
+    "$ROOT_DIR"|"$ROOT_DIR"/*) ;;
+    *) return 1 ;;
+  esac
+  [[ "$cmdline" == *"uvicorn src.main:app"* || "$cmdline" == *"vite --host"* || "$cmdline" == *"npm run dev"* || "$cmdline" == *"tests/benchmarks/http_bridge.py"* || "$cmdline" == *"tests/benchmarks/tcp_bridge.py"* ]]
 }
 
 stop_project_port_owner() {
@@ -961,6 +1206,15 @@ print_port_owner_status() {
 
 print_project_status() {
   log "INFO" "FaceSpeed status"
+  if has_command tmux; then
+    local sessions
+    sessions="$(tmux list-sessions -F '#S' 2>/dev/null | grep -E "^${TMUX_PREFIX}($|-)" | paste -sd ', ' - || true)"
+    if [[ -n "$sessions" ]]; then
+      log "INFO" "tmux sessions: ${sessions}"
+    else
+      log "INFO" "tmux sessions: none with prefix ${TMUX_PREFIX}"
+    fi
+  fi
   print_pid_status "backend" "$BACKEND_PID_FILE"
   print_pid_status "frontend" "$FRONTEND_PID_FILE"
   print_port_owner_status "backend" "$BACKEND_PORT"
@@ -975,6 +1229,11 @@ print_project_status() {
   else
     log "WARN" "frontend: unavailable at http://${FRONTEND_HOST}:${FRONTEND_PORT}/"
   fi
+  if http_ok "http://${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT}/"; then
+    log "INFO" "nginx proxy: ok at http://${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT}/"
+  else
+    log "WARN" "nginx proxy: unavailable at http://${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT}/"
+  fi
   list_project_containers || true
 }
 
@@ -987,13 +1246,13 @@ Usage:
   bash scripts/setup.sh [mode]
 
 Common modes:
-  --setup-run          Check, install local deps, then run backend + frontend.
+  --setup-run          Stop old runtime, check/install, then run Riva/DB/backend/frontend in tmux.
   --bootstrap          Alias for --setup-run.
   --setup              Install backend/frontend dependencies only.
-  --run                Run backend + frontend with warnings allowed.
-  --verify             Run setup checks, frontend tests/build, and backend tests.
+  --run                Stop old runtime, then run Riva/DB/backend/frontend in tmux.
+  --verify             Run setup checks, frontend tests/build, and pytest tests/.
   --status             Show project PIDs, health endpoints, and project containers.
-  --stop               Stop project-owned PID-file processes and labeled containers.
+  --stop               Stop project tmux sessions, processes, and containers.
   --check              Check Python, Node, npm, Docker, NVIDIA, ports, RAM/VRAM/disk.
   --check-support      Print supported machine profiles.
   --capture-demo       Capture the GitHub README GIF from the running app.
@@ -1001,11 +1260,11 @@ Common modes:
 
 NVIDIA modes:
   --dry-run-containers Print safe Docker commands without pulling or starting.
-  --list-containers    List project-labeled containers.
-  --stop-containers    Stop project-labeled containers only.
+  --list-containers    List containers matched by project label, compose name, or repo mount.
+  --stop-containers    Stop/remove containers matched by project label, compose name, or repo mount.
   --a2f-profiles       List Audio2Face-3D NIM profiles from the configured image.
   --start-a2f-nim      Start Audio2Face-3D NIM; requires accepted NGC EULA/key.
-  --check-riva         Check Riva container/TTS port.
+  --check-riva         Check Riva containers and TTS/ASR ports.
   --check-a2f          Check Audio2Face-3D gRPC/HTTP health.
 
 Default root command:
@@ -1013,6 +1272,10 @@ Default root command:
 
 Warnings do not block local app startup. Heavy NVIDIA downloads still require the
 right NGC license/EULA and NGC_API_KEY in your local shell.
+
+Runtime tmux sessions:
+  facespeed-riva-docker, facespeed-riva-tts, facespeed-riva-asr,
+  facespeed-riva-backend, facespeed-riva-frontend.
 USAGE
 }
 
@@ -1025,15 +1288,18 @@ run_auto() {
   start_riva || true
   check_riva_container || true
   check_riva_tts || true
+  check_riva_asr || true
   check_audio2face || true
   log "INFO" "auto setup completed; if WARN remains for NGC/Riva/A2F, follow the exact WARN instructions above"
 }
 
 run_start_services() {
-  log "INFO" "starting configured local services"
+  require_tmux || return 1
+  log "INFO" "starting configured local services in tmux session ${TMUX_DOCKER_SESSION}"
   if [[ -f "${ROOT_DIR}/docker-compose.yml" ]] && has_command docker; then
-    docker compose -f "${ROOT_DIR}/docker-compose.yml" up -d
-    log "INFO" "docker compose services started"
+    tmux_start_session "$TMUX_DOCKER_SESSION" "$ROOT_DIR" \
+      "docker compose -p '${PROJECT_COMPOSE_NAME}' -f '${ROOT_DIR}/docker-compose.yml' up"
+    log "INFO" "docker compose logs are in tmux session ${TMUX_DOCKER_SESSION}"
   else
     log "WARN" "docker-compose.yml not found; no docker compose services started"
   fi
@@ -1124,6 +1390,7 @@ case "$MODE" in
   --check-riva)
     check_riva_container || true
     check_riva_tts || true
+    check_riva_asr || true
     ;;
   --check-a2f)
     check_audio2face || true

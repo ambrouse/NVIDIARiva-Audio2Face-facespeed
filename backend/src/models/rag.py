@@ -19,6 +19,10 @@ class AgentName(StrEnum):
     search = "search"
     review = "review"
     teacher = "teacher"
+    upload = "upload"
+    database = "database"
+    qdrant = "qdrant"
+    llm = "llm"
 
 
 class ReviewStatus(StrEnum):
@@ -100,11 +104,69 @@ class DocumentDetail(Document):
     chunks: list[ChunkNode] = Field(default_factory=list)
 
 
+class DocumentUpdateRequest(BaseModel):
+    title: str | None = Field(default=None, min_length=1, max_length=180)
+    summary: str | None = Field(default=None, max_length=500)
+    language: LanguageCode | None = None
+
+    @field_validator("title", "summary")
+    @classmethod
+    def normalizeOptionalText(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = " ".join(value.split())
+        if not normalized and value:
+            raise ValueError("value cannot be blank")
+        return normalized
+
+
+class DocumentDeleteResult(BaseModel):
+    id: str
+    deleted: bool
+    removedChunkCount: int = Field(ge=0)
+    removedTurnCount: int = Field(ge=0)
+    removedFiles: list[str] = Field(default_factory=list)
+
+
 class AgentTrace(BaseModel):
     agent: AgentName
     status: str
     message: str = Field(max_length=600)
     evidenceChunkIds: list[str] = Field(default_factory=list)
+
+
+class AgentEvent(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    sessionId: str
+    agent: str
+    target: str | None = None
+    eventType: str = Field(min_length=1, max_length=48)
+    status: str = Field(min_length=1, max_length=48)
+    message: str = Field(max_length=800)
+    metadata: dict = Field(default_factory=dict)
+    createdAt: str | None = None
+
+
+class AgentSessionStatus(BaseModel):
+    sessionId: str
+    state: str
+    question: str = ""
+    answer: str = ""
+    events: list[AgentEvent] = Field(default_factory=list)
+
+
+class PromptConfig(BaseModel):
+    agent: str = Field(min_length=1, max_length=48)
+    name: str = Field(min_length=1, max_length=120)
+    content: str = Field(min_length=1, max_length=6000)
+    enabled: bool = True
+    updatedAt: str | None = None
+
+
+class PromptUpdateRequest(BaseModel):
+    name: str | None = Field(default=None, min_length=1, max_length=120)
+    content: str | None = Field(default=None, min_length=1, max_length=6000)
+    enabled: bool | None = None
 
 
 class RagSearchRequest(BaseModel):
@@ -136,6 +198,7 @@ class VoiceChatRequest(BaseModel):
     language: LanguageCode = LanguageCode.english
     voice: str = Field(default="English-US.Female-1", min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_.-]+$")
     outputMode: str = Field(default="preview", pattern=r"^(preview|export|stream)$")
+    sessionId: str | None = Field(default=None, min_length=8, max_length=80)
 
     @field_validator("message")
     @classmethod
@@ -160,7 +223,9 @@ class VoiceTurn(BaseModel):
     audioUrl: str | None = None
     animationUrl: str | None = None
     jobId: str | None = None
+    sessionId: str | None = None
     agentTrace: list[AgentTrace] = Field(default_factory=list)
+    agentEvents: list[AgentEvent] = Field(default_factory=list)
 
 
 class RagRuntimeStatus(BaseModel):
@@ -173,3 +238,7 @@ class RagRuntimeStatus(BaseModel):
     embeddingBaseUrl: str
     parseProvider: str = "docling"
     retrievalProvider: str = "embedding-rerank"
+    postgresAvailable: bool = False
+    qdrantAvailable: bool = False
+    llmAvailable: bool = False
+    graphRagEnabled: bool = False

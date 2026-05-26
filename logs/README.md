@@ -5,6 +5,8 @@ This folder keeps curated project logs, not long-lived runtime noise.
 ## Keep In Git
 
 - `logs/plans/*.md`: task and release implementation logs.
+- `logs/documentation/*.md`: documentation/format task logs.
+- `logs/benchmarks/*.md`: benchmark session summaries.
 - `logs/README.md`: log policy and maintenance notes.
 
 ## Runtime Only

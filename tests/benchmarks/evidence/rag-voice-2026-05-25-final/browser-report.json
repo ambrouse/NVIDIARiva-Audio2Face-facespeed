@@ -1,0 +1,19 @@
+{
+  "createdAt": "2026-05-25T10:27:18.537Z",
+  "frontendUrl": "http://127.0.0.1:6310/",
+  "backendUrl": "http://127.0.0.1:6320",
+  "question": "What does the indexed PDF say in the passage containing: \"the indirect object identification ioi task was introduced by wang\"?",
+  "audioInput": {
+    "path": "tests/benchmarks/evidence/rag-voice-2026-05-25-final/audio-input-question.wav",
+    "bytes": 632364,
+    "synthetic": false
+  },
+  "outputAudio": {
+    "ok": true,
+    "path": "tests/benchmarks/evidence/rag-voice-2026-05-25-final/audio-output.wav",
+    "bytes": 1604140
+  },
+  "screenshot": "tests/benchmarks/evidence/rag-voice-2026-05-25-final/frontend-answer.png",
+  "consoleErrors": [],
+  "failedResponses": []
+}

@@ -1,32 +1,39 @@
 ---
 name: plan-skill
-description: 'Những quy tắt bắt buộc khi lập kế hoạch dự án.'
-argument-hint: 'tuân thủ các quy tắc đã đề ra.'
+description: "Quy tắc bắt buộc khi lập kế hoạch dự án theo phase."
+argument-hint: "planning task"
 user-invocable: true
 ---
 
 # Plan Skill
 
-Áp dụng cho task có nhiều bước, nhiều file, cần fix lỗi quan trọng, cần phối hợp nhiều skill hoặc cần theo dõi tiến trình rõ ràng.
+Áp dụng cho task có nhiều bước, nhiều file, nhiều skill, rủi ro cao hoặc cần theo dõi tiến trình rõ ràng.
 
-## Mục tiêu
-- Mỗi task quan trọng phải có plan rõ để biết mục tiêu, phạm vi, phase, status, test, log và điều kiện đóng task.
-- Plan không phải tài liệu dài; phải đủ chi tiết để làm đúng, theo dõi được và tránh bỏ sót.
-- Nếu requirement mơ hồ, hỏi trước khi lập plan hoặc trước khi bắt đầu phase rủi ro.
+## Mục Tiêu
 
-## File plan
-- Lưu plan trong `plans/plan-{task-name}.md`.
-- Tên task dùng kebab-case, ngắn, dễ tìm.
-- Plan phải có: mục tiêu, phạm vi, ngoài phạm vi, skill cần dùng, rủi ro, phase, status, test/verify, log liên quan.
+- Plan phải nêu mục tiêu, phạm vi, ngoài phạm vi, skill cần dùng, rủi ro, phase, status, verify và close criteria.
+- Plan không cần dài, nhưng phải đủ rõ để làm đúng và không bỏ sót.
+- Nếu yêu cầu mơ hồ hoặc có phase rủi ro, hỏi trước hoặc ghi giả định rõ trong plan.
 
-## Format bắt buộc
+## File Plan
+
+- Plan đang chạy lưu trong `plans/running/plan-{task-name}.md`.
+- Khi task hoàn thành và không còn việc mở, chuyển plan ra `plans/plan-{task-name}.md`.
+- Tên task dùng kebab-case, ngắn và dễ tìm.
+- Mỗi plan quan trọng phải có log tương ứng trong `logs/` và doc tương ứng trong `docs/`.
+- Tên plan nên kèm thời gian và version nếu có: `plans/plan-{task-name}-YYYYMMDD-v1.md`.
+- Trong mỗi folder con luôn có file `README.md` để mô tả mục đích và cách sử dụng các doc trong đó, readme phải rõ ràng dễ hiểu có mô tả chi tiết folder này lưu trữ doc gì, về gì, sơ qua nội dung, v.v.v.v.
+
+## Format Bắt Buộc
+
 ```md
-# Plan: {Task Name}
+# Plan: {task-name}
 
 - Created: YYYY-MM-DD HH:mm
 - Updated: YYYY-MM-DD HH:mm
 - Status: planned | in_progress | blocked | verifying | completed | closed
 - Related log: logs/{type}/{file}.md
+- Related doc: docs/{type}/{file}.md
 
 ## Goal
 ...
@@ -36,7 +43,7 @@ user-invocable: true
 - Out: ...
 
 ## Skills
-- frontend-skill / backend-skill / testing-skill / security-skill / documentation-skill / logging-skill / push-code-skill
+- ...
 
 ## Phases
 | Phase | Goal | Status | Evidence |
@@ -46,31 +53,25 @@ user-invocable: true
 ## Verification
 - ...
 
-## Close criteria
+## Close Criteria
 - ...
 ```
 
-## Phase workflow
-- Chia task thành nhiều phase nhỏ, mỗi phase có status: `pending`, `in_progress`, `blocked`, `testing`, `done`, `skipped`.
-- Mỗi phase phải nêu goal, việc làm, skill áp dụng, test/verify cần chạy và evidence cần log.
-- Làm tuần tự theo phase; không chuyển phase tiếp nếu phase hiện tại chưa đạt test/verify, trừ khi ghi rõ blocker hoặc lý do skip.
-- Khi bắt đầu phase, cập nhật status `in_progress`; khi test, cập nhật `testing`; khi đạt, cập nhật `done`.
-- Nếu đổi hướng, cập nhật plan ngay: lý do đổi, phase bị ảnh hưởng, test/log mới cần có.
+## Phase Workflow
 
-## Kết hợp logs
-- Mỗi plan phải có log tương ứng trong `logs/` theo `logging-skill`.
-- Log phải ghi trong phiên làm việc: thời gian, mục tiêu, cách chắt lọc, cách phân chia phase, thay đổi đã làm, test/verify, blocker, kết quả.
-- Luôn cập nhật log sau mỗi phase quan trọng, sau khi test/verify và khi đóng task.
-- Log chỉ ghi điểm chính, không copy toàn bộ plan hoặc output dài; nếu nhiều log liên quan thì gom/tóm tắt để dễ tra cứu.
+- Status phase dùng: `pending`, `in_progress`, `blocked`, `testing`, `done`, `skipped`.
+- Bắt đầu phase thì cập nhật `in_progress`; khi verify thì cập nhật `testing`; đạt thì cập nhật `done`.
+- Không chuyển phase nếu phase hiện tại chưa đạt verify, trừ khi ghi rõ blocker hoặc lý do skip.
+- Nếu đổi hướng, cập nhật plan ngay: lý do, phase bị ảnh hưởng và verify/log mới.
 
-## Test và verification
-- Phase backend phải dùng `testing-skill`: ưu tiên test request thật qua HTTP/test client hoặc integration layer và đánh giá output/side effect.
-- Phase frontend phải dùng `frontend-skill` + `testing-skill`: chạy app/browser khi có UI change, soi giao diện thật, đánh giá responsive/state/accessibility và tối ưu nếu cần.
-- Phase security phải dùng `security-skill`: kiểm auth, permission, input/output, secrets, dependency, config và logging nhạy cảm.
-- Không claim hoàn thành nếu chưa có evidence test/verify hoặc chưa ghi rõ vì sao chưa test được.
+## Verification Và Đóng Plan
 
-## Đóng plan
-- Khi toàn bộ phase đạt, chuyển Status thành `completed`, ghi summary kết quả và evidence.
-- Sau khi log cuối đã cập nhật và task không còn việc mở, chuyển Status thành `closed`.
-- Close criteria tối thiểu: code/docs/logs đúng phạm vi, test/verify đạt hoặc có lý do chưa chạy, rủi ro còn lại được ghi rõ.
-- Không tự push sau khi hoàn thành trừ khi user yêu cầu; nếu push, dùng `push-code-skill`.
+- Backend/API phase dùng thêm `backend-skill` và `testing-skill`.
+- Frontend/UI phase dùng thêm `frontend-skill` và `testing-skill`.
+- Security/config/secret phase dùng thêm `security-skill`.
+- Khi toàn bộ phase đạt, chuyển status thành `completed`; sau log/doc cuối, chuyển thành `closed`.
+- Không tự push nếu user chưa yêu cầu; nếu push, dùng `push-code-skill`.
+
+## Ngôn Ngữ
+
+- Viết tiếng Việt có dấu.

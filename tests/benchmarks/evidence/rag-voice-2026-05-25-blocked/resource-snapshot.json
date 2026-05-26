@@ -1,0 +1,11 @@
+{
+  "createdAt": "2026-05-25T09:12:05.349798+00:00",
+  "ram": "              total        used        free      shared  buff/cache   available\nMem:          125Gi        33Gi        47Gi       435Mi        43Gi        89Gi\nSwap:         4.0Gi       103Mi       3.9Gi\n",
+  "disk": {
+    "total": 398746431488,
+    "used": 304224055296,
+    "free": 94522376192
+  },
+  "gpu": "0, NVIDIA RTX PRO 5000 Blackwell, 48935, 35827, 12578, 31",
+  "gpuProcesses": "15418, VLLM::EngineCore, 18550\n43614, /home/ntcai/face-reconizer/face-recognition/.venv311/bin/python, 4581\n62486, ./venv/bin/python, 5238\n68831, /home/ntcai/RAG_Chatbot/RAG_Chat/parse-data/venv/bin/python, 7378"
+}

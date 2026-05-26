@@ -1,10 +1,10 @@
 # Release Notes: v0.3.0
 
-Date: 2026-05-23
+Date: 2026-05-26
 
 ## Summary
 
-v0.3.0 is the first GitHub-ready Voice RAG avatar release. It turns the project into a local product workspace for PDF-grounded voice answers with Riva speech and a browser 3D face.
+v0.3.0 is the current local Voice RAG avatar release. It turns the project into a local product workspace for PDF-grounded voice answers with Riva speech, Docling parsing, embedding/rerank retrieval, vLLM teacher/review, and a browser 3D face.
 
 ## Supported Machine Profiles
 
@@ -18,19 +18,23 @@ v0.3.0 is the first GitHub-ready Voice RAG avatar release. It turns the project 
 ## Release Checklist
 
 - `./setup.sh --check`
+- `bash -n scripts/setup.sh`
+- `docker compose config --quiet`
+- `curl http://127.0.0.1:6300/api/rag/status`
 - `npm --prefix frontend test -- --run`
 - `npm --prefix frontend run build`
-- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests`
-- `node scripts/capture-release-demo.mjs`
+- `backend/.venv-linux/bin/python -m pytest tests`
 
 ## Evidence
 
-- Release evidence: `test/release-readiness-2026-05-23/`
-- README banner GIF: `docs/assets/voice-rag-avatar-demo.gif`
-- Browser report: `test/release-readiness-2026-05-23/browser-report.json`
+- Benchmark summary: `tests/benchmarks/README.md`
+- Benchmark report: `tests/benchmarks/REPORT-2026-05-25-rag-voice.md`
+- Nginx proxy smoke: `tests/nginx-proxy/test-nginx-proxy-20260526-v1.md`
+- README banner image: `docs/assets/facespeed-readme-banner.png`
 
 ## Known Limits
 
-- NVIDIA Riva, Docling, and embedding/rerank providers must be running and reachable for the true main path.
+- NVIDIA Riva, Docling, embedding/rerank, and vLLM providers must be running and reachable for the true main path.
 - The repository does not bundle NVIDIA licensed model assets or NGC credentials.
 - Audio2Face-3D NIM remains optional; the current product path uses Riva voice plus browser-side ARKit morph animation.
+- Local Riva TTS can timeout on long spoken text; `VOICE_CHAT_TTS_MAX_CHARS=150` keeps audio preview short while preserving the full answer in chat.

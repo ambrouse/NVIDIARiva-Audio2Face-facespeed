@@ -1,0 +1,27 @@
+server {
+    listen ${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT};
+    server_name _;
+    client_max_body_size 64m;
+
+    location /api/ {
+        proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT};
+        proxy_http_version 1.1;
+            proxy_set_header Host ${BACKEND_HOST}:${BACKEND_PORT};
+            proxy_set_header X-Forwarded-Proto http;
+            proxy_set_header X-Forwarded-Host ${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT};
+            proxy_read_timeout 300s;
+            proxy_send_timeout 300s;
+        }
+
+        location / {
+            proxy_pass http://${FRONTEND_HOST}:${FRONTEND_PORT};
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade ${DOLLAR}http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host ${FRONTEND_HOST}:${FRONTEND_PORT};
+            proxy_set_header X-Forwarded-Proto http;
+            proxy_set_header X-Forwarded-Host ${FACESPEED_PROXY_HOST}:${FACESPEED_PROXY_PORT};
+            proxy_read_timeout 300s;
+            proxy_send_timeout 300s;
+        }
+}

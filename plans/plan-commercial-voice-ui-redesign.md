@@ -34,10 +34,10 @@ Rebuild the Voice RAG frontend into a commercial product workspace: compact voic
 | Phase | Goal | Status | Evidence |
 | --- | --- | --- | --- |
 | 1 | Benchmark current voice/avatar product UI patterns | done | Tavus, ElevenLabs, HeyGen docs/search reviewed |
-| 2 | Rebuild navigation and home layout | done | `test/release-readiness-2026-05-23/app/01-home-voice-chat.png` |
+| 2 | Rebuild navigation and home layout | done | `.cache/facespeed/evidence/release-readiness-2026-05-23/app/01-home-voice-chat.png` |
 | 3 | Add model picker, size controls, and expression controls | done | `app/03-avatar-picker-popup.png`, `app/07-atlas-calm-model-selected.png` |
 | 4 | Improve facial animation naturalness | done | `browser-report.json`: jaw delta 0.404, blink max 0.702 |
-| 5 | Full browser QA and polish pass | done | `test/release-readiness-2026-05-23/` |
+| 5 | Full browser QA and polish pass | done | `.cache/facespeed/evidence/release-readiness-2026-05-23/` |
 
 ## Verification
 

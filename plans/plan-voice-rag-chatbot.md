@@ -261,7 +261,7 @@ Requirements:
 | 9 | Redesign frontend into production voice RAG UI | done | Landing-style UI with popup Knowledge/Runtime/Trace evidence captured |
 | 10 | Add setup/config/CI/docs | done | `.env.example`, README, handoff, evidence docs updated |
 | 11 | Security and robustness hardening | done | PDF validation and provider-error no-fallback regression tests pass |
-| 12 | Full QA evidence and close | done | `test/release-readiness-2026-05-23/` includes PDF/audio/video/UI/mobile/browser reports |
+| 12 | Full QA evidence and close | done | `.cache/facespeed/evidence/release-readiness-2026-05-23/` includes PDF/audio/video/UI/mobile/browser reports |
 
 ## Phase Details
 
@@ -533,10 +533,10 @@ Phase 1 decision:
   - Docling parse API at `http://127.0.0.1:8005`.
   - embedding/rerank API at `http://127.0.0.1:8006`.
 - Provider-backed evidence:
-  - `test/release-readiness-2026-05-23/pipeline/docling-rag-evidence.pdf`
-  - `test/release-readiness-2026-05-23/pipeline/docling-report.json`
-  - `test/release-readiness-2026-05-23/app/02-chat-answer-avatar.png`
-  - `test/release-readiness-2026-05-23/pipeline/docling-avatar-3d-moving.webm`
+  - `.cache/facespeed/evidence/release-readiness-2026-05-23/pipeline/docling-rag-evidence.pdf`
+  - `.cache/facespeed/evidence/release-readiness-2026-05-23/pipeline/docling-report.json`
+  - `.cache/facespeed/evidence/release-readiness-2026-05-23/app/02-chat-answer-avatar.png`
+  - `.cache/facespeed/evidence/release-readiness-2026-05-23/pipeline/docling-avatar-3d-moving.webm`
 
 ## Verification
 

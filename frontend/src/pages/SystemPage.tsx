@@ -20,10 +20,10 @@ export function SystemPage() {
       </div>
       {error && <div className="alert">{error}</div>}
       <div className="resourceGrid">
-        <div><strong>Backend</strong><span>127.0.0.1:8020</span></div>
+        <div><strong>Backend</strong><span>127.0.0.1:6320</span></div>
         <div><strong>Frontend</strong><span>127.0.0.1:6310</span></div>
-        <div><strong>Riva</strong><span>127.0.0.1:50051</span></div>
-        <div><strong>Audio2Face</strong><span>127.0.0.1:8040</span></div>
+        <div><strong>Riva</strong><span>127.0.0.1:6051</span></div>
+        <div><strong>Audio2Face</strong><span>127.0.0.1:6040</span></div>
       </div>
       <div className="notice">Heavy NVIDIA actions are blocked unless ports, RAM, memory commit, disk, GPU/VRAM and Docker all pass the 10% reserve gates.</div>
       <div className="checkList">

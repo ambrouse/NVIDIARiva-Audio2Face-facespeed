@@ -11,7 +11,7 @@ Reference scan:
 
 Initial repo findings:
 
-- `test/` has multiple overlapping evidence folders for the same product surface.
+- `.cache/facespeed/evidence/` has multiple overlapping evidence folders for the same product surface.
 - The old mixed evidence folder combined test fixtures, provider proof, UI screenshots, audio, video, and reports.
 - `logs/jobs/` contains many per-job runtime logs that should not remain as permanent source artifacts.
 - Root metadata is missing `LICENSE`, `CONTRIBUTING.md`, changelog/release notes, and explicit version file.
@@ -19,11 +19,11 @@ Initial repo findings:
 
 Completed release hardening:
 
-- Consolidated all release evidence into `test/release-readiness-2026-05-23/` and removed stale duplicate evidence folders.
-- Captured the production UI flow as `test/release-readiness-2026-05-23/demo/facespeed-release-demo.gif` and published it to `docs/assets/voice-rag-avatar-demo.gif` for the README banner.
+- Consolidated all release evidence into `.cache/facespeed/evidence/release-readiness-2026-05-23/` and removed stale duplicate evidence folders.
+- Captured the production UI flow as `.cache/facespeed/evidence/release-readiness-2026-05-23/demo/facespeed-release-demo.gif` and published it to `docs/assets/voice-rag-avatar-demo.gif` for the README banner.
 - Added GitHub metadata: `LICENSE`, `CONTRIBUTORS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `RELEASE.md`, and `VERSION`.
 - Updated version metadata in the backend FastAPI app and frontend package files to `0.3.0`.
-- Added folder-level READMEs for `backend/`, `frontend/`, `docs/`, `scripts/`, `tests/`, `test/`, `logs/`, and `plans/`.
+- Added folder-level READMEs for `backend/`, `frontend/`, `docs/`, `scripts/`, `tests/`, `.cache/facespeed/evidence/`, `logs/`, and `plans/`.
 - Hardened setup and operations flow through root `setup.sh`, `scripts/setup.sh`, `scripts/manage-logs.sh`, `docs/installation.md`, and `docs/operations.md`.
 - Rebuilt `README.md` as a product-facing GitHub entry with banner GIF, quick start, support matrix, evidence links, test commands, and repository map.
 - Cleaned runtime log folders and configured `.gitignore` so durable plan logs stay tracked while disposable logs stay out of source.
@@ -32,7 +32,7 @@ Verification completed:
 
 - `npm --prefix frontend test -- --run`: 4 passed.
 - `npm --prefix frontend run build`: passed; Vite reported a non-blocking chunk-size warning for the Three.js/avatar bundle.
-- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests`: 41 passed.
+- `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest tests`: 41 passed.
 - `bash -n setup.sh && bash -n scripts/setup.sh && bash -n scripts/manage-logs.sh`: passed.
 - `./setup.sh --check-support`: printed the support matrix successfully.
 - `./setup.sh --check`: completed with current-host warnings for missing NGC CLI, busy ports from already-running services, low memory/VRAM reserve, and no detected Audio2Face-3D runtime. Main Riva/Docling/embedding/backend/frontend checks were reachable.
@@ -46,4 +46,4 @@ Clone validation follow-up:
 - Found and fixed release-clone issues: setup did not create provider-backed `.env`, tests were affected by `.env`, and bootstrap-started backend/frontend processes died after the setup command returned.
 - Final clone verification passed: fresh setup installed deps, `.env` was created with `SERVICE_MANAGER_MODE=docker` and `PIPELINE_MODE=riva`, `./setup.sh --verify` passed frontend 4/4 and backend/setup 41/41, and `./setup.sh --bootstrap` kept backend/frontend alive on `8120/6410`.
 - Clone RAG proof passed: Docling ingested `clone-rag-evidence.pdf`, embedding/rerank returned a cited answer, Riva produced RIFF WAV audio, and the avatar animation artifact contained 1,636 frames.
-- Clone browser proof passed with screenshots in `test/release-clone-validation-2026-05-23/app/` and zero console/page/network errors in `browser-report.json`.
+- Clone browser proof passed with screenshots in `.cache/facespeed/evidence/release-clone-validation-2026-05-23/app/` and zero console/page/network errors in `browser-report.json`.

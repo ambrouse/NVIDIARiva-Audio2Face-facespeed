@@ -1,4 +1,6 @@
 from pathlib import Path
+import threading
+import time
 
 from src.config import Settings
 from src.models.job import CreateJobRequest, Job, JobState
@@ -13,6 +15,9 @@ class JobService:
         self.rivaClient = rivaClient
         self.audio2FaceClient = audio2FaceClient
         self.jobs: dict[str, Job] = {}
+        maxConcurrency = max(1, int(settings.rivaTtsMaxConcurrency))
+        self._ttsSemaphore = threading.BoundedSemaphore(maxConcurrency)
+        self._ttsMaxConcurrency = maxConcurrency
 
     def createJob(self, request: CreateJobRequest) -> Job:
         job = Job(
@@ -41,7 +46,13 @@ class JobService:
 
             self._setState(job, JobState.generatingSpeech)
             audioPath = self.settings.outputDir / "audio" / f"{job.id}.wav"
-            self.rivaClient.synthesize(normalizedText, job.voice, job.language, audioPath)
+            waitStarted = time.perf_counter()
+            self._log(job, "info", f"waiting for Riva TTS slot ({self._ttsMaxConcurrency} concurrent)")
+            with self._ttsSemaphore:
+                waited = time.perf_counter() - waitStarted
+                if waited > 0.05:
+                    self._log(job, "info", f"Riva TTS slot acquired after {waited:.2f}s")
+                self.rivaClient.synthesize(normalizedText, job.voice, job.language, audioPath)
             job.audioPath = str(audioPath)
             job.audioUrl = f"/api/artifacts/audio/{job.id}.wav"
             self._setState(job, JobState.speechReady)

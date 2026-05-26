@@ -25,5 +25,5 @@ FastAPI backend for FaceSpeed Voice RAG.
 ## Test
 
 ```bash
-PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests
+backend/.venv-linux/bin/python -m pytest tests
 ```

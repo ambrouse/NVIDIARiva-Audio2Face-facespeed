@@ -10,7 +10,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const requireFromFrontend = createRequire(path.join(repoRoot, 'frontend', 'package.json'));
 const { chromium } = requireFromFrontend('playwright');
 
-const outputDir = path.join(repoRoot, 'test', 'release-readiness-2026-05-23', 'demo');
+const outputDir = path.join(repoRoot, '.cache', 'facespeed', 'evidence', 'release-readiness-2026-05-23', 'demo');
 const outputGif = path.join(outputDir, 'facespeed-release-demo.gif');
 const readmeGif = path.join(repoRoot, 'docs', 'assets', 'voice-rag-avatar-demo.gif');
 const framesDir = path.join(outputDir, '.frames');

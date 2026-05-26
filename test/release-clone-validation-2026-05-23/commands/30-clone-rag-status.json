@@ -1,1 +1,0 @@
-{"asrAvailable":true,"asrDetail":"Riva ASR endpoint 127.0.0.1:50151 is enabled by config.","documentCount":0,"chunkCount":0,"languages":["en-US","vi-VN"],"doclingBaseUrl":"http://127.0.0.1:8005","embeddingBaseUrl":"http://127.0.0.1:8006","parseProvider":"docling","retrievalProvider":"embedding-rerank"}

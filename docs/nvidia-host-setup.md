@@ -69,11 +69,17 @@ bash scripts/setup.sh --stop-containers
 Default localhost ports:
 
 ```text
-Backend API: 127.0.0.1:8020
-Frontend:    127.0.0.1:6310
-Riva gRPC:   127.0.0.1:50051
-Audio2Face gRPC: 127.0.0.1:8040
-Audio2Face HTTP: 127.0.0.1:8041
+Nginx app proxy:     127.0.0.1:6300
+Frontend:            127.0.0.1:6310
+Backend API:         127.0.0.1:6320
+Postgres:            127.0.0.1:6001
+Qdrant HTTP/gRPC:    127.0.0.1:6002/6003
+Audio2Face optional: 127.0.0.1:6040/6041
+Riva TTS:            127.0.0.1:6051
+Riva ASR:            127.0.0.1:6052
+Docling:             127.0.0.1:8005
+Embedding/rerank:    127.0.0.1:8006
+LLM judge/teacher:   127.0.0.1:8007
 ```
 
 If any target port is busy, stop and choose a new port with the user. Do not kill the owner process.

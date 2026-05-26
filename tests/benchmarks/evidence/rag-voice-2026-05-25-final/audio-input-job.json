@@ -1,0 +1,17 @@
+{
+  "latencySeconds": 0.41,
+  "job": {
+    "id": "6e63b51a-27e8-4249-a15c-c1b345eafa7e",
+    "state": "completed",
+    "text": "What does the indexed PDF say in the passage containing: \"the indirect object identification ioi task was introduced by wang\"?",
+    "voice": "English-US.Female-1",
+    "language": "en-US",
+    "a2fProfile": "default",
+    "outputMode": "preview",
+    "audioPath": "outputs/audio/6e63b51a-27e8-4249-a15c-c1b345eafa7e.wav",
+    "resultPath": "outputs/animation/6e63b51a-27e8-4249-a15c-c1b345eafa7e.json",
+    "audioUrl": "/api/artifacts/audio/6e63b51a-27e8-4249-a15c-c1b345eafa7e.wav",
+    "animationUrl": "/api/artifacts/animation/6e63b51a-27e8-4249-a15c-c1b345eafa7e.json",
+    "error": null
+  }
+}

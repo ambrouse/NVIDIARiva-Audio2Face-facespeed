@@ -13,7 +13,7 @@ Bring the repository to a release-ready GitHub product state: clean source/evide
 
 - In:
   - Consolidate duplicated evidence/test folders into one current release evidence package.
-  - Capture a smooth GIF demo under `test/` and publish the same GIF into `docs/assets/` for the README banner.
+  - Capture a smooth GIF demo under `.cache/facespeed/evidence/` and publish the same GIF into `docs/assets/` for the README banner.
   - Clean logs and add durable log retention/cleanup scripts and docs.
   - Add GitHub-ready `LICENSE`, `CONTRIBUTING.md`, release notes, version metadata, and docs index.
   - Harden `setup.sh` so a terminal-only machine can check/install prerequisites, create venv/node deps, validate Docker/GPU/Riva/RAG requirements, and fail with clear unsupported-machine messages.
@@ -39,7 +39,7 @@ Bring the repository to a release-ready GitHub product state: clean source/evide
 | Phase | Goal | Status | Evidence |
 | --- | --- | --- | --- |
 | 1 | Audit current docs/logs/tests/setup and benchmark product UI references | done | Web reference notes, repo inventory |
-| 2 | Clean and consolidate test/evidence/log/doc structure | done | `test/release-readiness-2026-05-23/`, `logs/README.md` |
+| 2 | Clean and consolidate test/evidence/log/doc structure | done | `.cache/facespeed/evidence/release-readiness-2026-05-23/`, `logs/README.md` |
 | 3 | Add license/contributing/version/release metadata | done | `LICENSE`, `CONTRIBUTING.md`, `CONTRIBUTORS.md`, `VERSION`, `CHANGELOG.md`, `RELEASE.md` |
 | 4 | Harden setup/log management scripts and docs | done | `setup.sh`, `scripts/setup.sh`, `scripts/manage-logs.sh`, `docs/installation.md`, `docs/operations.md` |
 | 5 | Regenerate demo video/GIF banner and README | done | `docs/assets/voice-rag-avatar-demo.gif`, `README.md` |
@@ -62,13 +62,13 @@ Latest results:
 - `PYTHONPATH=backend backend/.venv-linux/bin/python -m pytest backend/tests tests`: 41 passed.
 - `./setup.sh --check`: completed with environment warnings for the current host while Riva/Docling/embedding/backend/frontend checks were reachable.
 - Browser QA captured desktop/mobile screenshots plus `facespeed-release-demo.gif` under 100 MB.
-- Fresh release clone validation passed from `/tmp/facespeed-release-clone-validation-2026-05-23`; evidence is in `test/release-clone-validation-2026-05-23/`.
+- Fresh release clone validation passed from `/tmp/facespeed-release-clone-validation-2026-05-23`; evidence is in `.cache/facespeed/evidence/release-clone-validation-2026-05-23/`.
 
 ## Close Criteria
 
 - README looks like a credible GitHub product page with GIF banner and accurate run instructions.
 - Important folders have README files.
-- Only current, useful evidence remains in `test/`.
+- Only current, useful evidence remains in `.cache/facespeed/evidence/`.
 - Logs are summarized and operational logs have cleanup/retention workflow.
 - Setup script can bootstrap or clearly report missing OS/GPU/Docker/key prerequisites.
 - All automated and browser checks pass with evidence.

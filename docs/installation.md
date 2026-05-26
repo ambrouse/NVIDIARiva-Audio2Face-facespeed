@@ -1,6 +1,6 @@
 # Installation
 
-Date: 2026-05-23
+Date: 2026-05-26
 
 ## Supported Machines
 
@@ -27,7 +27,7 @@ On a fresh clone, `./setup.sh --setup` and `./setup.sh --setup-run` create `.env
 | --- | --- |
 | `./setup.sh --check` | Detect OS, Python, Node, npm, Docker, GPU, ports, memory, disk, Riva, and Audio2Face availability. |
 | `./setup.sh --setup` | Install project-local backend/frontend dependencies. |
-| `./setup.sh --run` | Start backend and frontend on localhost. |
+| `./setup.sh --run` | Start Riva TTS/ASR, nginx proxy, Postgres, Qdrant, backend, and frontend in tmux. |
 | `./setup.sh --setup-run` | Check, install, and run local app. |
 | `./setup.sh --verify` | Run frontend tests, frontend build, backend tests, and setup checks. |
 | `./setup.sh --capture-demo` | Recreate the release GIF from the real app. |
@@ -39,14 +39,18 @@ Full Voice RAG runtime needs reachable providers:
 
 | Provider | Default |
 | --- | --- |
-| Riva TTS | `127.0.0.1:50051` |
-| Riva ASR | `127.0.0.1:50151` |
+| Nginx app proxy | `http://127.0.0.1:6300` |
+| Frontend | `http://127.0.0.1:6310` |
+| Backend | `http://127.0.0.1:6320` |
+| Riva TTS | `127.0.0.1:6051` |
+| Riva ASR | `127.0.0.1:6052` |
 | Docling parse | `http://127.0.0.1:8005` |
 | Embedding/rerank | `http://127.0.0.1:8006` |
+| vLLM judge/teacher | `http://127.0.0.1:8007/v1` |
 
 The repository does not ship NVIDIA licensed model assets or credentials. Keep `NGC_API_KEY` in your local shell only.
 
-Backend and frontend processes started by setup are detached with project PID files under `logs/runtime/`, so the app stays available after setup exits. Stop them with `./setup.sh --stop`.
+Runtime started by setup stays in tmux sessions named with `facespeed-riva-*`, so the app stays available after setup exits and logs remain attachable. Stop everything project-owned with `./setup.sh --stop`.
 
 ## Failure Policy
 
