@@ -113,6 +113,104 @@ Các service không nằm trong bảng này là do repo quản lý hoặc option
 | Riva TTS `6051`, Riva ASR `6052` | `scripts/setup.sh` start bằng tmux `facespeed-riva-tts` và `facespeed-riva-asr` nếu Riva quickstart/model đã được provision |
 | Audio2Face `6040/6041` | Optional, không bắt buộc cho path browser ARKit hiện tại |
 
+Contract backend đang gọi:
+
+| API | Method/path | Request format | Response format backend cần |
+| --- | --- | --- | --- |
+| Docling parse | `POST /api/v1/parse` | `multipart/form-data`, field `files`, file PDF, content type `application/pdf` | JSON có `status: 200`, `result` là array; item đầu có `content` markdown không rỗng, `file_name` optional, `error` rỗng |
+| Embedding | `POST /api/v1/embed` | JSON `{"texts": ["..."]}`; text đã trim/normalize whitespace, không được rỗng | JSON có `status: 200`, `result` là array vector, số vector bằng số text; mỗi vector là array số float không rỗng |
+| Rerank | `POST /api/v1/rerank` | JSON `{"query": "...", "documents": ["..."]}`; query/document không được rỗng | JSON có `status: 200`, `result` là array object `{"index": number, "score": number}` |
+| vLLM health/model | `GET /v1/models` nếu `LLM_API_BASE_URL=http://127.0.0.1:8007/v1` | Không có body | HTTP `200` nghĩa là LLM available |
+| vLLM chat | `POST /v1/chat/completions` nếu `LLM_API_BASE_URL=http://127.0.0.1:8007/v1` | OpenAI-compatible chat completion | JSON có `choices[0].message.content` |
+
+Ví dụ Docling:
+
+```bash
+curl -F "files=@paper.pdf;type=application/pdf" \
+  http://127.0.0.1:8005/api/v1/parse
+```
+
+```json
+{
+  "status": 200,
+  "description": "ok",
+  "result": [
+    {
+      "file_name": "paper.pdf",
+      "content": "# Title\n\nParsed markdown...",
+      "error": ""
+    }
+  ]
+}
+```
+
+Ví dụ embedding:
+
+```json
+{
+  "texts": ["question or chunk text"]
+}
+```
+
+```json
+{
+  "status": 200,
+  "result": [[0.0123, -0.0456, 0.0789]]
+}
+```
+
+Benchmark hiện tại ghi nhận embedding provider trả vector 2048 chiều. Backend không hard-code số chiều, nhưng Qdrant collection sẽ được tạo theo chiều vector đầu tiên; nếu đổi embedding model làm đổi dimension thì cần reindex hoặc xóa collection `QDRANT_COLLECTION`.
+
+Ví dụ rerank:
+
+```json
+{
+  "query": "What does the paper propose?",
+  "documents": ["candidate chunk 1", "candidate chunk 2"]
+}
+```
+
+```json
+{
+  "status": 200,
+  "result": [
+    {"index": 0, "score": 0.91},
+    {"index": 1, "score": 0.42}
+  ]
+}
+```
+
+Ví dụ vLLM:
+
+```json
+{
+  "model": "google/gemma-4-E4B-it",
+  "messages": [
+    {"role": "system", "content": "system prompt"},
+    {"role": "user", "content": "user prompt"}
+  ],
+  "temperature": 0.2,
+  "max_tokens": 700
+}
+```
+
+```json
+{
+  "choices": [
+    {"message": {"content": "answer text"}}
+  ]
+}
+```
+
+Model vLLM mặc định là `google/gemma-4-E4B-it`. Nếu đổi model hoặc đổi server vLLM, sửa trong `.env`:
+
+```dotenv
+LLM_API_BASE_URL=http://127.0.0.1:8007/v1
+LLM_MODEL=google/gemma-4-E4B-it
+LLM_TEMPERATURE=0.2
+LLM_TIMEOUT_SECONDS=60
+```
+
 ### Env Quan Trọng
 
 | Biến | Giá trị mặc định | Ý nghĩa |
